@@ -42,6 +42,10 @@ body.studentView .adminOnly{display:none!important}
 .coachOverviewCard{border:1px solid #ffffff18;border-radius:18px;padding:16px;background:#0d1219;cursor:pointer}
 .coachOverviewCard:hover{border-color:#7dd8ff}
 .coachOverviewCard .counts{display:flex;gap:12px;flex-wrap:wrap;margin-top:10px;color:#aeb6c2;font-size:.9rem}
+.spaceCard{position:relative;overflow:hidden;background:radial-gradient(circle at 18% 16%,#16324a88 0,transparent 28%),radial-gradient(circle at 82% 18%,#402b6088 0,transparent 25%),linear-gradient(145deg,#111b2b,#0d1219 68%);border-color:#7dd8ff45!important}
+.spaceCard:before{content:"";position:absolute;inset:0;pointer-events:none;opacity:.8;background-image:radial-gradient(circle at 8% 18%,#fff 0 1px,transparent 1.5px),radial-gradient(circle at 22% 68%,#fff9 0 1px,transparent 1.5px),radial-gradient(circle at 48% 12%,#fff8 0 1px,transparent 1.5px),radial-gradient(circle at 70% 58%,#fff 0 1px,transparent 1.5px),radial-gradient(circle at 88% 28%,#fff9 0 1px,transparent 1.5px),radial-gradient(circle at 91% 82%,#fff7 0 1px,transparent 1.5px)}
+.spaceCard>*{position:relative;z-index:1}.missionHead{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap}.rocketOrb{width:76px;height:76px;border-radius:50%;display:grid;place-items:center;font-size:2.3rem;background:#ffffff0d;border:1px solid #ffffff22;box-shadow:inset 0 0 30px #7dd8ff18,0 12px 40px #0005}.rocketOrb{position:relative}.rocketOrb:after{content:"";position:absolute;width:102px;height:32px;border:1px solid #7dd8ff30;border-radius:50%;transform:rotate(-17deg);box-shadow:0 0 24px #7dd8ff14}.nextAction{margin-top:16px;padding:14px 16px;border-radius:18px;background:#ffffff08;border:1px solid #ffffff18}.nextAction strong{display:block;margin-bottom:4px}.rewardTop{display:flex;align-items:center;justify-content:space-between;gap:10px}.tinyLock{font-size:.82rem;color:#8e97a5}.starterCTA{display:flex;gap:8px;flex-wrap:wrap;margin-top:15px}.starterCTA a{padding:9px 12px;border-radius:999px;border:1px solid #ffffff24;background:#ffffff08;font-weight:800}.starterCTA a:hover{border-color:#7dd8ff}.xpNumber{font-size:clamp(2.7rem,8vw,5rem);font-weight:950;letter-spacing:-.05em;line-height:.95;margin:10px 0 4px}.xpBar{height:14px;border-radius:999px;background:#ffffff10;border:1px solid #ffffff20;overflow:hidden;margin-top:10px}.xpFill{height:100%;border-radius:inherit;background:linear-gradient(90deg,#7dd8ff,#d5b6ff,#f2dfc5)}.xpMeta{display:flex;gap:8px;flex-wrap:wrap;margin-top:15px}.xpMeta span{padding:7px 10px;border-radius:999px;background:#ffffff08;border:1px solid #ffffff1d;color:#cbd4df;font-size:.9rem}.missionNote{font-size:.92rem;color:#9edfff;margin-top:8px}.rewardGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:16px}.rewardBadge{border:1px solid #ffffff1a;border-radius:18px;padding:15px;background:#0d1219}.rewardBadge.locked{opacity:.36;filter:grayscale(.45)}.rewardIcon{font-size:1.65rem}.rewardBadge h4{margin:8px 0 3px}.rewardBadge p{margin:0;color:#9ea7b5;font-size:.9rem}.rewardState{font-size:.77rem;text-transform:uppercase;letter-spacing:.08em;color:#9edfff;margin-top:9px;font-weight:850}
+
 .coachOverviewCard strong{display:block}
 .coachLayout{display:grid;grid-template-columns:300px 1fr;gap:18px;align-items:start}
 .studentPicker{display:grid;gap:8px}
@@ -155,25 +159,42 @@ body.studentView .adminOnly{display:none!important}
       <button id="logoutBtn" class="btn logoutBtn">Sign out</button>
     </div>
 
-    <section id="firstWeekCard" class="dashCard" style="margin-bottom:18px">
-      <div class="kicker">Start here</div>
-      <h2 style="font-size:clamp(1.8rem,4vw,3rem)">Your first week</h2>
-      <p class="muted">Three steps are enough to get the mentorship system working for you.</p>
-      <div id="firstWeekSteps" class="onboardSteps"></div>
-    </section>
-
-    <section class="dashCard" style="margin-bottom:18px;background:linear-gradient(135deg,#182638,#10151d);border-color:#7dd8ff55">
-      <div class="kicker">Today’s training</div>
-      <div id="todayTraining">
-        <p class="muted">Building your training priorities…</p>
-      </div>
-      <div class="actions" style="margin-top:18px">
-        <a class="btn" href="/practice-planner/?minutes=20">Build / adapt my session →</a>
+    <section class="dashCard spaceCard" style="margin-bottom:18px">
+      <div class="missionHead">
+        <div>
+          <div class="kicker">Mission Control</div>
+          <div id="missionControl"><p class="muted">Calibrating your ship…</p></div>
+        </div>
+        <div class="rocketOrb" aria-hidden="true">🚀</div>
       </div>
     </section>
 
     <section class="dashCard" style="margin-bottom:18px">
-      <div class="kicker">Learning signal</div>
+      <div class="kicker">Rewards Bay</div>
+      <h3>Milestones earned through real practice</h3>
+      <p class="muted">No points for logging in or clicking around. Rewards come from training, retrieval, assignments and reflection.</p>
+      <div id="rewardsBay"><p class="empty">Scanning mission history…</p></div>
+    </section>
+
+    <section id="firstWeekCard" class="dashCard" style="margin-bottom:18px">
+      <div class="kicker">Flight School</div>
+      <h2 style="font-size:clamp(1.8rem,4vw,3rem)">Your first orbit</h2>
+      <p class="muted">Three steps are enough to get your training system into orbit.</p>
+      <div id="firstWeekSteps" class="onboardSteps"></div>
+    </section>
+
+    <section class="dashCard" style="margin-bottom:18px;background:linear-gradient(135deg,#182638,#10151d);border-color:#7dd8ff55">
+      <div class="kicker">Today’s Mission</div>
+      <div id="todayTraining">
+        <p class="muted">Building your training priorities…</p>
+      </div>
+      <div class="actions" style="margin-top:18px">
+        <a class="btn" href="/practice-planner/?minutes=20">Launch / adapt mission →</a>
+      </div>
+    </section>
+
+    <section class="dashCard" style="margin-bottom:18px">
+      <div class="kicker">Ship Status</div>
       <div id="learningSignal">
         <span class="badge">Checking</span>
         <h3 style="margin-top:12px">Reading your recent practice signal…</h3>
@@ -188,15 +209,15 @@ body.studentView .adminOnly{display:none!important}
     <div class="studentArea">
     <div class="portalGrid">
       <article class="dashCard">
-        <div class="kicker">Current focus</div>
+        <div class="kicker">Current Coordinates</div>
         <div id="goalsList"></div>
       </article>
       <article class="dashCard">
-        <div class="kicker">Assignments</div>
+        <div class="kicker">Mission Orders</div>
         <div id="assignmentsList"></div>
       </article>
       <article class="dashCard">
-        <div class="kicker">Review queue</div>
+        <div class="kicker">Signal Queue</div>
         <div class="reviewDue" id="reviewCount">0</div>
         <p class="muted">items due for review</p>
         <div id="reviewsList"></div>
@@ -218,7 +239,7 @@ body.studentView .adminOnly{display:none!important}
     </section>
 
     <section class="sec" id="weeklyReflectionSection" style="padding-bottom:0">
-      <div class="kicker">Weekly reflection</div>
+      <div class="kicker">Mission Debrief</div>
       <div class="dashCard">
         <span class="badge">3 questions · once a week</span>
         <h2 style="font-size:clamp(1.8rem,4vw,3rem);margin-top:12px">What changed this week?</h2>
@@ -234,11 +255,11 @@ body.studentView .adminOnly{display:none!important}
     </section>
 
     <section class="sec" style="padding-bottom:0">
-      <div class="kicker">Recent practice</div>
+      <div class="kicker">Flight Log</div>
       <div class="dashCard">
         <div class="portalTop" style="margin-bottom:8px">
           <div>
-            <h2 style="font-size:clamp(1.8rem,4vw,3rem)">Training journal</h2>
+            <h2 style="font-size:clamp(1.8rem,4vw,3rem)">Flight Log</h2>
             <p class="muted">A short record of what you have been working on and when it returns.</p>
           </div>
         </div>
@@ -247,12 +268,12 @@ body.studentView .adminOnly{display:none!important}
     </section>
 
     <section class="sec" style="padding-bottom:0">
-      <div class="kicker">Deliberate practice</div>
+      <div class="kicker">Launch Bay</div>
       <a class="dashCard" href="/practice-planner/" style="display:block;min-height:0;background:linear-gradient(135deg,#142131,#10151d);border-color:#7dd8ff55">
         <span class="badge">Mentorship tool</span>
-        <h2 style="font-size:clamp(2rem,5vw,3.5rem);margin-top:14px">Build My Training</h2>
+        <h2 style="font-size:clamp(2rem,5vw,3.5rem);margin-top:14px">Launch Mission</h2>
         <p class="lede" style="margin-bottom:0">Diagnose what is limiting you, choose how much time you have, and generate a focused practice session. Your feedback can schedule the next review automatically.</p>
-        <div class="actions"><span class="btn">Build today’s session →</span></div>
+        <div class="actions"><span class="btn">Launch today’s mission →</span></div>
         <div class="reviewActions" style="margin-top:14px">
           <a class="smallBtn" href="/practice-planner/?minutes=10">10 min</a>
           <a class="smallBtn" href="/practice-planner/?minutes=20">20 min</a>
@@ -267,7 +288,7 @@ body.studentView .adminOnly{display:none!important}
     </div>
 
     <section class="sec adminOnly" style="padding-bottom:0">
-      <div class="kicker">Coach attention</div>
+      <div class="kicker">Priority Signals</div>
       <div class="dashCard" style="margin-bottom:26px;background:linear-gradient(135deg,#2a1820,#10151d);border-color:#ff9e9e44">
         <div class="portalTop" style="margin-bottom:12px">
           <div>
@@ -287,7 +308,7 @@ body.studentView .adminOnly{display:none!important}
         <div id="coachReflectionList"><p class="empty">No weekly reflections yet.</p></div>
       </div>
 
-      <div class="kicker">Coach dashboard</div>
+      <div class="kicker">Command Deck</div>
       <h2>Manage mentorship students</h2>
       <p class="muted">Choose a student, then manage goals, assignments, reviews and private resources without opening Supabase.</p>
 
@@ -535,16 +556,111 @@ function bindCoachModeTabs() {
   });
 }
 
+
+function matchCount(text, re) { return (String(text || '').match(re) || []).length; }
+function activityDates(allReviews) {
+  const dates=[];
+  allReviews.forEach(r => {
+    const p=String(r.prompt||'');
+    for(const m of p.matchAll(/\[(?:MISSION_LOGGED|REVIEWED):([0-9]{4}-[0-9]{2}-[0-9]{2})[^\]]*\]/g)) dates.push(m[1]);
+    if(/^WEEKLY REFLECTION:/i.test(p) && r.created_at) dates.push(String(r.created_at).slice(0,10));
+  });
+  return [...new Set(dates)].sort();
+}
+function currentStreak(dates) {
+  if(!dates.length) return 0;
+  const set=new Set(dates); let streak=0; const d=new Date();
+  for(let i=0;i<365;i++){
+    const key=d.toISOString().slice(0,10);
+    if(set.has(key)){ streak++; d.setDate(d.getDate()-1); continue; }
+    if(i===0){ d.setDate(d.getDate()-1); continue; }
+    break;
+  }
+  return streak;
+}
+function levelForXP(xp){
+  const levels=[
+    [1,'Launch Cadet',0],[2,'Orbit Pilot',100],[3,'Star Navigator',240],[4,'Nebula Specialist',450],[5,'Constellation Captain',740],
+    [6,'Deep Space Explorer',1120],[7,'Cosmic Architect',1600],[8,'Galactic Virtuoso',2200],[9,'Solar Commander',2950],[10,'Celestial Mentor',3900]
+  ];
+  let cur=levels[0],next=null;
+  for(let i=0;i<levels.length;i++){if(xp>=levels[i][2])cur=levels[i];else{next=levels[i];break;}}
+  if(!next) next=[cur[0]+1,'Beyond the Map',cur[2]+1200];
+  const pct=Math.max(0,Math.min(100,((xp-cur[2])/(next[2]-cur[2]))*100));
+  return {level:cur[0],title:cur[1],floor:cur[2],nextLevel:next[0],nextTitle:next[1],nextXP:next[2],pct};
+}
+function renderGamification(allReviews, doneAssignments, goals){
+  const missionCount=allReviews.reduce((n,r)=>n+matchCount(r.prompt,/\[MISSION_LOGGED:/g),0);
+  const reviewCount=allReviews.reduce((n,r)=>n+matchCount(r.prompt,/\[REVIEWED:/g),0);
+  const reflections=allReviews.filter(r=>/^WEEKLY REFLECTION:/i.test(r.prompt||'')).length;
+  const assignmentsDone=doneAssignments.length;
+  const xp=missionCount*35+reviewCount*20+assignmentsDone*60+reflections*40;
+  const lv=levelForXP(xp); const streak=currentStreak(activityDates(allReviews));
+  const dueNow=(window.__dashboardReviews||[]).length;
+  const openOrders=(window.__dashboardAssignments||[]).length;
+
+  let nextTitle='Launch your first mission';
+  let nextBody='Start with 10–20 focused minutes. The goal is not volume; it is a clean learning signal.';
+  let nextHref='/practice-planner/?minutes=20';
+  if(dueNow>0){
+    nextTitle='Process your next signal';
+    nextBody=`${dueNow} review${dueNow===1?' is':'s are'} ready to retrieve. Do the review before adding more material.`;
+    nextHref='#';
+  }else if(openOrders>0){
+    nextTitle='Complete a mission order';
+    nextBody='You have an open coach assignment. Use it as today’s primary training target.';
+    nextHref='#';
+  }else if(goals.length>0){
+    nextTitle='Train your current coordinates';
+    nextBody='Your direction is clear. Launch a short mission around your highest-priority goal.';
+  }
+
+  const mc=document.getElementById('missionControl');
+  if(mc) mc.innerHTML=`
+    <span class="badge">Level ${lv.level} · ${esc(lv.title)}</span>
+    <div class="xpNumber">${xp} XP</div>
+    <div class="muted">Learning-process XP · not a dance ranking</div>
+    <div class="missionNote">${lv.nextXP-xp} XP to Level ${lv.nextLevel} · ${esc(lv.nextTitle)}</div>
+    <div class="xpBar"><div class="xpFill" style="width:${lv.pct}%"></div></div>
+    <div class="xpMeta"><span>🚀 ${missionCount} missions</span><span>📡 ${reviewCount} reviews</span><span>📦 ${assignmentsDone} assignments</span><span>🌙 ${reflections} debriefs</span><span>✨ ${streak}-day momentum</span></div>
+    <div class="nextAction">
+      <strong>Next best action · ${esc(nextTitle)}</strong>
+      <span class="muted">${esc(nextBody)}</span>
+      ${xp===0 ? `<div class="starterCTA"><a href="/practice-planner/?minutes=10">10 min launch</a><a href="/practice-planner/?minutes=20">20 min launch</a></div>` : ''}
+    </div>`;
+
+  const badgeData=[
+    ['🚀','First Launch','Complete your first training mission.',missionCount>=1],
+    ['🛰️','Orbit Established','Complete 3 training missions.',missionCount>=3],
+    ['🌌','Deep Space Consistency','Complete 10 training missions.',missionCount>=10],
+    ['📡','Signal Received','Complete your first spaced review.',reviewCount>=1],
+    ['🧠','Memory Satellite','Complete 10 spaced reviews.',reviewCount>=10],
+    ['📦','Cargo Delivered','Complete your first assignment.',assignmentsDone>=1],
+    ['🛸','Mission Specialist','Complete 5 assignments.',assignmentsDone>=5],
+    ['🌙','Moon Debrief','Submit your first weekly reflection.',reflections>=1],
+    ['📝','Black Box Analyst','Submit 5 weekly reflections.',reflections>=5],
+    ['🔥','Stable Orbit','Build a 3-day practice/review streak.',streak>=3],
+    ['⭐','Mission Focus','Have a current coach-assigned goal.',goals.length>=1]
+  ].sort((a,b)=>Number(b[3])-Number(a[3]));
+  const unlocked=badgeData.filter(b=>b[3]).length;
+  const rb=document.getElementById('rewardsBay');
+  if(rb) rb.innerHTML=`
+    <div class="rewardTop"><span class="badge">${unlocked}/${badgeData.length} unlocked</span><span class="tinyLock">Rewards never affect access or coaching priority.</span></div>
+    <div class="rewardGrid">${badgeData.map(b=>`<div class="rewardBadge ${b[3]?'':'locked'}"><div class="rewardIcon">${b[0]}</div><h4>${esc(b[1])}</h4><p>${esc(b[2])}</p><div class="rewardState">${b[3]?'Unlocked':'Locked'}</div></div>`).join('')}</div>`;
+}
+
 async function loadOwnDashboard() {
   const user = currentUser;
   const today = new Date().toISOString().slice(0,10);
 
-  const [goalsRes, assignmentsRes, reviewsRes, resourcesRes, recentReviewsRes] = await Promise.all([
+  const [goalsRes, assignmentsRes, reviewsRes, resourcesRes, recentReviewsRes, allReviewsRes, doneAssignmentsRes] = await Promise.all([
     sb.from('goals').select('*').eq('student_id', user.id).eq('status','active').order('priority'),
     sb.from('assignments').select('*').eq('student_id', user.id).neq('status','done').order('due_date', { ascending:true, nullsFirst:false }),
     sb.from('reviews').select('*').eq('student_id', user.id).lte('next_review', today).order('next_review'),
     sb.from('resources').select('*').or(`student_id.eq.${user.id},student_id.is.null`).order('created_at', { ascending:false }),
-    sb.from('reviews').select('*').eq('student_id', user.id).order('id', { ascending:false }).limit(5)
+    sb.from('reviews').select('*').eq('student_id', user.id).order('id', { ascending:false }).limit(5),
+    sb.from('reviews').select('*').eq('student_id', user.id).order('id', { ascending:false }),
+    sb.from('assignments').select('*').eq('student_id', user.id).eq('status','done')
   ]);
 
   const goals = goalsRes.data || [];
@@ -552,6 +668,12 @@ async function loadOwnDashboard() {
   const reviews = reviewsRes.data || [];
   const resources = resourcesRes.data || [];
   const recentReviews = recentReviewsRes.data || [];
+  const allReviews = allReviewsRes.data || [];
+  const doneAssignments = doneAssignmentsRes.data || [];
+
+  window.__dashboardReviews = reviews;
+  window.__dashboardAssignments = assignments;
+  renderGamification(allReviews, doneAssignments, goals);
 
   const firstWeek = document.getElementById('firstWeekSteps');
   const firstWeekCard = document.getElementById('firstWeekCard');
@@ -615,9 +737,9 @@ async function loadOwnDashboard() {
       <h3 style="margin-top:10px">${esc(r.title)}</h3>
       <p>${esc(r.prompt || 'Try to retrieve this before reviewing any reference material.')}</p>
       <div class="reviewActions" data-review-actions="${esc(r.id)}">
-        <button type="button" data-review-rate="hard" data-review-id="${esc(r.id)}">Hard</button>
-        <button type="button" data-review-rate="good" data-review-id="${esc(r.id)}">Good</button>
-        <button type="button" data-review-rate="easy" data-review-id="${esc(r.id)}">Easy</button>
+        <button type="button" data-review-rate="hard" data-review-id="${esc(r.id)}">Hard signal</button>
+        <button type="button" data-review-rate="good" data-review-id="${esc(r.id)}">Good signal</button>
+        <button type="button" data-review-rate="easy" data-review-id="${esc(r.id)}">Easy signal</button>
       </div>
       <div class="reviewStatus" id="reviewStatus-${esc(r.id)}"></div>
     </div>`);
@@ -657,9 +779,9 @@ async function loadOwnDashboard() {
         <h3>${esc(x.title)}</h3>
         ${x.prompt ? `<p>${esc(x.prompt)}</p>` : ''}
         <div class="reviewActions" data-review-actions="${esc(x.id)}">
-          <button type="button" data-review-rate="hard" data-review-id="${esc(x.id)}">Hard</button>
-          <button type="button" data-review-rate="good" data-review-id="${esc(x.id)}">Good</button>
-          <button type="button" data-review-rate="easy" data-review-id="${esc(x.id)}">Easy</button>
+          <button type="button" data-review-rate="hard" data-review-id="${esc(x.id)}">Hard signal</button>
+          <button type="button" data-review-rate="good" data-review-id="${esc(x.id)}">Good signal</button>
+          <button type="button" data-review-rate="easy" data-review-id="${esc(x.id)}">Easy signal</button>
         </div>
         <div class="reviewStatus" id="reviewStatus-${esc(x.id)}"></div>
       </div>`).join('')
@@ -711,11 +833,15 @@ function bindTodayReviewActions() {
       btn.closest('.reviewActions').querySelectorAll('button').forEach(b => b.disabled = true);
       if (status) status.textContent = 'Saving…';
 
+      const { data: existing } = await sb.from('reviews').select('prompt').eq('id',id).eq('student_id',currentUser.id).single();
+      const stamp = `[REVIEWED:${new Date().toISOString().slice(0,10)}:${rating.toUpperCase()}]`;
+      const updatedPrompt = `${existing?.prompt || ''} ${stamp}`.trim();
       const { error } = await sb
         .from('reviews')
         .update({
           next_review:addReviewDays(schedule.days),
-          interval_days:schedule.interval
+          interval_days:schedule.interval,
+          prompt:updatedPrompt
         })
         .eq('id', id)
         .eq('student_id', currentUser.id);
@@ -726,7 +852,7 @@ function bindTodayReviewActions() {
         return;
       }
 
-      if (status) status.textContent = `Done · returns ${schedule.label.toLowerCase()}.`;
+      if (status) status.textContent = `Signal processed · +20 XP · returns ${schedule.label.toLowerCase()}.`;
       setTimeout(() => loadOwnDashboard(), 650);
     };
   });
@@ -745,7 +871,7 @@ function bindTodayAssignmentActions() {
         if (status) status.textContent = error.message;
         return;
       }
-      if (status) status.textContent = 'Completed.';
+      if (status) status.textContent = 'Mission order completed · +60 XP.';
       setTimeout(() => loadOwnDashboard(), 500);
     };
   });
@@ -773,7 +899,7 @@ async function saveWeeklyReflection(e) {
   }
   document.getElementById('weeklyReflectionForm').reset();
   localStorage.setItem(`gabWeeklyReflectionDate:${currentUser.id}`, today);
-  msg.textContent = 'Saved. Gab can now see this reflection.';
+  msg.textContent = 'Mission debrief saved · +40 XP. Gab can now see it.';
   setTimeout(() => loadOwnDashboard(), 500);
 }
 
