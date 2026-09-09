@@ -38,6 +38,11 @@ body.coachView .studentArea{display:none!important}
 body.studentView .adminOnly{display:none!important}
 @media(max-width:820px){.portalGrid,.portalGrid.two{grid-template-columns:1fr}.portalTop{align-items:flex-start;flex-direction:column}}
 
+.coachOverviewGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:16px 0 26px}
+.coachOverviewCard{border:1px solid #ffffff18;border-radius:18px;padding:16px;background:#0d1219;cursor:pointer}
+.coachOverviewCard:hover{border-color:#7dd8ff}
+.coachOverviewCard .counts{display:flex;gap:12px;flex-wrap:wrap;margin-top:10px;color:#aeb6c2;font-size:.9rem}
+.coachOverviewCard strong{display:block}
 .coachLayout{display:grid;grid-template-columns:300px 1fr;gap:18px;align-items:start}
 .studentPicker{display:grid;gap:8px}
 .studentBtn{width:100%;text-align:left;padding:13px 14px;border-radius:14px;border:1px solid #ffffff18;background:#0d1219;color:#fff;cursor:pointer;font:inherit}
@@ -286,6 +291,13 @@ body.studentView .adminOnly{display:none!important}
       <h2>Manage mentorship students</h2>
       <p class="muted">Choose a student, then manage goals, assignments, reviews and private resources without opening Supabase.</p>
 
+      <div class="dashCard" style="margin-bottom:18px">
+        <div class="kicker">At a glance</div>
+        <h3>Student overview</h3>
+        <p class="muted">See who has due reviews, open assignments, or unresolved coach flags before opening individual profiles.</p>
+        <div id="coachOverviewGrid" class="coachOverviewGrid"><p class="empty">Loading students…</p></div>
+      </div>
+
       <div class="coachLayout">
         <div class="dashCard">
           <h3>Students</h3>
@@ -495,6 +507,7 @@ async function loadDashboard(user) {
 
   if (profile.role === 'coach') {
     await loadStudents();
+    await loadCoachOverview();
     await loadCoachAttention();
     await loadCoachReflections();
     bindCoachForms();
@@ -825,6 +838,61 @@ async function loadStudents() {
       const student = students.find(s => s.id === btn.dataset.student);
       await selectStudent(student);
     });
+  });
+}
+
+async function loadCoachOverview() {
+  const grid = document.getElementById('coachOverviewGrid');
+  if (!grid) return;
+
+  const today = new Date().toISOString().slice(0,10);
+  const [assignmentsRes, reviewsRes] = await Promise.all([
+    sb.from('assignments').select('id,student_id,status').neq('status','done'),
+    sb.from('reviews').select('id,student_id,prompt,next_review')
+  ]);
+
+  if (assignmentsRes.error || reviewsRes.error) {
+    const err = assignmentsRes.error || reviewsRes.error;
+    grid.innerHTML = `<p class="empty">${esc(err.message)}</p>`;
+    return;
+  }
+
+  const assignments = assignmentsRes.data || [];
+  const reviews = reviewsRes.data || [];
+
+  const rows = allStudents.map(student => {
+    const openAssignments = assignments.filter(x => x.student_id === student.id).length;
+    const dueReviews = reviews.filter(x => x.student_id === student.id && x.next_review && x.next_review <= today).length;
+    const coachFlags = reviews.filter(x => x.student_id === student.id && /COACH FLAG/i.test(x.prompt || '')).length;
+    return {student,openAssignments,dueReviews,coachFlags};
+  }).sort((a,b) =>
+    (b.coachFlags - a.coachFlags) ||
+    (b.dueReviews - a.dueReviews) ||
+    (b.openAssignments - a.openAssignments) ||
+    String(a.student.display_name || a.student.email).localeCompare(String(b.student.display_name || b.student.email))
+  );
+
+  grid.innerHTML = rows.length ? rows.map(x => `
+    <button class="coachOverviewCard" type="button" data-overview-student="${esc(x.student.id)}">
+      <strong>${esc(x.student.display_name || x.student.email)}</strong>
+      <small class="muted">${esc(x.student.email || '')}</small>
+      <div class="counts">
+        <span>${x.dueReviews} review${x.dueReviews===1?'':'s'} due</span>
+        <span>${x.openAssignments} assignment${x.openAssignments===1?'':'s'}</span>
+        ${x.coachFlags ? `<span>${x.coachFlags} needs Gab</span>` : ''}
+      </div>
+    </button>`).join('') : '<p class="empty">No mentees yet.</p>';
+
+  grid.querySelectorAll('[data-overview-student]').forEach(btn => {
+    btn.onclick = async () => {
+      const student = allStudents.find(s => s.id === btn.dataset.overviewStudent);
+      if (!student) return;
+      document.querySelectorAll('.studentBtn').forEach(b => b.classList.remove('active'));
+      const studentBtn = document.querySelector(`[data-student="${student.id}"]`);
+      if (studentBtn) studentBtn.classList.add('active');
+      await selectStudent(student);
+      document.getElementById('coachEditor').scrollIntoView({behavior:'smooth',block:'start'});
+    };
   });
 }
 
