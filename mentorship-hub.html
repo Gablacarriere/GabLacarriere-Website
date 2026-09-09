@@ -24,6 +24,12 @@
 .reviewDue{font-weight:900;font-size:2rem}
 .adminOnly{display:none}
 body.isAdmin .adminOnly{display:block}
+.coachModeTabs{display:none;gap:10px;flex-wrap:wrap;margin:0 0 22px}
+body.isAdmin .coachModeTabs{display:flex}
+.coachModeTabs button{padding:10px 14px;border-radius:999px;border:1px solid #ffffff24;background:transparent;color:#fff;font:inherit;font-weight:800;cursor:pointer}
+.coachModeTabs button.active{background:#f2dfc5;color:#10141a;border-color:#f2dfc5}
+body.coachView .studentArea{display:none!important}
+body.studentView .adminOnly{display:none!important}
 @media(max-width:820px){.portalGrid,.portalGrid.two{grid-template-columns:1fr}.portalTop{align-items:flex-start;flex-direction:column}}
 
 .coachLayout{display:grid;grid-template-columns:300px 1fr;gap:18px;align-items:start}
@@ -139,6 +145,12 @@ body.isAdmin .adminOnly{display:block}
       </div>
     </section>
 
+    <div class="coachModeTabs" id="coachModeTabs">
+      <button type="button" data-mode="student" class="active">My Training</button>
+      <button type="button" data-mode="coach">Students I Coach</button>
+    </div>
+
+    <div class="studentArea">
     <div class="portalGrid">
       <article class="dashCard">
         <div class="kicker">Current focus</div>
@@ -196,6 +208,8 @@ body.isAdmin .adminOnly{display:block}
     </section>
 
     <section class="sec" style="padding-bottom:0"><div class="kicker">Private resources</div><div id="resourcesGrid" class="portalGrid"></div></section>
+
+    </div>
 
     <section class="sec adminOnly" style="padding-bottom:0">
       <div class="kicker">Coach attention</div>
@@ -394,8 +408,11 @@ async function loadDashboard(user) {
   document.getElementById('loginView').classList.add('hidden');
   document.getElementById('dashboardView').classList.remove('hidden');
   document.getElementById('studentName').textContent = profile.display_name || user.email.split('@')[0];
-  document.getElementById('roleBadge').textContent = profile.role === 'coach' ? 'Coach' : 'Mentee';
-  if (profile.role === 'coach') document.body.classList.add('isAdmin');
+  document.getElementById('roleBadge').textContent = profile.role === 'coach' ? 'Coach + Mentee' : 'Mentee';
+  if (profile.role === 'coach') {
+    document.body.classList.add('isAdmin','studentView');
+    bindCoachModeTabs();
+  }
 
   await loadOwnDashboard();
 
@@ -405,6 +422,27 @@ async function loadDashboard(user) {
     await loadCoachReflections();
     bindCoachForms();
   }
+}
+
+function bindCoachModeTabs() {
+  const tabs = document.getElementById('coachModeTabs');
+  if (!tabs || tabs.dataset.bound === '1') return;
+  tabs.dataset.bound = '1';
+
+  tabs.querySelectorAll('[data-mode]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const mode = btn.dataset.mode;
+      document.body.classList.toggle('studentView', mode === 'student');
+      document.body.classList.toggle('coachView', mode === 'coach');
+      tabs.querySelectorAll('button').forEach(b => b.classList.toggle('active', b === btn));
+      if (mode === 'coach') {
+        const admin = document.querySelector('.adminOnly');
+        if (admin) admin.scrollIntoView({behavior:'smooth',block:'start'});
+      } else {
+        window.scrollTo({top:0,behavior:'smooth'});
+      }
+    });
+  });
 }
 
 async function loadOwnDashboard() {
