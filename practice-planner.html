@@ -54,4 +54,32 @@ async function saveFeedback(rating,g,p,m,c){
 function build(){const g=goal.value,p=problem.value,m=+minutes.value,c=context.value,d=problems[p];const a=Math.max(2,Math.round(m*.15)),b=Math.max(4,Math.round(m*.4)),v=Math.max(2,Math.round(m*.25)),t=Math.max(2,m-a-b-v);plan.innerHTML=`<div class="diagnosis"><div class="kicker">Your diagnosis</div><h3>${d[0]}</h3><p>${d[1]}</p><p><strong>Training direction:</strong> ${d[2]}</p><p class="micro">${skills[g]} ${contexts[c]}</p></div><h2 style="margin-top:26px">Your ${m}-minute session</h2><div class="planStep"><b>${a} min</b><div><h3>Define success</h3><p>Choose one observable or feelable criterion.</p></div></div><div class="planStep"><b>${b} min</b><div><h3>Focused practice</h3><p>${d[2]}</p></div></div><div class="planStep"><b>${v} min</b><div><h3>Change one variable</h3><p>Add one source of variability while preserving the target skill.</p></div></div><div class="planStep"><b>${t} min</b><div><h3>Test transfer</h3><p>Return to freer movement and see whether the skill remains available.</p></div></div><div class="diagnosis"><h3>How did it go?</h3><p class="muted">Your answer schedules the next review automatically.</p><div class="feedback"><button data-f="easy">Easy</button><button data-f="good">Good difficulty</button><button data-f="hard">Too difficult</button><button data-f="coach">Needs Gab</button></div><p id="feedbackMsg" class="micro"></p></div>`;document.querySelectorAll('[data-f]').forEach(x=>x.onclick=async()=>{document.querySelectorAll('[data-f]').forEach(y=>y.classList.remove('active'));x.classList.add('active');await saveFeedback(x.dataset.f,g,p,m,c)})}
 buildPlan.onclick=build;checkAccess();
 </script>
+
+<script>
+(function(){
+  const params = new URLSearchParams(location.search);
+  const minutes = params.get('minutes');
+  if (!minutes) return;
+
+  const minuteSelectors = [
+    'select[name="minutes"]', '#minutes', '[data-minutes-select]'
+  ];
+  for (const sel of minuteSelectors) {
+    const el = document.querySelector(sel);
+    if (el) {
+      el.value = minutes;
+      el.dispatchEvent(new Event('change', {bubbles:true}));
+      return;
+    }
+  }
+
+  const candidates = [...document.querySelectorAll('button,[role="button"],label,input[type="radio"]')];
+  const target = candidates.find(el => {
+    const val = el.value || el.dataset?.minutes || el.textContent || '';
+    return String(val).trim() === minutes || String(val).includes(`${minutes} min`);
+  });
+  if (target) target.click();
+})();
+</script>
+
 </body></html>
