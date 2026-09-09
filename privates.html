@@ -45,6 +45,14 @@
     ]
   }
   </script>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-RHMDH35TBJ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-RHMDH35TBJ');
+</script>
 </head>
 <body>
 <nav><div class="w n"><a class="brand" href="/">GAB LACARRIERE</a><div class="links"><a href="/about/">About</a><a href="/privates/">Privates</a><a href="/classes/">Classes</a><a href="/wedding/">Wedding</a><a href="/creative/">Creative</a><a class="btn" href="/mentorship/">Mentorship</a></div></div></nav><a class="waFloat" href="https://wa.me/19295864994?text=Hi%20Gab%2C%20I%27m%20interested%20in%20training%20with%20you." target="_blank" rel="noopener" aria-label="Contact Gab on WhatsApp">WhatsApp · Contact Gab</a>
@@ -60,5 +68,45 @@
   <section class="sec"><div class="w"><div class="kicker">Private Zouk & Lambada lessons NYC FAQ</div><div class="bioText"><h3>Can I book Brazilian Zouk or Lambada?</h3><p class="muted">Yes. Private training and Kinesthetic Practice Sessions can be used for Brazilian Zouk, Lambada or a combination of both.</p><h3>What is the difference between a private lesson and a Kinesthetic Practice Session?</h3><p class="muted">A private lesson includes more diagnosis, explanation and technical problem-solving. A Kinesthetic Practice Session minimizes discussion and prioritizes continuous movement, repetition and embodied feedback.</p><h3>Who are these sessions for?</h3><p class="muted">They can be adapted to developing dancers, experienced social dancers and competitors who want focused one-on-one training in New York City.</p></div></div></section>
 </main>
 <footer><div class="w">Gab Lacarriere · Brazilian Zouk · Lambada · Movement Education · New York City</div></footer>
+
+<script>
+document.addEventListener('click', function (e) {
+  var a = e.target.closest('a');
+  if (!a || typeof gtag !== 'function') return;
+
+  var href = a.getAttribute('href') || '';
+  var text = (a.textContent || '').trim().replace(/\s+/g, ' ').slice(0, 100);
+  var eventName = null;
+  var destination = null;
+
+  if (href.indexOf('wa.me/') !== -1) {
+    eventName = 'whatsapp_click';
+    destination = 'whatsapp';
+  } else if (/\/classes\/?(?:$|[?#])/.test(href) || /brazilian-zouk-classes-nyc|lambada-classes-nyc/.test(href)) {
+    eventName = 'classes_click';
+    destination = href;
+  } else if (/\/privates\/?(?:$|[?#])/.test(href)) {
+    eventName = 'privates_click';
+    destination = 'privates';
+  } else if (/\/mentorship\/?(?:$|[?#])/.test(href)) {
+    eventName = 'mentorship_click';
+    destination = 'mentorship';
+  } else if (/\/wedding\/?(?:$|[?#])/.test(href)) {
+    eventName = 'wedding_click';
+    destination = 'wedding';
+  } else if (/\/creative\/?(?:$|[?#])/.test(href)) {
+    eventName = 'creative_click';
+    destination = 'creative';
+  }
+
+  if (eventName) {
+    gtag('event', eventName, {
+      link_text: text,
+      link_url: href,
+      destination: destination
+    });
+  }
+});
+</script>
 </body>
 </html>
