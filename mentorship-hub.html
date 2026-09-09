@@ -97,6 +97,16 @@ body.isAdmin .adminOnly{display:block}
       <button id="logoutBtn" class="btn logoutBtn">Sign out</button>
     </div>
 
+    <section class="dashCard" style="margin-bottom:18px;background:linear-gradient(135deg,#182638,#10151d);border-color:#7dd8ff55">
+      <div class="kicker">Today’s training</div>
+      <div id="todayTraining">
+        <p class="muted">Building your training priorities…</p>
+      </div>
+      <div class="actions" style="margin-top:18px">
+        <a class="btn" href="/practice-planner/">Build / adapt my session →</a>
+      </div>
+    </section>
+
     <div class="portalGrid">
       <article class="dashCard">
         <div class="kicker">Current focus</div>
@@ -328,6 +338,24 @@ async function loadOwnDashboard() {
   const assignments = assignmentsRes.data || [];
   const reviews = reviewsRes.data || [];
   const resources = resourcesRes.data || [];
+
+  const todayParts = [];
+  if (reviews.length) {
+    const r = reviews[0];
+    todayParts.push(`<div class="item"><div class="badge">1 · Retrieve</div><h3 style="margin-top:10px">${esc(r.title)}</h3><p>${esc(r.prompt || 'Try to retrieve this before reviewing any reference material.')}</p></div>`);
+  }
+  if (assignments.length) {
+    const a = assignments[0];
+    todayParts.push(`<div class="item"><div class="badge">2 · Apply</div><h3 style="margin-top:10px">${esc(a.title)}</h3><p>${esc(a.instructions || 'Work on this assignment with one clear success criterion.')}${a.due_date ? ` · Due ${esc(a.due_date)}` : ''}</p></div>`);
+  }
+  if (goals.length) {
+    const g = goals[0];
+    todayParts.push(`<div class="item"><div class="badge">3 · Transfer</div><h3 style="margin-top:10px">${esc(g.title)}</h3><p>${esc(g.notes || 'Finish by testing this focus in freer movement rather than isolated repetition.')}</p></div>`);
+  }
+
+  document.getElementById('todayTraining').innerHTML = todayParts.length
+    ? todayParts.slice(0,3).join('')
+    : `<h3>No required work today.</h3><p class="muted">Use Build My Training to create a short deliberate-practice session from what you currently want to improve.</p>`;
 
   document.getElementById('goalsList').innerHTML = goals.length
     ? goals.map(x => itemHTML(x.title, x.notes || '')).join('')
