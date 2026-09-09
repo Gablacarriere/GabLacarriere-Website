@@ -640,7 +640,16 @@ async function loadOwnDashboard() {
 
   document.getElementById('reviewCount').textContent = reviews.length;
   document.getElementById('reviewsList').innerHTML = reviews.length
-    ? reviews.slice(0,5).map(x => itemHTML(x.title, x.prompt || '')).join('')
+    ? reviews.slice(0,5).map(x => `<div class="item">
+        <h3>${esc(x.title)}</h3>
+        ${x.prompt ? `<p>${esc(x.prompt)}</p>` : ''}
+        <div class="reviewActions" data-review-actions="${esc(x.id)}">
+          <button type="button" data-review-rate="hard" data-review-id="${esc(x.id)}">Hard</button>
+          <button type="button" data-review-rate="good" data-review-id="${esc(x.id)}">Good</button>
+          <button type="button" data-review-rate="easy" data-review-id="${esc(x.id)}">Easy</button>
+        </div>
+        <div class="reviewStatus" id="reviewStatus-${esc(x.id)}"></div>
+      </div>`).join('')
     : '<div class="empty"><strong>Nothing due today.</strong><br>No need to manufacture review work—train a current priority instead.</div>';
 
   const recentEl = document.getElementById('recentTrainingList');
