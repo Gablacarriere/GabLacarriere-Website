@@ -17,6 +17,22 @@
       "destination": "/mentorship.html"
     },
     {
+      "source": "/classes/",
+      "destination": "/classes.html"
+    },
+    {
+      "source": "/about/",
+      "destination": "/about.html"
+    },
+    {
+      "source": "/wedding/",
+      "destination": "/wedding.html"
+    },
+    {
+      "source": "/creative/",
+      "destination": "/creative.html"
+    },
+    {
       "source": "/((?!.*\\.).*)",
       "destination": "/index.html"
     }
