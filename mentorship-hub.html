@@ -25,6 +25,29 @@
 .adminOnly{display:none}
 body.isAdmin .adminOnly{display:block}
 @media(max-width:820px){.portalGrid,.portalGrid.two{grid-template-columns:1fr}.portalTop{align-items:flex-start;flex-direction:column}}
+
+.coachLayout{display:grid;grid-template-columns:300px 1fr;gap:18px;align-items:start}
+.studentPicker{display:grid;gap:8px}
+.studentBtn{width:100%;text-align:left;padding:13px 14px;border-radius:14px;border:1px solid #ffffff18;background:#0d1219;color:#fff;cursor:pointer;font:inherit}
+.studentBtn:hover,.studentBtn.active{border-color:#7dd8ff;background:#142131}
+.studentBtn strong{display:block}.studentBtn small{display:block;color:#8e97a5;margin-top:2px}
+.editorPanel{display:grid;gap:18px}
+.editorSection{border:1px solid #ffffff18;border-radius:20px;padding:20px;background:#0d1219}
+.editorSection h3{margin-bottom:4px}
+.editorForm{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:16px 0}
+.editorForm .full{grid-column:1/-1}
+.editorForm input,.editorForm select,.editorForm textarea{width:100%;padding:12px 13px;border-radius:12px;border:1px solid #ffffff22;background:#090e15;color:#fff;font:inherit}
+.editorForm textarea{min-height:90px;resize:vertical}
+.editorActions{display:flex;gap:8px;flex-wrap:wrap}
+.smallBtn{padding:8px 11px;border-radius:999px;border:1px solid #ffffff24;background:transparent;color:#fff;font:inherit;font-weight:750;cursor:pointer}
+.smallBtn.danger{color:#ffb5b5;border-color:#ff777744}
+.manageItem{padding:14px 0;border-top:1px solid #ffffff12}
+.manageItem:first-child{border-top:0}
+.manageItemTop{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
+.manageItem p{margin:5px 0 0;color:#aeb6c2}
+.coachStatus{min-height:24px;color:#9edfff}
+@media(max-width:820px){.coachLayout{grid-template-columns:1fr}.editorForm{grid-template-columns:1fr}.editorForm .full{grid-column:auto}}
+
 </style>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="/supabase-config.js"></script>
@@ -75,11 +98,101 @@ body.isAdmin .adminOnly{display:block}
     <section class="sec" style="padding-bottom:0"><div class="kicker">Private resources</div><div id="resourcesGrid" class="portalGrid"></div></section>
 
     <section class="sec adminOnly" style="padding-bottom:0">
-      <div class="kicker">Coach view</div>
-      <div class="dashCard">
-        <h2>Students</h2>
-        <p class="muted">This section appears only for accounts with the <strong>coach</strong> role.</p>
-        <div id="studentsList"></div>
+      <div class="kicker">Coach dashboard</div>
+      <h2>Manage mentorship students</h2>
+      <p class="muted">Choose a student, then manage goals, assignments, reviews and private resources without opening Supabase.</p>
+
+      <div class="coachLayout">
+        <div class="dashCard">
+          <h3>Students</h3>
+          <div id="studentsList" class="studentPicker"></div>
+        </div>
+
+        <div class="editorPanel">
+          <div class="dashCard" id="coachEmpty">
+            <h3>Select a student</h3>
+            <p class="muted">Their mentorship plan will appear here.</p>
+          </div>
+
+          <div id="coachEditor" class="hidden">
+            <div class="dashCard">
+              <span class="badge">Editing student</span>
+              <h2 id="coachStudentName" style="margin-top:12px">Student</h2>
+              <p id="coachStudentEmail" class="muted"></p>
+              <p id="coachStatus" class="coachStatus"></p>
+            </div>
+
+            <section class="editorSection">
+              <h3>Current goals</h3>
+              <p class="muted">Set the student's current technical or learning priorities.</p>
+              <form id="goalForm" class="editorForm">
+                <input type="hidden" id="goalId">
+                <input id="goalTitle" placeholder="Goal title" required>
+                <input id="goalPriority" type="number" value="10" min="1" placeholder="Priority">
+                <textarea id="goalNotes" class="full" placeholder="Notes"></textarea>
+                <select id="goalStatus">
+                  <option value="active">Active</option>
+                  <option value="paused">Paused</option>
+                  <option value="completed">Completed</option>
+                </select>
+                <div class="editorActions"><button class="btn" type="submit">Save goal</button><button class="smallBtn" type="button" data-reset="goal">Clear</button></div>
+              </form>
+              <div id="coachGoals"></div>
+            </section>
+
+            <section class="editorSection">
+              <h3>Assignments</h3>
+              <p class="muted">Give the student a concrete practice task.</p>
+              <form id="assignmentForm" class="editorForm">
+                <input type="hidden" id="assignmentId">
+                <input id="assignmentTitle" placeholder="Assignment title" required>
+                <input id="assignmentDue" type="date">
+                <textarea id="assignmentInstructions" class="full" placeholder="Instructions"></textarea>
+                <select id="assignmentStatus">
+                  <option value="open">Open</option>
+                  <option value="in_progress">In progress</option>
+                  <option value="done">Done</option>
+                </select>
+                <div class="editorActions"><button class="btn" type="submit">Save assignment</button><button class="smallBtn" type="button" data-reset="assignment">Clear</button></div>
+              </form>
+              <div id="coachAssignments"></div>
+            </section>
+
+            <section class="editorSection">
+              <h3>Review queue</h3>
+              <p class="muted">Create material that should return for spaced review.</p>
+              <form id="reviewForm" class="editorForm">
+                <input type="hidden" id="reviewId">
+                <input id="reviewTitle" placeholder="Review item" required>
+                <input id="reviewDate" type="date" required>
+                <textarea id="reviewPrompt" class="full" placeholder="Prompt or reminder"></textarea>
+                <input id="reviewInterval" type="number" value="1" min="1" placeholder="Interval days">
+                <div class="editorActions"><button class="btn" type="submit">Save review</button><button class="smallBtn" type="button" data-reset="review">Clear</button></div>
+              </form>
+              <div id="coachReviews"></div>
+            </section>
+
+            <section class="editorSection">
+              <h3>Private resources</h3>
+              <p class="muted">Attach a video, document, drill or other resource to this student.</p>
+              <form id="resourceForm" class="editorForm">
+                <input type="hidden" id="resourceId">
+                <input id="resourceTitle" placeholder="Resource title" required>
+                <select id="resourceType">
+                  <option value="lesson">Lesson</option>
+                  <option value="video">Video</option>
+                  <option value="drill">Drill</option>
+                  <option value="document">Document</option>
+                  <option value="practice">Practice</option>
+                </select>
+                <input id="resourceUrl" class="full" type="url" placeholder="https://..." required>
+                <textarea id="resourceDescription" class="full" placeholder="Description"></textarea>
+                <div class="editorActions"><button class="btn" type="submit">Save resource</button><button class="smallBtn" type="button" data-reset="resource">Clear</button></div>
+              </form>
+              <div id="coachResources"></div>
+            </section>
+          </div>
+        </div>
       </div>
     </section>
   </section>
@@ -88,13 +201,26 @@ body.isAdmin .adminOnly{display:block}
 <script>
 const cfg = window.GAB_PORTAL || {};
 let sb;
+let currentUser = null;
+let currentProfile = null;
+let selectedStudent = null;
+let coachData = { goals:[], assignments:[], reviews:[], resources:[] };
+
+function esc(v='') {
+  return String(v ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
 
 function showMessage(msg) {
   document.getElementById('loginMessage').textContent = msg || '';
 }
 
+function coachMessage(msg='') {
+  const el = document.getElementById('coachStatus');
+  if (el) el.textContent = msg;
+}
+
 function itemHTML(title, body='') {
-  return `<div class="item"><h3>${title}</h3>${body ? `<p>${body}</p>` : ''}</div>`;
+  return `<div class="item"><h3>${esc(title)}</h3>${body ? `<p>${esc(body)}</p>` : ''}</div>`;
 }
 
 async function initPortal() {
@@ -125,6 +251,7 @@ document.getElementById('logoutBtn').addEventListener('click', async () => {
 });
 
 async function loadDashboard(user) {
+  currentUser = user;
   const { data: profile, error: profileError } = await sb
     .from('profiles').select('*').eq('id', user.id).single();
 
@@ -133,12 +260,23 @@ async function loadDashboard(user) {
     return;
   }
 
+  currentProfile = profile;
   document.getElementById('loginView').classList.add('hidden');
   document.getElementById('dashboardView').classList.remove('hidden');
   document.getElementById('studentName').textContent = profile.display_name || user.email.split('@')[0];
   document.getElementById('roleBadge').textContent = profile.role === 'coach' ? 'Coach' : 'Mentee';
   if (profile.role === 'coach') document.body.classList.add('isAdmin');
 
+  await loadOwnDashboard();
+
+  if (profile.role === 'coach') {
+    await loadStudents();
+    bindCoachForms();
+  }
+}
+
+async function loadOwnDashboard() {
+  const user = currentUser;
   const today = new Date().toISOString().slice(0,10);
 
   const [goalsRes, assignmentsRes, reviewsRes, resourcesRes] = await Promise.all([
@@ -167,13 +305,202 @@ async function loadDashboard(user) {
     : '<p class="empty">Nothing due today.</p>';
 
   document.getElementById('resourcesGrid').innerHTML = resources.length
-    ? resources.map(x => `<a class="dashCard" href="${x.url}" target="_blank" rel="noopener"><div class="kicker">${x.resource_type || 'Resource'}</div><h3>${x.title}</h3><p class="muted">${x.description || ''}</p></a>`).join('')
+    ? resources.map(x => `<a class="dashCard" href="${esc(x.url)}" target="_blank" rel="noopener"><div class="kicker">${esc(x.resource_type || 'Resource')}</div><h3>${esc(x.title)}</h3><p class="muted">${esc(x.description || '')}</p></a>`).join('')
     : '<p class="empty">No private resources have been published yet.</p>';
+}
 
-  if (profile.role === 'coach') {
-    const { data: students } = await sb.from('profiles').select('id,display_name,email,role').order('display_name');
-    document.getElementById('studentsList').innerHTML = (students || []).map(x => itemHTML(x.display_name || x.email, x.role)).join('');
+async function loadStudents() {
+  const { data, error } = await sb
+    .from('profiles')
+    .select('id,display_name,email,role')
+    .neq('role','coach')
+    .order('display_name');
+
+  const list = document.getElementById('studentsList');
+  if (error) {
+    list.innerHTML = `<p class="empty">${esc(error.message)}</p>`;
+    return;
   }
+  const students = data || [];
+  list.innerHTML = students.length ? students.map(s => `
+    <button class="studentBtn" type="button" data-student="${esc(s.id)}">
+      <strong>${esc(s.display_name || s.email)}</strong>
+      <small>${esc(s.email || '')}</small>
+    </button>`).join('') : '<p class="empty">No mentee accounts yet.</p>';
+
+  list.querySelectorAll('[data-student]').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      list.querySelectorAll('.studentBtn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const student = students.find(s => s.id === btn.dataset.student);
+      await selectStudent(student);
+    });
+  });
+}
+
+async function selectStudent(student) {
+  selectedStudent = student;
+  document.getElementById('coachEmpty').classList.add('hidden');
+  document.getElementById('coachEditor').classList.remove('hidden');
+  document.getElementById('coachStudentName').textContent = student.display_name || student.email;
+  document.getElementById('coachStudentEmail').textContent = student.email || '';
+  coachMessage('Loading…');
+  resetAllForms();
+  await refreshCoachData();
+  coachMessage('');
+}
+
+async function refreshCoachData() {
+  if (!selectedStudent) return;
+  const id = selectedStudent.id;
+  const [g,a,r,res] = await Promise.all([
+    sb.from('goals').select('*').eq('student_id',id).order('priority'),
+    sb.from('assignments').select('*').eq('student_id',id).order('created_at',{ascending:false}),
+    sb.from('reviews').select('*').eq('student_id',id).order('next_review'),
+    sb.from('resources').select('*').eq('student_id',id).order('created_at',{ascending:false})
+  ]);
+  const err = g.error || a.error || r.error || res.error;
+  if (err) return coachMessage(err.message);
+
+  coachData = {
+    goals:g.data || [],
+    assignments:a.data || [],
+    reviews:r.data || [],
+    resources:res.data || []
+  };
+  renderCoachData();
+}
+
+function manageItem(type, x, title, body='') {
+  return `<div class="manageItem">
+    <div class="manageItemTop">
+      <div><strong>${esc(title)}</strong>${body ? `<p>${esc(body)}</p>` : ''}</div>
+      <div class="editorActions">
+        <button class="smallBtn" type="button" data-edit-type="${type}" data-id="${x.id}">Edit</button>
+        <button class="smallBtn danger" type="button" data-delete-type="${type}" data-id="${x.id}">Delete</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+function renderCoachData() {
+  document.getElementById('coachGoals').innerHTML = coachData.goals.length
+    ? coachData.goals.map(x => manageItem('goal',x,x.title,[x.status,x.notes].filter(Boolean).join(' · '))).join('')
+    : '<p class="empty">No goals yet.</p>';
+
+  document.getElementById('coachAssignments').innerHTML = coachData.assignments.length
+    ? coachData.assignments.map(x => manageItem('assignment',x,x.title,[x.status,x.due_date ? 'Due '+x.due_date : '',x.instructions].filter(Boolean).join(' · '))).join('')
+    : '<p class="empty">No assignments yet.</p>';
+
+  document.getElementById('coachReviews').innerHTML = coachData.reviews.length
+    ? coachData.reviews.map(x => manageItem('review',x,x.title,[x.next_review ? 'Next '+x.next_review : '',x.prompt].filter(Boolean).join(' · '))).join('')
+    : '<p class="empty">No reviews yet.</p>';
+
+  document.getElementById('coachResources').innerHTML = coachData.resources.length
+    ? coachData.resources.map(x => manageItem('resource',x,x.title,[x.resource_type,x.description,x.url].filter(Boolean).join(' · '))).join('')
+    : '<p class="empty">No private resources yet.</p>';
+
+  document.querySelectorAll('[data-edit-type]').forEach(btn => btn.onclick = () => editItem(btn.dataset.editType, Number(btn.dataset.id)));
+  document.querySelectorAll('[data-delete-type]').forEach(btn => btn.onclick = () => deleteItem(btn.dataset.deleteType, Number(btn.dataset.id)));
+}
+
+function editItem(type,id) {
+  const plural = type === 'assignment' ? 'assignments' : type === 'resource' ? 'resources' : type + 's';
+  const x = coachData[plural].find(v => Number(v.id) === Number(id));
+  if (!x) return;
+
+  if (type === 'goal') {
+    goalId.value=x.id; goalTitle.value=x.title||''; goalPriority.value=x.priority||10; goalNotes.value=x.notes||''; goalStatus.value=x.status||'active';
+    goalTitle.focus();
+  } else if (type === 'assignment') {
+    assignmentId.value=x.id; assignmentTitle.value=x.title||''; assignmentDue.value=x.due_date||''; assignmentInstructions.value=x.instructions||''; assignmentStatus.value=x.status||'open';
+    assignmentTitle.focus();
+  } else if (type === 'review') {
+    reviewId.value=x.id; reviewTitle.value=x.title||''; reviewDate.value=x.next_review||''; reviewPrompt.value=x.prompt||''; reviewInterval.value=x.interval_days||1;
+    reviewTitle.focus();
+  } else if (type === 'resource') {
+    resourceId.value=x.id; resourceTitle.value=x.title||''; resourceType.value=x.resource_type||'lesson'; resourceUrl.value=x.url||''; resourceDescription.value=x.description||'';
+    resourceTitle.focus();
+  }
+  window.scrollTo({top: document.getElementById(type+'Form').getBoundingClientRect().top + window.scrollY - 100, behavior:'smooth'});
+}
+
+async function deleteItem(type,id) {
+  if (!selectedStudent) return;
+  const tables = {goal:'goals',assignment:'assignments',review:'reviews',resource:'resources'};
+  if (!confirm('Delete this '+type+'?')) return;
+  coachMessage('Deleting…');
+  const { error } = await sb.from(tables[type]).delete().eq('id',id);
+  if (error) return coachMessage(error.message);
+  await refreshCoachData();
+  coachMessage('Deleted.');
+}
+
+function resetForm(type) {
+  if (type === 'goal') {
+    goalForm.reset(); goalId.value=''; goalPriority.value=10; goalStatus.value='active';
+  } else if (type === 'assignment') {
+    assignmentForm.reset(); assignmentId.value=''; assignmentStatus.value='open';
+  } else if (type === 'review') {
+    reviewForm.reset(); reviewId.value=''; reviewInterval.value=1; reviewDate.value=new Date().toISOString().slice(0,10);
+  } else if (type === 'resource') {
+    resourceForm.reset(); resourceId.value=''; resourceType.value='lesson';
+  }
+}
+
+function resetAllForms(){ ['goal','assignment','review','resource'].forEach(resetForm); }
+
+async function saveRow(table,id,payload) {
+  coachMessage('Saving…');
+  const q = id
+    ? sb.from(table).update(payload).eq('id',Number(id))
+    : sb.from(table).insert(payload);
+  const { error } = await q;
+  if (error) { coachMessage(error.message); return false; }
+  coachMessage('Saved.');
+  await refreshCoachData();
+  return true;
+}
+
+function bindCoachForms() {
+  if (window.__coachBound) return;
+  window.__coachBound = true;
+
+  document.querySelectorAll('[data-reset]').forEach(b => b.addEventListener('click', () => resetForm(b.dataset.reset)));
+
+  goalForm.addEventListener('submit', async e => {
+    e.preventDefault(); if (!selectedStudent) return;
+    const ok = await saveRow('goals',goalId.value,{
+      student_id:selectedStudent.id,title:goalTitle.value.trim(),notes:goalNotes.value.trim()||null,
+      priority:Number(goalPriority.value||10),status:goalStatus.value
+    }); if(ok) resetForm('goal');
+  });
+
+  assignmentForm.addEventListener('submit', async e => {
+    e.preventDefault(); if (!selectedStudent) return;
+    const ok = await saveRow('assignments',assignmentId.value,{
+      student_id:selectedStudent.id,title:assignmentTitle.value.trim(),instructions:assignmentInstructions.value.trim()||null,
+      due_date:assignmentDue.value||null,status:assignmentStatus.value
+    }); if(ok) resetForm('assignment');
+  });
+
+  reviewForm.addEventListener('submit', async e => {
+    e.preventDefault(); if (!selectedStudent) return;
+    const ok = await saveRow('reviews',reviewId.value,{
+      student_id:selectedStudent.id,title:reviewTitle.value.trim(),prompt:reviewPrompt.value.trim()||null,
+      next_review:reviewDate.value,interval_days:Number(reviewInterval.value||1)
+    }); if(ok) resetForm('review');
+  });
+
+  resourceForm.addEventListener('submit', async e => {
+    e.preventDefault(); if (!selectedStudent) return;
+    const ok = await saveRow('resources',resourceId.value,{
+      student_id:selectedStudent.id,title:resourceTitle.value.trim(),description:resourceDescription.value.trim()||null,
+      resource_type:resourceType.value,url:resourceUrl.value.trim()
+    }); if(ok) resetForm('resource');
+  });
+
+  resetAllForms();
 }
 
 initPortal();
