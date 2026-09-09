@@ -175,6 +175,19 @@ body.studentView .adminOnly{display:none!important}
       <p class="muted">No points for logging in or clicking around. Rewards come from training, retrieval, assignments and reflection.</p>
       <div id="rewardsBay"><p class="empty">Scanning mission history…</p></div>
     </section>
+    <section class="dashCard" style="margin-bottom:18px">
+      <div class="kicker">My Space</div>
+      <h3>XP history & activity</h3>
+      <p class="muted">Everything that changes your XP is saved here permanently.</p>
+      <div id="spaceHistory"><p class="empty">Loading your activity…</p></div>
+    </section>
+
+    <section class="dashCard" style="margin-bottom:18px">
+      <div class="kicker">Mission Profile</div>
+      <h3>Your complete space record</h3>
+      <p class="muted">Your XP, missions and review history are saved to your account and follow you across devices.</p>
+      <div id="missionProfile"></div>
+    </section>
 
     <section id="firstWeekCard" class="dashCard" style="margin-bottom:18px">
       <div class="kicker">Flight School</div>
@@ -288,6 +301,13 @@ body.studentView .adminOnly{display:none!important}
     </div>
 
     <section class="sec adminOnly" style="padding-bottom:0">
+      <div class="kicker">Recent Mission Feed</div>
+      <div class="dashCard" style="margin-bottom:26px">
+        <h3>What students actually trained</h3>
+        <p class="muted">Every completed Training Builder session appears here, not only “Needs Gab” sessions.</p>
+        <div id="coachMissionFeed"><p class="empty">No mission activity yet.</p></div>
+      </div>
+
       <div class="kicker">Priority Signals</div>
       <div class="dashCard" style="margin-bottom:26px;background:linear-gradient(135deg,#2a1820,#10151d);border-color:#ff9e9e44">
         <div class="portalTop" style="margin-bottom:12px">
@@ -311,6 +331,13 @@ body.studentView .adminOnly{display:none!important}
       <div class="kicker">Command Deck</div>
       <h2>Manage mentorship students</h2>
       <p class="muted">Choose a student, then manage goals, assignments, reviews and private resources without opening Supabase.</p>
+
+      <div class="dashCard" style="margin-bottom:18px">
+        <div class="kicker">Crew Activity</div>
+        <h3>Recent student activity</h3>
+        <p class="muted">New missions, reviews, assignments and debriefs appear here automatically.</p>
+        <div id="coachActivityFeed"><p class="empty">Loading recent activity…</p></div>
+      </div>
 
       <div class="dashCard" style="margin-bottom:18px">
         <div class="kicker">At a glance</div>
@@ -528,7 +555,9 @@ async function loadDashboard(user) {
 
   if (profile.role === 'coach') {
     await loadStudents();
+    await loadCoachActivityFeed();
     await loadCoachOverview();
+    await loadCoachMissionFeed();
     await loadCoachAttention();
     await loadCoachReflections();
     bindCoachForms();
@@ -557,15 +586,12 @@ function bindCoachModeTabs() {
 }
 
 
-function matchCount(text, re) { return (String(text || '').match(re) || []).length; }
-function activityDates(allReviews) {
+function activityDates(trainingSessions,reviewAttempts,reflections){
   const dates=[];
-  allReviews.forEach(r => {
-    const p=String(r.prompt||'');
-    for(const m of p.matchAll(/\[(?:MISSION_LOGGED|REVIEWED):([0-9]{4}-[0-9]{2}-[0-9]{2})[^\]]*\]/g)) dates.push(m[1]);
-    if(/^WEEKLY REFLECTION:/i.test(p) && r.created_at) dates.push(String(r.created_at).slice(0,10));
-  });
-  return [...new Set(dates)].sort();
+  trainingSessions.forEach(x=>dates.push(String(x.created_at||'').slice(0,10)));
+  reviewAttempts.forEach(x=>dates.push(String(x.created_at||'').slice(0,10)));
+  reflections.forEach(x=>dates.push(String(x.reflection_week||'').slice(0,10)));
+  return [...new Set(dates.filter(Boolean))].sort();
 }
 function currentStreak(dates) {
   if(!dates.length) return 0;
@@ -587,47 +613,34 @@ function levelForXP(xp){
   for(let i=0;i<levels.length;i++){if(xp>=levels[i][2])cur=levels[i];else{next=levels[i];break;}}
   if(!next) next=[cur[0]+1,'Beyond the Map',cur[2]+1200];
   const pct=Math.max(0,Math.min(100,((xp-cur[2])/(next[2]-cur[2]))*100));
-  return {level:cur[0],title:cur[1],floor:cur[2],nextLevel:next[0],nextTitle:next[1],nextXP:next[2],pct};
+  return {level:cur[0],title:cur[1],nextLevel:next[0],nextTitle:next[1],nextXP:next[2],pct};
 }
-function renderGamification(allReviews, doneAssignments, goals){
-  const missionCount=allReviews.reduce((n,r)=>n+matchCount(r.prompt,/\[MISSION_LOGGED:/g),0);
-  const reviewCount=allReviews.reduce((n,r)=>n+matchCount(r.prompt,/\[REVIEWED:/g),0);
-  const reflections=allReviews.filter(r=>/^WEEKLY REFLECTION:/i.test(r.prompt||'')).length;
+function renderGamification(xpEvents,trainingSessions,reviewAttempts,reflections,doneAssignments,goals){
+  const xp=xpEvents.reduce((sum,x)=>sum+Number(x.xp||0),0);
+  const missionCount=trainingSessions.length;
+  const reviewCount=reviewAttempts.length;
   const assignmentsDone=doneAssignments.length;
-  const xp=missionCount*35+reviewCount*20+assignmentsDone*60+reflections*40;
-  const lv=levelForXP(xp); const streak=currentStreak(activityDates(allReviews));
+  const reflectionCount=reflections.length;
+  const lv=levelForXP(xp);
+  const streak=currentStreak(activityDates(trainingSessions,reviewAttempts,reflections));
   const dueNow=(window.__dashboardReviews||[]).length;
   const openOrders=(window.__dashboardAssignments||[]).length;
 
   let nextTitle='Launch your first mission';
   let nextBody='Start with 10–20 focused minutes. The goal is not volume; it is a clean learning signal.';
-  let nextHref='/practice-planner/?minutes=20';
-  if(dueNow>0){
-    nextTitle='Process your next signal';
-    nextBody=`${dueNow} review${dueNow===1?' is':'s are'} ready to retrieve. Do the review before adding more material.`;
-    nextHref='#';
-  }else if(openOrders>0){
-    nextTitle='Complete a mission order';
-    nextBody='You have an open coach assignment. Use it as today’s primary training target.';
-    nextHref='#';
-  }else if(goals.length>0){
-    nextTitle='Train your current coordinates';
-    nextBody='Your direction is clear. Launch a short mission around your highest-priority goal.';
-  }
+  if(dueNow>0){nextTitle='Process your next signal';nextBody=`${dueNow} review${dueNow===1?' is':'s are'} ready to retrieve.`;}
+  else if(openOrders>0){nextTitle='Complete a mission order';nextBody='You have an open coach assignment.';}
+  else if(goals.length>0){nextTitle='Train your current coordinates';nextBody='Launch a short mission around your highest-priority goal.';}
 
   const mc=document.getElementById('missionControl');
   if(mc) mc.innerHTML=`
     <span class="badge">Level ${lv.level} · ${esc(lv.title)}</span>
     <div class="xpNumber">${xp} XP</div>
-    <div class="muted">Learning-process XP · not a dance ranking</div>
+    <div class="muted">Saved in your mentorship profile</div>
     <div class="missionNote">${lv.nextXP-xp} XP to Level ${lv.nextLevel} · ${esc(lv.nextTitle)}</div>
     <div class="xpBar"><div class="xpFill" style="width:${lv.pct}%"></div></div>
-    <div class="xpMeta"><span>🚀 ${missionCount} missions</span><span>📡 ${reviewCount} reviews</span><span>📦 ${assignmentsDone} assignments</span><span>🌙 ${reflections} debriefs</span><span>✨ ${streak}-day momentum</span></div>
-    <div class="nextAction">
-      <strong>Next best action · ${esc(nextTitle)}</strong>
-      <span class="muted">${esc(nextBody)}</span>
-      ${xp===0 ? `<div class="starterCTA"><a href="/practice-planner/?minutes=10">10 min launch</a><a href="/practice-planner/?minutes=20">20 min launch</a></div>` : ''}
-    </div>`;
+    <div class="xpMeta"><span>🚀 ${missionCount} missions</span><span>📡 ${reviewCount} reviews</span><span>📦 ${assignmentsDone} assignments</span><span>🌙 ${reflectionCount} debriefs</span><span>✨ ${streak}-day momentum</span></div>
+    <div class="nextAction"><strong>Next best action · ${esc(nextTitle)}</strong><span class="muted">${esc(nextBody)}</span></div>`;
 
   const badgeData=[
     ['🚀','First Launch','Complete your first training mission.',missionCount>=1],
@@ -637,269 +650,109 @@ function renderGamification(allReviews, doneAssignments, goals){
     ['🧠','Memory Satellite','Complete 10 spaced reviews.',reviewCount>=10],
     ['📦','Cargo Delivered','Complete your first assignment.',assignmentsDone>=1],
     ['🛸','Mission Specialist','Complete 5 assignments.',assignmentsDone>=5],
-    ['🌙','Moon Debrief','Submit your first weekly reflection.',reflections>=1],
-    ['📝','Black Box Analyst','Submit 5 weekly reflections.',reflections>=5],
+    ['🌙','Moon Debrief','Submit your first weekly reflection.',reflectionCount>=1],
+    ['📝','Black Box Analyst','Submit 5 weekly reflections.',reflectionCount>=5],
     ['🔥','Stable Orbit','Build a 3-day practice/review streak.',streak>=3],
     ['⭐','Mission Focus','Have a current coach-assigned goal.',goals.length>=1]
   ].sort((a,b)=>Number(b[3])-Number(a[3]));
   const unlocked=badgeData.filter(b=>b[3]).length;
   const rb=document.getElementById('rewardsBay');
-  if(rb) rb.innerHTML=`
-    <div class="rewardTop"><span class="badge">${unlocked}/${badgeData.length} unlocked</span><span class="tinyLock">Rewards never affect access or coaching priority.</span></div>
-    <div class="rewardGrid">${badgeData.map(b=>`<div class="rewardBadge ${b[3]?'':'locked'}"><div class="rewardIcon">${b[0]}</div><h4>${esc(b[1])}</h4><p>${esc(b[2])}</p><div class="rewardState">${b[3]?'Unlocked':'Locked'}</div></div>`).join('')}</div>`;
+  if(rb) rb.innerHTML=`<div class="rewardTop"><span class="badge">${unlocked}/${badgeData.length} unlocked</span><span class="tinyLock">Persistent profile rewards</span></div><div class="rewardGrid">${badgeData.map(b=>`<div class="rewardBadge ${b[3]?'':'locked'}"><div class="rewardIcon">${b[0]}</div><h4>${esc(b[1])}</h4><p>${esc(b[2])}</p><div class="rewardState">${b[3]?'Unlocked':'Locked'}</div></div>`).join('')}</div>`;
+}
+
+
+async function awardXP(type,key,xp,title='',metadata={}) {
+  const { data, error } = await sb.rpc('award_learning_xp', {
+    p_event_type:type,
+    p_event_key:key,
+    p_xp:xp,
+    p_title:title || null,
+    p_metadata:metadata || {}
+  });
+  if (error) throw error;
+  return data;
+}
+
+function spaceLevelFromXP(xp) {
+  const levels=[
+    [1,'Launch Cadet',0],[2,'Orbit Pilot',100],[3,'Star Navigator',240],[4,'Nebula Specialist',450],[5,'Constellation Captain',740],
+    [6,'Deep Space Explorer',1120],[7,'Cosmic Architect',1600],[8,'Galactic Virtuoso',2200],[9,'Solar Commander',2950],[10,'Celestial Mentor',3900]
+  ];
+  let cur=levels[0],next=null;
+  for(let i=0;i<levels.length;i++){ if(xp>=levels[i][2]) cur=levels[i]; else {next=levels[i]; break;} }
+  if(!next) next=[cur[0]+1,'Beyond the Map',cur[2]+1200];
+  const pct=Math.max(0,Math.min(100,((xp-cur[2])/(next[2]-cur[2]))*100));
+  return {level:cur[0],title:cur[1],nextLevel:next[0],nextTitle:next[1],nextXP:next[2],pct};
+}
+
+async function loadPersistentSpace() {
+  const progressEl=document.getElementById('missionControl');
+  const rewardsEl=document.getElementById('rewardsBay');
+  const historyEl=document.getElementById('spaceHistory');
+  const [progressRes,eventsRes]=await Promise.all([
+    sb.from('student_progress').select('*').eq('student_id',currentUser.id).maybeSingle(),
+    sb.from('xp_events').select('*').eq('student_id',currentUser.id).order('created_at',{ascending:false}).limit(50)
+  ]);
+  if(progressRes.error){ if(progressEl) progressEl.innerHTML=`<p class="empty">${esc(progressRes.error.message)}</p>`; return; }
+  const p=progressRes.data || {xp:0,missions_completed:0,reviews_completed:0,assignments_completed:0,reflections_completed:0,current_streak:0,longest_streak:0};
+  const events=eventsRes.data || [];
+  const lv=spaceLevelFromXP(Number(p.xp||0));
+  if(progressEl) progressEl.innerHTML=`
+    <span class="badge">Level ${lv.level} · ${esc(lv.title)}</span>
+    <div class="xpNumber">${Number(p.xp||0)} XP</div>
+    <div class="muted">Saved permanently to your mentorship profile</div>
+    <div class="missionNote">${Math.max(0,lv.nextXP-Number(p.xp||0))} XP to Level ${lv.nextLevel} · ${esc(lv.nextTitle)}</div>
+    <div class="xpBar"><div class="xpFill" style="width:${lv.pct}%"></div></div>
+    <div class="xpMeta">
+      <span>🚀 ${p.missions_completed||0} missions</span>
+      <span>📡 ${p.reviews_completed||0} reviews</span>
+      <span>📦 ${p.assignments_completed||0} assignments</span>
+      <span>🌙 ${p.reflections_completed||0} debriefs</span>
+      <span>✨ ${p.current_streak||0}-day momentum</span>
+      <span>🏆 best ${p.longest_streak||0} days</span>
+    </div>`;
+
+  const badges=[
+    ['🚀','First Launch','Complete your first mission.',p.missions_completed>=1],
+    ['🛰️','Orbit Established','Complete 3 missions.',p.missions_completed>=3],
+    ['🌌','Deep Space Consistency','Complete 10 missions.',p.missions_completed>=10],
+    ['📡','Signal Received','Complete your first review.',p.reviews_completed>=1],
+    ['🧠','Memory Satellite','Complete 10 reviews.',p.reviews_completed>=10],
+    ['📦','Cargo Delivered','Complete your first assignment.',p.assignments_completed>=1],
+    ['🛸','Mission Specialist','Complete 5 assignments.',p.assignments_completed>=5],
+    ['🌙','Moon Debrief','Save your first weekly reflection.',p.reflections_completed>=1],
+    ['📝','Black Box Analyst','Save 5 weekly reflections.',p.reflections_completed>=5],
+    ['🔥','Stable Orbit','Reach a 3-day momentum streak.',p.longest_streak>=3]
+  ];
+  if(rewardsEl) rewardsEl.innerHTML=`<div class="rewardGrid">${badges.map(b=>`<div class="rewardBadge ${b[3]?'':'locked'}"><div class="rewardIcon">${b[0]}</div><h4>${esc(b[1])}</h4><p>${esc(b[2])}</p><div class="rewardState">${b[3]?'Unlocked':'Locked'}</div></div>`).join('')}</div>`;
+
+  if(historyEl) historyEl.innerHTML=events.length ? events.map(ev=>{
+    const icons={mission:'🚀',review:'📡',assignment:'📦',reflection:'🌙'};
+    const when=new Date(ev.created_at).toLocaleString([], {month:'short',day:'numeric',hour:'numeric',minute:'2-digit'});
+    return `<div class="item"><div class="manageItemTop"><div><h3>${icons[ev.event_type]||'✨'} ${esc(ev.title || ev.event_type)}</h3><p>${when}</p></div><span class="badge">+${ev.xp} XP</span></div></div>`;
+  }).join('') : '<p class="empty">No XP activity yet. Complete a mission to begin your flight log.</p>';
 }
 
 async function loadOwnDashboard() {
   const user = currentUser;
-  const today = new Date().toISOString().slice(0,10);
-
-  const [goalsRes, assignmentsRes, reviewsRes, resourcesRes, recentReviewsRes, allReviewsRes, doneAssignmentsRes] = await Promise.all([
-    sb.from('goals').select('*').eq('student_id', user.id).eq('status','active').order('priority'),
-    sb.from('assignments').select('*').eq('student_id', user.id).neq('status','done').order('due_date', { ascending:true, nullsFirst:false }),
-    sb.from('reviews').select('*').eq('student_id', user.id).lte('next_review', today).order('next_review'),
-    sb.from('resources').select('*').or(`student_id.eq.${user.id},student_id.is.null`).order('created_at', { ascending:false }),
-    sb.from('reviews').select('*').eq('student_id', user.id).order('id', { ascending:false }).limit(5),
-    sb.from('reviews').select('*').eq('student_id', user.id).order('id', { ascending:false }),
-    sb.from('assignments').select('*').eq('student_id', user.id).eq('status','done')
-  ]);
-
-  const goals = goalsRes.data || [];
-  const assignments = assignmentsRes.data || [];
-  const reviews = reviewsRes.data || [];
-  const resources = resourcesRes.data || [];
-  const recentReviews = recentReviewsRes.data || [];
-  const allReviews = allReviewsRes.data || [];
-  const doneAssignments = doneAssignmentsRes.data || [];
-
-  window.__dashboardReviews = reviews;
-  window.__dashboardAssignments = assignments;
-  renderGamification(allReviews, doneAssignments, goals);
-
-  const firstWeek = document.getElementById('firstWeekSteps');
-  const firstWeekCard = document.getElementById('firstWeekCard');
-  if (firstWeek && firstWeekCard) {
-    const hasDirection = goals.length > 0 || assignments.length > 0;
-    const hasPractice = recentReviews.length > 0;
-    const hasReview = reviews.length > 0 || recentReviews.some(r => Number(r.interval_days || 0) > 1);
-
-    const steps = [
-      {done:hasDirection, title:'Know your current focus', body:hasDirection ? 'You have a clear direction.' : 'Use your current goal or ask Gab to set one.'},
-      {done:hasPractice, title:'Complete one focused session', body:hasPractice ? 'Your training system has started.' : 'Use Build My Training for your first deliberate-practice session.'},
-      {done:hasReview, title:'Let something return', body:hasReview ? 'Spaced review is now active.' : 'Rate the session so the system knows when to bring it back.'}
-    ];
-
-    firstWeek.innerHTML = steps.map((s,i) => `
-      <div class="onboardStep ${s.done ? 'done' : ''}">
-        <div class="onboardDot">${s.done ? '✓' : i+1}</div>
-        <div><strong>${esc(s.title)}</strong><p class="muted" style="margin:3px 0 0">${esc(s.body)}</p></div>
-      </div>`).join('');
-
-    if (steps.every(s => s.done)) {
-      firstWeekCard.innerHTML = '<div class="kicker">System active</div><h3>Your training loop is running.</h3><p class="muted">Train → rate → retrieve → adapt. You can now use Today’s Training as your default starting point.</p>';
-    }
-  }
-
-  const signalEl = document.getElementById('learningSignal');
-  if (signalEl) {
-    const reviewText = reviews.map(r => `${r.title || ''} ${r.prompt || ''}`.toLowerCase()).join(' ');
-    let label = 'Ready for focused practice';
-    let title = 'Keep the target narrow.';
-    let description = 'You have no strong difficulty signal today. Work on one current priority and test it in freer movement.';
-    if (reviewText.includes('too difficult')) {
-      label = 'Needs stabilization';
-      title = 'Reduce complexity before adding variation.';
-      description = 'A recent session was too difficult. Slow down, simplify the task, and accumulate clean repetitions before increasing variability.';
-    } else if (reviewText.includes('needs gab') || reviewText.includes('coach flag')) {
-      label = 'Coach input recommended';
-      title = 'Do not grind through uncertainty.';
-      description = 'One of your recent training problems was flagged for Gab. Keep practicing simple fundamentals, but avoid repeating the unclear task blindly.';
-    } else if (reviewText.includes('good difficulty')) {
-      label = 'Stabilizing';
-      title = 'Repeat before making it harder.';
-      description = 'Your recent difficulty level was productive. Repeat the same core skill and add only a small amount of variability.';
-    } else if (reviewText.includes('easy')) {
-      label = 'Ready for variability';
-      title = 'Increase context, not just complexity.';
-      description = 'The skill is feeling easy. Test it with a new entry, timing, partner response, direction, or social-dance context.';
-    } else if (reviews.length) {
-      label = 'Review due';
-      title = 'Retrieve before reviewing.';
-      description = 'You have material due today. Try to reproduce it from memory before checking any video, note, or demonstration.';
-    }
-    signalEl.innerHTML = `<span class="badge">${esc(label)}</span><h3 style="margin-top:12px">${esc(title)}</h3><p class="muted">${esc(description)}</p>`;
-  }
-
-  const todayParts = [];
-  if (reviews.length) {
-    const r = reviews[0];
-    todayParts.push(`<div class="item">
-      <div class="badge">1 · Retrieve</div>
-      <h3 style="margin-top:10px">${esc(r.title)}</h3>
-      <p>${esc(r.prompt || 'Try to retrieve this before reviewing any reference material.')}</p>
-      <div class="reviewActions" data-review-actions="${esc(r.id)}">
-        <button type="button" data-review-rate="hard" data-review-id="${esc(r.id)}">Hard signal</button>
-        <button type="button" data-review-rate="good" data-review-id="${esc(r.id)}">Good signal</button>
-        <button type="button" data-review-rate="easy" data-review-id="${esc(r.id)}">Easy signal</button>
-      </div>
-      <div class="reviewStatus" id="reviewStatus-${esc(r.id)}"></div>
-    </div>`);
-  }
-  if (assignments.length) {
-    const a = assignments[0];
-    todayParts.push(`<div class="item">
-      <div class="badge">2 · Apply</div>
-      <h3 style="margin-top:10px">${esc(a.title)}</h3>
-      <p>${esc(a.instructions || 'Work on this assignment with one clear success criterion.')}${a.due_date ? ` · Due ${esc(a.due_date)}` : ''}</p>
-      <div class="reviewActions"><button type="button" data-complete-assignment="${esc(a.id)}">Mark assignment done</button></div>
-      <div class="reviewStatus" id="assignmentStatus-${esc(a.id)}"></div>
-    </div>`);
-  }
-  if (goals.length) {
-    const g = goals[0];
-    todayParts.push(`<div class="item"><div class="badge">3 · Transfer</div><h3 style="margin-top:10px">${esc(g.title)}</h3><p>${esc(g.notes || 'Finish by testing this focus in freer movement rather than isolated repetition.')}</p></div>`);
-  }
-
-  document.getElementById('todayTraining').innerHTML = todayParts.length
-    ? todayParts.slice(0,3).join('')
-    : `<h3>No required work today.</h3><p class="muted">Use Build My Training to create a short deliberate-practice session from what you currently want to improve.</p>`;
-  bindTodayReviewActions();
-  bindTodayAssignmentActions();
-
-  document.getElementById('goalsList').innerHTML = goals.length
-    ? goals.map(x => itemHTML(x.title, x.notes || '')).join('')
-    : '<div class="empty"><strong>No coach-assigned focus yet.</strong><br>Use Build My Training for a self-directed session, or ask Gab to set your next priority.</div>';
-
-  document.getElementById('assignmentsList').innerHTML = assignments.length
-    ? assignments.map(x => itemHTML(x.title, [x.instructions, x.due_date ? 'Due '+x.due_date : ''].filter(Boolean).join(' · '))).join('')
-    : '<div class="empty"><strong>No open assignments.</strong><br>Your review queue or current focus can still guide today’s practice.</div>';
-
-  document.getElementById('reviewCount').textContent = reviews.length;
-  document.getElementById('reviewsList').innerHTML = reviews.length
-    ? reviews.slice(0,5).map(x => `<div class="item">
-        <h3>${esc(x.title)}</h3>
-        ${x.prompt ? `<p>${esc(x.prompt)}</p>` : ''}
-        <div class="reviewActions" data-review-actions="${esc(x.id)}">
-          <button type="button" data-review-rate="hard" data-review-id="${esc(x.id)}">Hard signal</button>
-          <button type="button" data-review-rate="good" data-review-id="${esc(x.id)}">Good signal</button>
-          <button type="button" data-review-rate="easy" data-review-id="${esc(x.id)}">Easy signal</button>
-        </div>
-        <div class="reviewStatus" id="reviewStatus-${esc(x.id)}"></div>
-      </div>`).join('')
-    : '<div class="empty"><strong>Nothing due today.</strong><br>No need to manufacture review work—train a current priority instead.</div>';
-
-  const recentEl = document.getElementById('recentTrainingList');
-  if (recentEl) {
-    recentEl.innerHTML = recentReviews.length
-      ? recentReviews.map(x => {
-          const prompt = (x.prompt || '').replace('COACH FLAG: student requested Gab input.','').trim();
-          return `<div class="item">
-            <div class="manageItemTop">
-              <div>
-                <h3>${esc(x.title || 'Practice session')}</h3>
-                ${prompt ? `<p>${esc(prompt)}</p>` : ''}
-              </div>
-              ${x.next_review ? `<span class="badge">Returns ${esc(x.next_review)}</span>` : ''}
-            </div>
-          </div>`;
-        }).join('')
-      : '<p class="empty">No recent training recorded yet.</p>';
-  }
-
-  document.getElementById('resourcesGrid').innerHTML = resources.length
-    ? resources.map(x => `<a class="dashCard" href="${esc(x.url)}" target="_blank" rel="noopener"><div class="kicker">${esc(x.resource_type || 'Resource')}</div><h3>${esc(x.title)}</h3><p class="muted">${esc(x.description || '')}</p></a>`).join('')
-    : '<div class="empty"><strong>No private resources yet.</strong><br>Resources appear here only when they support your current learning priorities.</div>';
-  bindWeeklyReflection();
-}
-
-function addReviewDays(days) {
-  const d = new Date();
-  d.setDate(d.getDate() + days);
-  return d.toISOString().slice(0,10);
-}
-
-function bindTodayReviewActions() {
-  document.querySelectorAll('[data-review-rate]').forEach(btn => {
-    btn.onclick = async () => {
-      const id = Number(btn.dataset.reviewId);
-      const rating = btn.dataset.reviewRate;
-      const status = document.getElementById(`reviewStatus-${id}`);
-      const schedule = {
-        hard:{days:1, interval:1, label:'Tomorrow'},
-        good:{days:3, interval:3, label:'In 3 days'},
-        easy:{days:7, interval:7, label:'In 7 days'}
-      }[rating];
-      if (!schedule) return;
-
-      btn.closest('.reviewActions').querySelectorAll('button').forEach(b => b.disabled = true);
-      if (status) status.textContent = 'Saving…';
-
-      const { data: existing } = await sb.from('reviews').select('prompt').eq('id',id).eq('student_id',currentUser.id).single();
-      const stamp = `[REVIEWED:${new Date().toISOString().slice(0,10)}:${rating.toUpperCase()}]`;
-      const updatedPrompt = `${existing?.prompt || ''} ${stamp}`.trim();
-      const { error } = await sb
-        .from('reviews')
-        .update({
-          next_review:addReviewDays(schedule.days),
-          interval_days:schedule.interval,
-          prompt:updatedPrompt
-        })
-        .eq('id', id)
-        .eq('student_id', currentUser.id);
-
-      if (error) {
-        btn.closest('.reviewActions').querySelectorAll('button').forEach(b => b.disabled = false);
-        if (status) status.textContent = error.message;
-        return;
-      }
-
-      if (status) status.textContent = `Signal processed · +20 XP · returns ${schedule.label.toLowerCase()}.`;
-      setTimeout(() => loadOwnDashboard(), 650);
-    };
+  const { data, error } = await sb.rpc('save_weekly_reflection',{
+    p_improved:improved,
+    p_unstable:unstable,
+    p_for_coach:gab
   });
-}
-
-function bindTodayAssignmentActions() {
-  document.querySelectorAll('[data-complete-assignment]').forEach(btn => {
-    btn.onclick = async () => {
-      const id = Number(btn.dataset.completeAssignment);
-      const status = document.getElementById(`assignmentStatus-${id}`);
-      btn.disabled = true;
-      if (status) status.textContent = 'Saving…';
-      const { error } = await sb.from('assignments').update({status:'done'}).eq('id',id).eq('student_id',currentUser.id);
-      if (error) {
-        btn.disabled = false;
-        if (status) status.textContent = error.message;
-        return;
-      }
-      if (status) status.textContent = 'Mission order completed · +60 XP.';
-      setTimeout(() => loadOwnDashboard(), 500);
-    };
-  });
-}
-
-async function saveWeeklyReflection(e) {
-  e.preventDefault();
-  const msg = document.getElementById('weeklyReflectionMessage');
-  const improved = document.getElementById('weeklyImproved').value.trim();
-  const unstable = document.getElementById('weeklyUnstable').value.trim();
-  const gab = document.getElementById('weeklyGab').value.trim();
-  if (!improved && !unstable && !gab) {
-    msg.textContent = 'Write at least one short reflection.';
-    return;
-  }
-  msg.textContent = 'Saving…';
-  const today = new Date().toISOString().slice(0,10);
-  const prompt = `WEEKLY REFLECTION: Improved: ${improved || '—'} | Unstable: ${unstable || '—'} | For Gab: ${gab || '—'}`;
-  const payload = {student_id:currentUser.id,title:`Weekly reflection · ${today}`,prompt,next_review:addReviewDays(7),interval_days:7};
-  const { error } = await sb.from('reviews').insert(payload);
   if (error) {
     localStorage.setItem(`gabWeeklyReflection:${currentUser.id}`, JSON.stringify({improved,unstable,gab,date:today}));
     msg.textContent = 'Saved on this device. Database saving still needs permission enabled.';
     return;
   }
   document.getElementById('weeklyReflectionForm').reset();
-  localStorage.setItem(`gabWeeklyReflectionDate:${currentUser.id}`, today);
-  msg.textContent = 'Mission debrief saved · +40 XP. Gab can now see it.';
+  try {
+    await awardXP('reflection',`reflection:${today}`,40,`Mission debrief · ${today}`,{date:today});
+    msg.textContent = 'Mission debrief saved · +40 XP. Gab can now see it.';
+    await loadPersistentSpace();
+  } catch(xpErr) {
+    msg.textContent = `Reflection saved, but XP could not be saved: ${xpErr.message}`;
+  }
   setTimeout(() => loadOwnDashboard(), 500);
 }
 
@@ -913,15 +766,15 @@ function bindWeeklyReflection() {
 async function loadCoachReflections() {
   const list = document.getElementById('coachReflectionList');
   if (!list) return;
-  const { data, error } = await sb.from('reviews').select('id,student_id,title,prompt,next_review').ilike('prompt','WEEKLY REFLECTION:%').order('id',{ascending:false}).limit(12);
+  const { data, error } = await sb.from('weekly_reflections').select('*').order('created_at',{ascending:false}).limit(12);
   if (error) { list.innerHTML = `<p class="empty">${esc(error.message)}</p>`; return; }
   const rows = data || [];
   if (!rows.length) { list.innerHTML = '<p class="empty">No weekly reflections yet.</p>'; return; }
   list.innerHTML = rows.map(x => {
     const student = allStudents.find(s => s.id === x.student_id);
     const name = student ? (student.display_name || student.email) : 'Student';
-    const body = (x.prompt || '').replace(/^WEEKLY REFLECTION:\s*/i,'');
-    return `<div class="manageItem"><div class="manageItemTop"><div><span class="badge">${esc(name)}</span><h3 style="margin-top:10px">${esc(x.title)}</h3><p>${esc(body)}</p></div><button class="smallBtn" type="button" data-reflection-student="${esc(x.student_id)}">Open student</button></div></div>`;
+    const body = `Improved: ${x.improved || '—'} · Unstable: ${x.unstable || '—'} · For coach: ${x.for_coach || '—'}`;
+    return `<div class="manageItem"><div class="manageItemTop"><div><span class="badge">${esc(name)}</span><h3 style="margin-top:10px">Mission debrief · ${esc(x.reflection_week || '')}</h3><p>${esc(body)}</p></div><button class="smallBtn" type="button" data-reflection-student="${esc(x.student_id)}">Open student</button></div></div>`;
   }).join('');
   list.querySelectorAll('[data-reflection-student]').forEach(btn => {
     btn.onclick = async () => {
@@ -965,6 +818,22 @@ async function loadStudents() {
       await selectStudent(student);
     });
   });
+}
+
+
+async function loadCoachActivityFeed() {
+  const el=document.getElementById('coachActivityFeed');
+  if(!el) return;
+  const {data,error}=await sb.from('xp_events').select('*').order('created_at',{ascending:false}).limit(30);
+  if(error){el.innerHTML=`<p class="empty">${esc(error.message)}</p>`;return;}
+  const rows=data||[];
+  el.innerHTML=rows.length?rows.map(ev=>{
+    const student=allStudents.find(s=>s.id===ev.student_id);
+    const name=student?(student.display_name||student.email):'Student';
+    const icons={mission:'🚀',review:'📡',assignment:'📦',reflection:'🌙'};
+    const when=new Date(ev.created_at).toLocaleString([], {month:'short',day:'numeric',hour:'numeric',minute:'2-digit'});
+    return `<div class="item"><div class="manageItemTop"><div><span class="badge">${esc(name)}</span><h3 style="margin-top:8px">${icons[ev.event_type]||'✨'} ${esc(ev.title||ev.event_type)}</h3><p>${when}</p></div><span class="badge">+${ev.xp} XP</span></div></div>`;
+  }).join(''):'<p class="empty">No student activity yet.</p>';
 }
 
 async function loadCoachOverview() {
@@ -1022,16 +891,30 @@ async function loadCoachOverview() {
   });
 }
 
+async function loadCoachMissionFeed(){
+  const el=document.getElementById('coachMissionFeed');
+  if(!el) return;
+  const {data,error}=await sb.from('training_sessions').select('*').order('created_at',{ascending:false}).limit(30);
+  if(error){el.innerHTML=`<p class="empty">${esc(error.message)}</p>`;return;}
+  const rows=data||[];
+  el.innerHTML=rows.length ? rows.map(x=>{
+    const s=allStudents.find(v=>v.id===x.student_id);
+    const name=s?(s.display_name||s.email):'Student';
+    const when=x.created_at?new Date(x.created_at).toLocaleString():'';
+    return `<div class="manageItem"><div class="manageItemTop"><div><span class="badge">${esc(name)}</span><h3 style="margin-top:9px">${esc(x.goal_label)}</h3><p>${esc(x.diagnosis_label)} · ${esc(x.context_label)} · ${esc(x.minutes)} min · ${esc(x.rating)} · ${esc(when)}</p></div>${x.coach_attention?'<span class="badge">Priority signal</span>':''}</div></div>`;
+  }).join('') : '<p class="empty">No mission activity yet.</p>';
+}
+
 async function loadCoachAttention() {
   const count = document.getElementById('coachAttentionCount');
   const list = document.getElementById('coachAttentionList');
   if (!count || !list) return;
 
   const { data, error } = await sb
-    .from('reviews')
-    .select('id,student_id,title,prompt,next_review')
-    .ilike('prompt','%COACH FLAG%')
-    .order('next_review', { ascending:true });
+    .from('training_sessions')
+    .select('*')
+    .eq('coach_attention',true)
+    .order('created_at', { ascending:false });
 
   if (error) {
     list.innerHTML = `<p class="empty">${esc(error.message)}</p>`;
@@ -1048,13 +931,12 @@ async function loadCoachAttention() {
   list.innerHTML = rows.map(x => {
     const student = allStudents.find(s => s.id === x.student_id);
     const name = student ? (student.display_name || student.email) : 'Student';
-    const cleaned = (x.prompt || '').replace('COACH FLAG: student requested Gab input.','').trim();
     return `<div class="manageItem">
       <div class="manageItemTop">
         <div>
           <span class="badge">${esc(name)}</span>
-          <h3 style="margin-top:10px">${esc(x.title || 'Training issue')}</h3>
-          <p>${esc(cleaned)}</p>
+          <h3 style="margin-top:10px">${esc(x.goal_label || 'Training issue')}</h3>
+          <p>${esc(x.diagnosis_label || '')} · ${esc(x.context_label || '')} · ${esc(x.minutes || '')} min</p>
         </div>
         <button class="smallBtn" type="button" data-attention-student="${esc(x.student_id)}">Open student</button>
       </div>
