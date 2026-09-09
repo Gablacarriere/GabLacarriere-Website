@@ -68,6 +68,25 @@ body.isAdmin .adminOnly{display:block}
     </form>
   </section>
 
+
+  <section id="passwordChangeView" class="authCard hidden">
+    <span class="tag">First login</span>
+    <h2 style="margin-top:18px">Create your private password.</h2>
+    <p class="muted">For security, replace the temporary password before opening your mentorship dashboard.</p>
+    <form id="passwordChangeForm" class="form">
+      <div class="field">
+        <label for="newPassword">New password</label>
+        <input id="newPassword" type="password" minlength="10" autocomplete="new-password" required>
+      </div>
+      <div class="field">
+        <label for="confirmPassword">Confirm password</label>
+        <input id="confirmPassword" type="password" minlength="10" autocomplete="new-password" required>
+      </div>
+      <button class="btn" type="submit">Set my password</button>
+      <p id="passwordChangeMessage" class="muted"></p>
+    </form>
+  </section>
+
   <section id="dashboardView" class="hidden">
     <div class="portalTop">
       <div>
