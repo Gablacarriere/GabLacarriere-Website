@@ -555,11 +555,17 @@ async function loadDashboard(user) {
 
   if (profile.role === 'coach') {
     await loadStudents();
-    await loadCoachActivityFeed();
-    await loadCoachOverview();
-    await loadCoachMissionFeed();
-    await loadCoachAttention();
-    await loadCoachReflections();
+
+    // Load coach modules independently: one database error should not block
+    // the rest of the Command Deck.
+    await Promise.allSettled([
+      loadCoachActivityFeed(),
+      loadCoachOverview(),
+      loadCoachMissionFeed(),
+      loadCoachAttention(),
+      loadCoachReflections()
+    ]);
+
     bindCoachForms();
   }
 }
@@ -790,26 +796,25 @@ async function loadCoachReflections() {
 }
 
 async function loadStudents() {
-  const [profilesRes, progressRes] = await Promise.all([
-    sb.from('profiles')
-      .select('id,display_name,email,role')
-      .neq('id', currentUser.id)
-      .order('display_name'),
-    sb.from('student_progress')
-      .select('student_id,xp,missions_completed,reviews_completed,assignments_completed,reflections_completed,current_streak,longest_streak,last_activity_date')
-  ]);
-
   const list = document.getElementById('studentsList');
-  if (profilesRes.error || progressRes.error) {
-    const err = profilesRes.error || progressRes.error;
-    list.innerHTML = `<p class="empty">${esc(err.message)}</p>`;
+  if (!list) return;
+
+  // Render the roster from profiles FIRST, so an XP-table problem can never
+  // prevent the coach from seeing their students.
+  const profilesRes = await sb
+    .from('profiles')
+    .select('id,display_name,email,role')
+    .neq('id', currentUser.id)
+    .order('display_name');
+
+  if (profilesRes.error) {
+    list.innerHTML = `<p class="empty">Could not load students: ${esc(profilesRes.error.message)}</p>`;
     return;
   }
 
-  const progressByStudent = new Map((progressRes.data || []).map(p => [p.student_id, p]));
   const students = (profilesRes.data || []).map(s => ({
     ...s,
-    progress: progressByStudent.get(s.id) || {
+    progress: {
       xp:0, missions_completed:0, reviews_completed:0,
       assignments_completed:0, reflections_completed:0,
       current_streak:0, longest_streak:0, last_activity_date:null
@@ -818,29 +823,46 @@ async function loadStudents() {
 
   allStudents = students;
 
-  list.innerHTML = students.length ? students.map(s => {
-    const p = s.progress;
-    const lv = spaceLevelFromXP(Number(p.xp || 0));
-    return `
-      <button class="studentBtn" type="button" data-student="${esc(s.id)}">
-        <strong>${esc(s.display_name || s.email)}</strong>
-        <small>${esc(s.email || '')}${s.role === 'coach' ? ' · Coach + Mentee' : ''}</small>
-        <small style="margin-top:5px;color:#9edfff">🚀 ${Number(p.xp||0)} XP · Level ${lv.level} ${esc(lv.title)}</small>
-        <small>✨ ${Number(p.current_streak||0)}-day momentum · ${Number(p.missions_completed||0)} missions · ${Number(p.reviews_completed||0)} reviews</small>
-        <small>${p.last_activity_date ? `Last active ${esc(p.last_activity_date)}` : 'No training activity yet'}</small>
-      </button>`;
-  }).join('') : '<p class="empty">No mentee accounts yet.</p>';
+  function renderRoster() {
+    list.innerHTML = students.length ? students.map(s => {
+      const p = s.progress || {};
+      const lv = spaceLevelFromXP(Number(p.xp || 0));
+      return `
+        <button class="studentBtn" type="button" data-student="${esc(s.id)}">
+          <strong>${esc(s.display_name || s.email)}</strong>
+          <small>${esc(s.email || '')}${s.role === 'coach' ? ' · Coach + Mentee' : ''}</small>
+          <small style="margin-top:5px;color:#9edfff">🚀 ${Number(p.xp||0)} XP · Level ${lv.level} ${esc(lv.title)}</small>
+          <small>✨ ${Number(p.current_streak||0)}-day momentum · ${Number(p.missions_completed||0)} missions · ${Number(p.reviews_completed||0)} reviews</small>
+          <small>${p.last_activity_date ? `Last active ${esc(p.last_activity_date)}` : 'No training activity yet'}</small>
+        </button>`;
+    }).join('') : '<p class="empty">No mentee accounts yet.</p>';
 
-  list.querySelectorAll('[data-student]').forEach(btn => {
-    btn.addEventListener('click', async () => {
-      list.querySelectorAll('.studentBtn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      const student = students.find(s => s.id === btn.dataset.student);
-      await selectStudent(student);
+    list.querySelectorAll('[data-student]').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        list.querySelectorAll('.studentBtn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const student = students.find(s => s.id === btn.dataset.student);
+        await selectStudent(student);
+      });
     });
-  });
-}
+  }
 
+  renderRoster();
+
+  // XP is enrichment only. If it fails, the roster remains usable.
+  const progressRes = await sb
+    .from('student_progress')
+    .select('student_id,xp,missions_completed,reviews_completed,assignments_completed,reflections_completed,current_streak,longest_streak,last_activity_date');
+
+  if (!progressRes.error) {
+    const progressByStudent = new Map((progressRes.data || []).map(p => [p.student_id, p]));
+    students.forEach(s => {
+      if (progressByStudent.has(s.id)) s.progress = progressByStudent.get(s.id);
+    });
+    allStudents = students;
+    renderRoster();
+  }
+}
 
 async function loadCoachActivityFeed() {
   const el=document.getElementById('coachActivityFeed');
