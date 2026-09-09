@@ -351,6 +351,13 @@ body.studentView .adminOnly{display:none!important}
               <p id="coachStudentEmail" class="muted"></p>
               <p id="coachStatus" class="coachStatus"></p>
             </div>
+            <section class="editorSection spaceCard">
+              <div class="kicker">Student Space</div>
+              <h3>XP, level & activity</h3>
+              <p class="muted">A complete view of this mentee's saved gamification progress.</p>
+              <div id="coachStudentSpace"><p class="empty">Loading student progress…</p></div>
+              <div id="coachStudentXPHistory" style="margin-top:18px"></div>
+            </section>
 
             <section class="editorSection">
               <h3>Current goals</h3>
@@ -1191,8 +1198,12 @@ async function loadCoachAttention() {
           <h3 style="margin-top:10px">${esc(x.title || 'Training issue')}</h3>
           <p>${esc(cleaned)}</p>
         </div>
-        <button class="smallBtn" type="button" data-attention-student="${esc(x.student_id)}">Open student</button>
+        <div class="editorActions">
+          <button class="smallBtn" type="button" data-attention-student="${esc(x.student_id)}">Open student</button>
+          <button class="smallBtn" type="button" data-resolve-attention="${esc(x.id)}">Mark resolved</button>
+        </div>
       </div>
+      <div class="reviewStatus" id="attentionStatus-${esc(x.id)}"></div>
     </div>`;
   }).join('');
 
@@ -1207,6 +1218,110 @@ async function loadCoachAttention() {
       document.getElementById('coachEditor').scrollIntoView({behavior:'smooth',block:'start'});
     });
   });
+
+  list.querySelectorAll('[data-resolve-attention]').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const id = btn.dataset.resolveAttention;
+      const status = document.getElementById(`attentionStatus-${id}`);
+      btn.disabled = true;
+      if (status) status.textContent = 'Resolving…';
+
+      const { data: row, error: readError } = await sb
+        .from('reviews')
+        .select('prompt')
+        .eq('id', id)
+        .single();
+
+      if (readError) {
+        if (status) status.textContent = readError.message;
+        btn.disabled = false;
+        return;
+      }
+
+      const cleanedPrompt = String(row?.prompt || '')
+        .replace(/COACH FLAG:\s*student requested Gab input\.?/gi,'')
+        .replace(/COACH FLAG/gi,'')
+        .replace(/\s{2,}/g,' ')
+        .trim();
+
+      const { error } = await sb
+        .from('reviews')
+        .update({ prompt: cleanedPrompt })
+        .eq('id', id);
+
+      if (error) {
+        if (status) status.textContent = error.message;
+        btn.disabled = false;
+        return;
+      }
+
+      if (status) status.textContent = 'Resolved.';
+      await Promise.allSettled([
+        loadCoachAttention(),
+        loadCoachOverview()
+      ]);
+    });
+  });
+}
+
+
+async function loadSelectedStudentSpace(student) {
+  const space = document.getElementById('coachStudentSpace');
+  const history = document.getElementById('coachStudentXPHistory');
+  if (!space || !history || !student) return;
+
+  space.innerHTML = '<p class="empty">Loading student progress…</p>';
+  history.innerHTML = '';
+
+  const [progressRes, eventsRes] = await Promise.all([
+    sb.from('student_progress').select('*').eq('student_id', student.id).maybeSingle(),
+    sb.from('xp_events').select('*').eq('student_id', student.id).order('created_at',{ascending:false}).limit(30)
+  ]);
+
+  if (progressRes.error) {
+    space.innerHTML = `<p class="empty">${esc(progressRes.error.message)}</p>`;
+    return;
+  }
+
+  const p = progressRes.data || {
+    xp:0, missions_completed:0, reviews_completed:0,
+    assignments_completed:0, reflections_completed:0,
+    current_streak:0, longest_streak:0, last_activity_date:null
+  };
+
+  const lv = levelForXP(Number(p.xp || 0));
+
+  space.innerHTML = `
+    <span class="badge">Level ${lv.level} · ${esc(lv.title)}</span>
+    <div class="xpNumber" style="margin-top:12px">${Number(p.xp||0)} XP</div>
+    <div class="missionNote">${Math.max(0,lv.nextXP-Number(p.xp||0))} XP to ${esc(lv.nextTitle)}</div>
+    <div class="xpBar"><div class="xpFill" style="width:${lv.pct}%"></div></div>
+    <div class="xpMeta">
+      <span>🚀 ${Number(p.missions_completed||0)} missions</span>
+      <span>📡 ${Number(p.reviews_completed||0)} reviews</span>
+      <span>📦 ${Number(p.assignments_completed||0)} assignments</span>
+      <span>🌙 ${Number(p.reflections_completed||0)} debriefs</span>
+      <span>✨ ${Number(p.current_streak||0)}-day momentum</span>
+      <span>🏆 best ${Number(p.longest_streak||0)} days</span>
+      ${p.last_activity_date ? `<span>🕒 active ${esc(p.last_activity_date)}</span>` : ''}
+    </div>`;
+
+  const events = eventsRes.data || [];
+  history.innerHTML = `
+    <div class="kicker" style="margin-top:8px">XP History</div>
+    ${events.length ? events.map(ev => {
+      const icons={mission:'🚀',review:'📡',assignment:'📦',reflection:'🌙'};
+      const when=new Date(ev.created_at).toLocaleString([], {month:'short',day:'numeric',hour:'numeric',minute:'2-digit'});
+      return `<div class="item">
+        <div class="manageItemTop">
+          <div>
+            <h3>${icons[ev.event_type]||'✨'} ${esc(ev.title || ev.event_type)}</h3>
+            <p>${esc(when)}</p>
+          </div>
+          <span class="badge">+${Number(ev.xp||0)} XP</span>
+        </div>
+      </div>`;
+    }).join('') : '<p class="empty">No XP activity saved yet.</p>'}`;
 }
 
 async function selectStudent(student) {
@@ -1217,7 +1332,10 @@ async function selectStudent(student) {
   document.getElementById('coachStudentEmail').textContent = student.email || '';
   coachMessage('Loading…');
   resetAllForms();
-  await refreshCoachData();
+  await Promise.allSettled([
+    refreshCoachData(),
+    loadSelectedStudentSpace(student)
+  ]);
   coachMessage('');
 }
 
@@ -1431,5 +1549,6 @@ document.getElementById('passwordChangeForm').addEventListener('submit', async (
 
 initPortal();
 </script>
+<script src="/coach-alerts.js"></script>
 </body>
 </html>
