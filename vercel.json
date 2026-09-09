@@ -69,6 +69,10 @@
       "destination": "/practice-planner.html"
     },
     {
+      "source": "/mentorship-hub/",
+      "destination": "/mentorship-hub.html"
+    },
+    {
       "source": "/((?!.*\\.).*)",
       "destination": "/index.html"
     }
