@@ -9,6 +9,10 @@
       "destination": "/lambada-classes-nyc.html"
     },
     {
+      "source": "/privates/",
+      "destination": "/privates.html"
+    },
+    {
       "source": "/((?!.*\\.).*)",
       "destination": "/index.html"
     }
