@@ -13,6 +13,10 @@
       "destination": "/privates.html"
     },
     {
+      "source": "/mentorship/",
+      "destination": "/mentorship.html"
+    },
+    {
       "source": "/((?!.*\\.).*)",
       "destination": "/index.html"
     }
