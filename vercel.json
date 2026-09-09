@@ -41,6 +41,10 @@
       "destination": "/workshops.html"
     },
     {
+      "source": "/work-with-gab/",
+      "destination": "/work-with-gab.html"
+    },
+    {
       "source": "/kinesthetic-practice/",
       "destination": "/kinesthetic-practice.html"
     },
@@ -73,7 +77,7 @@
       "destination": "/mentorship-hub.html"
     },
     {
-      "source": "/((?!.*\\.).*)",
+      "source": "/((?!.*\\\\.).*)",
       "destination": "/index.html"
     }
   ]
