@@ -65,6 +65,10 @@
       "destination": "/learn.html"
     },
     {
+      "source": "/practice-planner/",
+      "destination": "/practice-planner.html"
+    },
+    {
       "source": "/((?!.*\\.).*)",
       "destination": "/index.html"
     }
