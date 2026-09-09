@@ -107,6 +107,14 @@ body.isAdmin .adminOnly{display:block}
       </div>
     </section>
 
+    <section class="dashCard" style="margin-bottom:18px">
+      <div class="kicker">Learning signal</div>
+      <div id="learningSignal">
+        <span class="badge">Checking</span>
+        <h3 style="margin-top:12px">Reading your recent practice signal…</h3>
+      </div>
+    </section>
+
     <div class="portalGrid">
       <article class="dashCard">
         <div class="kicker">Current focus</div>
@@ -354,6 +362,36 @@ async function loadOwnDashboard() {
   const reviews = reviewsRes.data || [];
   const resources = resourcesRes.data || [];
 
+  const signalEl = document.getElementById('learningSignal');
+  if (signalEl) {
+    const reviewText = reviews.map(r => `${r.title || ''} ${r.prompt || ''}`.toLowerCase()).join(' ');
+    let label = 'Ready for focused practice';
+    let title = 'Keep the target narrow.';
+    let description = 'You have no strong difficulty signal today. Work on one current priority and test it in freer movement.';
+    if (reviewText.includes('too difficult')) {
+      label = 'Needs stabilization';
+      title = 'Reduce complexity before adding variation.';
+      description = 'A recent session was too difficult. Slow down, simplify the task, and accumulate clean repetitions before increasing variability.';
+    } else if (reviewText.includes('needs gab') || reviewText.includes('coach flag')) {
+      label = 'Coach input recommended';
+      title = 'Do not grind through uncertainty.';
+      description = 'One of your recent training problems was flagged for Gab. Keep practicing simple fundamentals, but avoid repeating the unclear task blindly.';
+    } else if (reviewText.includes('good difficulty')) {
+      label = 'Stabilizing';
+      title = 'Repeat before making it harder.';
+      description = 'Your recent difficulty level was productive. Repeat the same core skill and add only a small amount of variability.';
+    } else if (reviewText.includes('easy')) {
+      label = 'Ready for variability';
+      title = 'Increase context, not just complexity.';
+      description = 'The skill is feeling easy. Test it with a new entry, timing, partner response, direction, or social-dance context.';
+    } else if (reviews.length) {
+      label = 'Review due';
+      title = 'Retrieve before reviewing.';
+      description = 'You have material due today. Try to reproduce it from memory before checking any video, note, or demonstration.';
+    }
+    signalEl.innerHTML = `<span class="badge">${esc(label)}</span><h3 style="margin-top:12px">${esc(title)}</h3><p class="muted">${esc(description)}</p>`;
+  }
+
   const todayParts = [];
   if (reviews.length) {
     const r = reviews[0];
@@ -408,6 +446,7 @@ async function loadStudents() {
     <button class="studentBtn" type="button" data-student="${esc(s.id)}">
       <strong>${esc(s.display_name || s.email)}</strong>
       <small>${esc(s.email || '')}</small>
+      <small style="margin-top:5px;color:#9edfff">Open to view current learning signal</small>
     </button>`).join('') : '<p class="empty">No mentee accounts yet.</p>';
 
   list.querySelectorAll('[data-student]').forEach(btn => {
