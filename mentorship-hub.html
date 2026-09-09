@@ -133,6 +133,19 @@ body.isAdmin .adminOnly{display:block}
     </div>
 
     <section class="sec" style="padding-bottom:0">
+      <div class="kicker">Recent practice</div>
+      <div class="dashCard">
+        <div class="portalTop" style="margin-bottom:8px">
+          <div>
+            <h2 style="font-size:clamp(1.8rem,4vw,3rem)">Training journal</h2>
+            <p class="muted">A short record of what you have been working on and when it returns.</p>
+          </div>
+        </div>
+        <div id="recentTrainingList"><p class="empty">No recent training recorded yet.</p></div>
+      </div>
+    </section>
+
+    <section class="sec" style="padding-bottom:0">
       <div class="kicker">Deliberate practice</div>
       <a class="dashCard" href="/practice-planner/" style="display:block;min-height:0;background:linear-gradient(135deg,#142131,#10151d);border-color:#7dd8ff55">
         <span class="badge">Mentorship tool</span>
@@ -350,17 +363,19 @@ async function loadOwnDashboard() {
   const user = currentUser;
   const today = new Date().toISOString().slice(0,10);
 
-  const [goalsRes, assignmentsRes, reviewsRes, resourcesRes] = await Promise.all([
+  const [goalsRes, assignmentsRes, reviewsRes, resourcesRes, recentReviewsRes] = await Promise.all([
     sb.from('goals').select('*').eq('student_id', user.id).eq('status','active').order('priority'),
     sb.from('assignments').select('*').eq('student_id', user.id).neq('status','done').order('due_date', { ascending:true, nullsFirst:false }),
     sb.from('reviews').select('*').eq('student_id', user.id).lte('next_review', today).order('next_review'),
-    sb.from('resources').select('*').or(`student_id.eq.${user.id},student_id.is.null`).order('created_at', { ascending:false })
+    sb.from('resources').select('*').or(`student_id.eq.${user.id},student_id.is.null`).order('created_at', { ascending:false }),
+    sb.from('reviews').select('*').eq('student_id', user.id).order('id', { ascending:false }).limit(5)
   ]);
 
   const goals = goalsRes.data || [];
   const assignments = assignmentsRes.data || [];
   const reviews = reviewsRes.data || [];
   const resources = resourcesRes.data || [];
+  const recentReviews = recentReviewsRes.data || [];
 
   const signalEl = document.getElementById('learningSignal');
   if (signalEl) {
@@ -422,6 +437,24 @@ async function loadOwnDashboard() {
   document.getElementById('reviewsList').innerHTML = reviews.length
     ? reviews.slice(0,5).map(x => itemHTML(x.title, x.prompt || '')).join('')
     : '<p class="empty">Nothing due today.</p>';
+
+  const recentEl = document.getElementById('recentTrainingList');
+  if (recentEl) {
+    recentEl.innerHTML = recentReviews.length
+      ? recentReviews.map(x => {
+          const prompt = (x.prompt || '').replace('COACH FLAG: student requested Gab input.','').trim();
+          return `<div class="item">
+            <div class="manageItemTop">
+              <div>
+                <h3>${esc(x.title || 'Practice session')}</h3>
+                ${prompt ? `<p>${esc(prompt)}</p>` : ''}
+              </div>
+              ${x.next_review ? `<span class="badge">Returns ${esc(x.next_review)}</span>` : ''}
+            </div>
+          </div>`;
+        }).join('')
+      : '<p class="empty">No recent training recorded yet.</p>';
+  }
 
   document.getElementById('resourcesGrid').innerHTML = resources.length
     ? resources.map(x => `<a class="dashCard" href="${esc(x.url)}" target="_blank" rel="noopener"><div class="kicker">${esc(x.resource_type || 'Resource')}</div><h3>${esc(x.title)}</h3><p class="muted">${esc(x.description || '')}</p></a>`).join('')
