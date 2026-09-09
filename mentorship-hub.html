@@ -137,6 +137,19 @@ body.isAdmin .adminOnly{display:block}
     <section class="sec" style="padding-bottom:0"><div class="kicker">Private resources</div><div id="resourcesGrid" class="portalGrid"></div></section>
 
     <section class="sec adminOnly" style="padding-bottom:0">
+      <div class="kicker">Coach attention</div>
+      <div class="dashCard" style="margin-bottom:26px;background:linear-gradient(135deg,#2a1820,#10151d);border-color:#ff9e9e44">
+        <div class="portalTop" style="margin-bottom:12px">
+          <div>
+            <span class="badge">Needs Gab</span>
+            <h2 style="font-size:clamp(1.8rem,4vw,3rem);margin-top:10px">Student attention queue</h2>
+            <p class="muted">Training sessions students flagged because they need your diagnosis or feedback.</p>
+          </div>
+          <div class="reviewDue" id="coachAttentionCount">0</div>
+        </div>
+        <div id="coachAttentionList"><p class="empty">No students need attention right now.</p></div>
+      </div>
+
       <div class="kicker">Coach dashboard</div>
       <h2>Manage mentorship students</h2>
       <p class="muted">Choose a student, then manage goals, assignments, reviews and private resources without opening Supabase.</p>
@@ -243,6 +256,7 @@ let sb;
 let currentUser = null;
 let currentProfile = null;
 let selectedStudent = null;
+let allStudents = [];
 let coachData = { goals:[], assignments:[], reviews:[], resources:[] };
 
 function esc(v='') {
@@ -319,6 +333,7 @@ async function loadDashboard(user) {
 
   if (profile.role === 'coach') {
     await loadStudents();
+    await loadCoachAttention();
     bindCoachForms();
   }
 }
@@ -388,6 +403,7 @@ async function loadStudents() {
     return;
   }
   const students = data || [];
+  allStudents = students;
   list.innerHTML = students.length ? students.map(s => `
     <button class="studentBtn" type="button" data-student="${esc(s.id)}">
       <strong>${esc(s.display_name || s.email)}</strong>
@@ -400,6 +416,58 @@ async function loadStudents() {
       btn.classList.add('active');
       const student = students.find(s => s.id === btn.dataset.student);
       await selectStudent(student);
+    });
+  });
+}
+
+async function loadCoachAttention() {
+  const count = document.getElementById('coachAttentionCount');
+  const list = document.getElementById('coachAttentionList');
+  if (!count || !list) return;
+
+  const { data, error } = await sb
+    .from('reviews')
+    .select('id,student_id,title,prompt,next_review')
+    .ilike('prompt','%COACH FLAG%')
+    .order('next_review', { ascending:true });
+
+  if (error) {
+    list.innerHTML = `<p class="empty">${esc(error.message)}</p>`;
+    return;
+  }
+
+  const rows = data || [];
+  count.textContent = rows.length;
+  if (!rows.length) {
+    list.innerHTML = '<p class="empty">No students need attention right now.</p>';
+    return;
+  }
+
+  list.innerHTML = rows.map(x => {
+    const student = allStudents.find(s => s.id === x.student_id);
+    const name = student ? (student.display_name || student.email) : 'Student';
+    const cleaned = (x.prompt || '').replace('COACH FLAG: student requested Gab input.','').trim();
+    return `<div class="manageItem">
+      <div class="manageItemTop">
+        <div>
+          <span class="badge">${esc(name)}</span>
+          <h3 style="margin-top:10px">${esc(x.title || 'Training issue')}</h3>
+          <p>${esc(cleaned)}</p>
+        </div>
+        <button class="smallBtn" type="button" data-attention-student="${esc(x.student_id)}">Open student</button>
+      </div>
+    </div>`;
+  }).join('');
+
+  list.querySelectorAll('[data-attention-student]').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const student = allStudents.find(s => s.id === btn.dataset.attentionStudent);
+      if (!student) return;
+      const studentBtn = document.querySelector(`[data-student="${student.id}"]`);
+      document.querySelectorAll('.studentBtn').forEach(b => b.classList.remove('active'));
+      if (studentBtn) studentBtn.classList.add('active');
+      await selectStudent(student);
+      document.getElementById('coachEditor').scrollIntoView({behavior:'smooth',block:'start'});
     });
   });
 }
