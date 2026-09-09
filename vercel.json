@@ -33,6 +33,38 @@
       "destination": "/creative.html"
     },
     {
+      "source": "/method/",
+      "destination": "/method.html"
+    },
+    {
+      "source": "/workshops/",
+      "destination": "/workshops.html"
+    },
+    {
+      "source": "/kinesthetic-practice/",
+      "destination": "/kinesthetic-practice.html"
+    },
+    {
+      "source": "/experience/",
+      "destination": "/experience.html"
+    },
+    {
+      "source": "/zouk-nyc-guide/",
+      "destination": "/zouk-nyc-guide.html"
+    },
+    {
+      "source": "/movement-architecture/",
+      "destination": "/movement-architecture.html"
+    },
+    {
+      "source": "/how-to-practice-zouk/",
+      "destination": "/how-to-practice-zouk.html"
+    },
+    {
+      "source": "/learn/",
+      "destination": "/learn.html"
+    },
+    {
       "source": "/((?!.*\\.).*)",
       "destination": "/index.html"
     }
