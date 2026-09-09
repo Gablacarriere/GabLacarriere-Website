@@ -1,5 +1,16 @@
 {
   "rewrites": [
-    { "source": "/((?!.*\\.).*)", "destination": "/index.html" }
+    {
+      "source": "/brazilian-zouk-classes-nyc/",
+      "destination": "/brazilian-zouk-classes-nyc.html"
+    },
+    {
+      "source": "/lambada-classes-nyc/",
+      "destination": "/lambada-classes-nyc.html"
+    },
+    {
+      "source": "/((?!.*\\.).*)",
+      "destination": "/index.html"
+    }
   ]
 }
