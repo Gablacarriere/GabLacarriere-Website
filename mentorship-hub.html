@@ -28,6 +28,12 @@ body.isAdmin .adminOnly{display:block}
 body.isAdmin .coachModeTabs{display:flex}
 .coachModeTabs button{padding:10px 14px;border-radius:999px;border:1px solid #ffffff24;background:transparent;color:#fff;font:inherit;font-weight:800;cursor:pointer}
 .coachModeTabs button.active{background:#f2dfc5;color:#10141a;border-color:#f2dfc5}
+.onboardSteps{display:grid;gap:10px;margin-top:14px}
+.onboardStep{display:flex;gap:12px;align-items:flex-start;padding:12px 0;border-bottom:1px solid #ffffff14}
+.onboardStep:last-child{border-bottom:0}
+.onboardDot{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:1px solid #ffffff2b;font-weight:900;flex:0 0 28px}
+.onboardStep.done .onboardDot{background:#f2dfc5;color:#10141a;border-color:#f2dfc5}
+
 body.coachView .studentArea{display:none!important}
 body.studentView .adminOnly{display:none!important}
 @media(max-width:820px){.portalGrid,.portalGrid.two{grid-template-columns:1fr}.portalTop{align-items:flex-start;flex-direction:column}}
@@ -143,6 +149,13 @@ body.studentView .adminOnly{display:none!important}
       </div>
       <button id="logoutBtn" class="btn logoutBtn">Sign out</button>
     </div>
+
+    <section id="firstWeekCard" class="dashCard" style="margin-bottom:18px">
+      <div class="kicker">Start here</div>
+      <h2 style="font-size:clamp(1.8rem,4vw,3rem)">Your first week</h2>
+      <p class="muted">Three steps are enough to get the mentorship system working for you.</p>
+      <div id="firstWeekSteps" class="onboardSteps"></div>
+    </section>
 
     <section class="dashCard" style="margin-bottom:18px;background:linear-gradient(135deg,#182638,#10151d);border-color:#7dd8ff55">
       <div class="kicker">Today’s training</div>
@@ -526,6 +539,30 @@ async function loadOwnDashboard() {
   const reviews = reviewsRes.data || [];
   const resources = resourcesRes.data || [];
   const recentReviews = recentReviewsRes.data || [];
+
+  const firstWeek = document.getElementById('firstWeekSteps');
+  const firstWeekCard = document.getElementById('firstWeekCard');
+  if (firstWeek && firstWeekCard) {
+    const hasDirection = goals.length > 0 || assignments.length > 0;
+    const hasPractice = recentReviews.length > 0;
+    const hasReview = reviews.length > 0 || recentReviews.some(r => Number(r.interval_days || 0) > 1);
+
+    const steps = [
+      {done:hasDirection, title:'Know your current focus', body:hasDirection ? 'You have a clear direction.' : 'Use your current goal or ask Gab to set one.'},
+      {done:hasPractice, title:'Complete one focused session', body:hasPractice ? 'Your training system has started.' : 'Use Build My Training for your first deliberate-practice session.'},
+      {done:hasReview, title:'Let something return', body:hasReview ? 'Spaced review is now active.' : 'Rate the session so the system knows when to bring it back.'}
+    ];
+
+    firstWeek.innerHTML = steps.map((s,i) => `
+      <div class="onboardStep ${s.done ? 'done' : ''}">
+        <div class="onboardDot">${s.done ? '✓' : i+1}</div>
+        <div><strong>${esc(s.title)}</strong><p class="muted" style="margin:3px 0 0">${esc(s.body)}</p></div>
+      </div>`).join('');
+
+    if (steps.every(s => s.done)) {
+      firstWeekCard.innerHTML = '<div class="kicker">System active</div><h3>Your training loop is running.</h3><p class="muted">Train → rate → retrieve → adapt. You can now use Today’s Training as your default starting point.</p>';
+    }
+  }
 
   const signalEl = document.getElementById('learningSignal');
   if (signalEl) {
