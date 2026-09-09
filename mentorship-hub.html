@@ -76,6 +76,10 @@ body.studentView .adminOnly{display:none!important}
 .weeklyForm{display:grid;gap:12px;margin-top:16px}
 .weeklyForm textarea{width:100%;min-height:88px;padding:12px 13px;border-radius:12px;border:1px solid #ffffff22;background:#090e15;color:#fff;font:inherit;resize:vertical}
 .weeklySaved{color:#9edfff;min-height:24px;margin-top:10px}
+.accountPanel{border:1px solid #ffffff18;border-radius:22px;padding:22px;background:#10151d}
+.accountForm{display:grid;gap:10px;max-width:520px;margin-top:14px}
+.accountForm input{width:100%;padding:12px 13px;border-radius:12px;border:1px solid #ffffff22;background:#090e15;color:#fff;font:inherit}
+.linkBtn{background:none;border:0;padding:0;color:#9edfff;text-decoration:underline;cursor:pointer;font:inherit}
 
 
 </style>
@@ -94,10 +98,23 @@ body.studentView .adminOnly{display:none!important}
       <div class="field"><label>Email</label><input id="email" type="email" autocomplete="email" required></div>
       <div class="field"><label>Password</label><input id="password" type="password" autocomplete="current-password" required></div>
       <button class="btn" type="submit">Sign in</button>
+      <button id="forgotPasswordBtn" class="linkBtn" type="button">Forgot your password?</button>
       <p id="loginMessage" class="muted"></p>
     </form>
   </section>
 
+
+  <section id="recoveryView" class="authCard hidden">
+    <span class="tag">Password recovery</span>
+    <h2 style="margin-top:18px">Choose a new password.</h2>
+    <p class="muted">You opened a secure password-reset link from your email.</p>
+    <form id="recoveryForm" class="accountForm">
+      <input id="recoveryPassword" type="password" minlength="10" autocomplete="new-password" placeholder="New password" required>
+      <input id="recoveryPasswordConfirm" type="password" minlength="10" autocomplete="new-password" placeholder="Confirm new password" required>
+      <button class="btn" type="submit">Set new password</button>
+      <p id="recoveryMessage" class="muted"></p>
+    </form>
+  </section>
 
   <section id="passwordChangeView" class="authCard hidden">
     <span class="tag">First login</span>
@@ -167,6 +184,20 @@ body.studentView .adminOnly{display:none!important}
         <div id="reviewsList"></div>
       </article>
     </div>
+
+    <section class="sec" style="padding-bottom:0">
+      <div class="kicker">Account</div>
+      <div class="accountPanel">
+        <h2 style="font-size:clamp(1.8rem,4vw,3rem)">Password & security</h2>
+        <p class="muted">Change your password without leaving the mentorship portal.</p>
+        <form id="changePasswordForm" class="accountForm">
+          <input id="accountNewPassword" type="password" minlength="10" autocomplete="new-password" placeholder="New password" required>
+          <input id="accountConfirmPassword" type="password" minlength="10" autocomplete="new-password" placeholder="Confirm new password" required>
+          <div><button class="btn" type="submit">Change password</button></div>
+          <p id="accountPasswordMessage" class="muted"></p>
+        </form>
+      </div>
+    </section>
 
     <section class="sec" id="weeklyReflectionSection" style="padding-bottom:0">
       <div class="kicker">Weekly reflection</div>
@@ -364,8 +395,18 @@ async function initPortal() {
     return;
   }
   sb = supabase.createClient(cfg.supabaseUrl, cfg.supabaseAnonKey);
+
+  sb.auth.onAuthStateChange(async (event, session) => {
+    if (event === 'PASSWORD_RECOVERY') {
+      document.getElementById('loginView').classList.add('hidden');
+      document.getElementById('dashboardView').classList.add('hidden');
+      document.getElementById('passwordChangeView').classList.add('hidden');
+      document.getElementById('recoveryView').classList.remove('hidden');
+    }
+  });
+
   const { data: { session } } = await sb.auth.getSession();
-  if (session) await loadDashboard(session.user);
+  if (session && !location.hash.includes('type=recovery')) await loadDashboard(session.user);
 }
 
 document.getElementById('loginForm').addEventListener('submit', async (e) => {
@@ -378,6 +419,23 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
   if (error) return showMessage(error.message);
   showMessage('');
   await loadDashboard(data.user);
+});
+
+document.getElementById('forgotPasswordBtn').addEventListener('click', async () => {
+  if (!sb) return showMessage('Portal setup is not connected yet.');
+  const email = document.getElementById('email').value.trim();
+  if (!email) {
+    showMessage('Enter your email above first, then tap “Forgot your password?”.');
+    return;
+  }
+  showMessage('Sending password reset email…');
+  const redirectTo = `${location.origin}/mentorship-hub/`;
+  const { error } = await sb.auth.resetPasswordForEmail(email, { redirectTo });
+  if (error) {
+    showMessage(error.message);
+    return;
+  }
+  showMessage('Password reset email sent. Check your inbox and spam folder.');
 });
 
 document.getElementById('logoutBtn').addEventListener('click', async () => {
@@ -935,6 +993,40 @@ function bindCoachForms() {
   resetAllForms();
 }
 
+
+document.getElementById('changePasswordForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const msg = document.getElementById('accountPasswordMessage');
+  const p1 = document.getElementById('accountNewPassword').value;
+  const p2 = document.getElementById('accountConfirmPassword').value;
+  if (p1.length < 10) { msg.textContent = 'Use at least 10 characters.'; return; }
+  if (p1 !== p2) { msg.textContent = 'The passwords do not match.'; return; }
+
+  msg.textContent = 'Updating password…';
+  const { error } = await sb.auth.updateUser({ password:p1 });
+  if (error) { msg.textContent = error.message; return; }
+
+  document.getElementById('changePasswordForm').reset();
+  msg.textContent = 'Password changed successfully.';
+});
+
+document.getElementById('recoveryForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const msg = document.getElementById('recoveryMessage');
+  const p1 = document.getElementById('recoveryPassword').value;
+  const p2 = document.getElementById('recoveryPasswordConfirm').value;
+  if (p1.length < 10) { msg.textContent = 'Use at least 10 characters.'; return; }
+  if (p1 !== p2) { msg.textContent = 'The passwords do not match.'; return; }
+
+  msg.textContent = 'Saving…';
+  const { data, error } = await sb.auth.updateUser({ password:p1 });
+  if (error) { msg.textContent = error.message; return; }
+
+  history.replaceState({}, document.title, '/mentorship-hub/');
+  document.getElementById('recoveryView').classList.add('hidden');
+  msg.textContent = '';
+  if (data.user) await loadDashboard(data.user);
+});
 
 document.getElementById('passwordChangeForm').addEventListener('submit', async (e) => {
   e.preventDefault();
