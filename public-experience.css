@@ -142,3 +142,14 @@
 .publicSite .formatCard .actions{padding-top:16px}
 }
 @media(max-width:360px){.publicSite .publicBrand{width:188px;height:48px;flex-basis:188px}.publicSite .mobileMenu summary{padding:10px 12px}}
+
+/* Original photography: preserve complete compositions and embedded credits. */
+.publicSite .editorialPhoto{margin:0;min-width:0}
+.publicSite .editorialPhoto img{display:block;width:100%;height:auto;border-radius:16px}
+.publicSite .editorialPhoto figcaption{font-size:.85rem;line-height:1.6;color:#b9c2ce;padding-top:12px;max-width:780px}
+.publicSite .photoBand{padding:32px 0}
+.publicSite .editorialSplit{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:48px;align-items:center}
+.publicSite .editorialTall{width:100%;max-width:420px;justify-self:center}
+.publicSite .workshopWide{margin-top:40px}
+.publicSite .heroPortrait img[src^="/assets/editorial/"],.publicSite .aboutPortrait img[src^="/assets/editorial/"]{aspect-ratio:auto;height:auto;object-fit:contain}
+@media(max-width:760px){.publicSite .editorialSplit{grid-template-columns:1fr;gap:28px}.publicSite .photoBand{padding:20px 0}}

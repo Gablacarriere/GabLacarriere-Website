@@ -107,7 +107,7 @@ function patchHtml(file) {
       html = html.replace('<main id="main">', '<main id="main" tabindex="-1">');
     }
     if (!/class="skipLink"/.test(html)) html = html.replace(/(<body[^>]*>)/i, '$1\n<a class="skipLink" href="#main">Skip to content</a>');
-    html = html.replace('</head>', '<link rel="stylesheet" href="/public-experience.css?v=visual-2">\n</head>');
+    html = html.replace('</head>', '<link rel="stylesheet" href="/public-experience.css?v=photos-1">\n</head>');
     html = html.replace('</footer>', '<div class="w footerLinks"><a href="/learn/">Learning library</a><a href="/classes/">Class details</a><a href="mailto:riseadance@gmail.com">Email Gab</a></div></footer>');
   }
 
