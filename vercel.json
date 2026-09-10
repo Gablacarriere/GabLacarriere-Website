@@ -1,6 +1,7 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "buildCommand": "node apply_branding.cjs",
+  "outputDirectory": "public",
   "rewrites": [
     {
       "source": "/brazilian-zouk-classes-nyc/",

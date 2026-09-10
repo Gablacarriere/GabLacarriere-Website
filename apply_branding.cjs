@@ -2,6 +2,7 @@ const fs = require("fs");
 const path = require("path");
 
 const ROOT = process.cwd();
+const OUT = path.join(ROOT, "public");
 
 const BRAND_CSS = `
 /* Official Gab Lacarriere brand lockup */
@@ -49,7 +50,7 @@ const HEAD_TAGS = `
 function walk(dir) {
   let files = [];
   for (const item of fs.readdirSync(dir, { withFileTypes: true })) {
-    if ([".git", ".vercel", "node_modules"].includes(item.name)) continue;
+    if ([".git", ".vercel", "node_modules", "public"].includes(item.name)) continue;
     const full = path.join(dir, item.name);
     if (item.isDirectory()) files = files.concat(walk(full));
     else files.push(full);
@@ -59,9 +60,7 @@ function walk(dir) {
 
 function patchHtml(file) {
   let html = fs.readFileSync(file, "utf8");
-  const before = html;
 
-  // Replace any existing text-only brand anchor while preserving its destination.
   html = html.replace(
     /<a\s+class=["']brand["']\s+href=["']([^"']+)["']\s*>([\s\S]*?)<\/a>/i,
     (match, href, label) => {
@@ -72,7 +71,6 @@ function patchHtml(file) {
     }
   );
 
-  // If this has already been branded, do not duplicate anything.
   if (!html.includes("Official Gab Lacarriere brand lockup")) {
     if (html.includes("</style>")) {
       html = html.replace("</style>", `${BRAND_CSS}\n</style>`);
@@ -85,21 +83,31 @@ function patchHtml(file) {
     html = html.replace("</head>", `${HEAD_TAGS}\n</head>`);
   }
 
-  if (html !== before) {
-    fs.writeFileSync(file, html, "utf8");
-    return true;
-  }
-  return false;
+  return html;
 }
 
-const htmlFiles = walk(ROOT).filter(f => f.toLowerCase().endsWith(".html"));
-let changed = 0;
+fs.rmSync(OUT, { recursive: true, force: true });
+fs.mkdirSync(OUT, { recursive: true });
 
-for (const file of htmlFiles) {
-  if (patchHtml(file)) {
-    changed++;
-    console.log("Branded:", path.relative(ROOT, file));
+for (const file of walk(ROOT)) {
+  const rel = path.relative(ROOT, file);
+
+  // API folders remain source-managed by Vercel, not copied into static output.
+  if (
+    rel === "vercel.json" ||
+    rel === "apply_branding.cjs" ||
+    rel.startsWith("api" + path.sep) ||
+    rel.startsWith("API" + path.sep)
+  ) continue;
+
+  const dest = path.join(OUT, rel);
+  fs.mkdirSync(path.dirname(dest), { recursive: true });
+
+  if (file.toLowerCase().endsWith(".html")) {
+    fs.writeFileSync(dest, patchHtml(file), "utf8");
+  } else {
+    fs.copyFileSync(file, dest);
   }
 }
 
-console.log(`Gab Lacarriere branding applied to ${changed} HTML file(s).`);
+console.log("Built branded static site into public/.");
