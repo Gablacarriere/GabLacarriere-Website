@@ -4,6 +4,14 @@
   "outputDirectory": "public",
   "rewrites": [
     {
+      "source": "/zouk-bnb/",
+      "destination": "/zouk-bnb.html"
+    },
+    {
+      "source": "/zouk-bnb",
+      "destination": "/zouk-bnb.html"
+    },
+    {
       "source": "/brazilian-zouk-classes-nyc/",
       "destination": "/brazilian-zouk-classes-nyc.html"
     },

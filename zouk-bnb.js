@@ -1,0 +1,1 @@
+document.querySelectorAll('[data-bnb-package]').forEach(link=>link.addEventListener('click',()=>{if(typeof window.gtag==='function')window.gtag('event','zouk_bnb_inquiry',{package:link.dataset.bnbPackage,contact_method:'whatsapp'});}));

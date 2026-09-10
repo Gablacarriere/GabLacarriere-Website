@@ -88,7 +88,7 @@ function patchHtml(file) {
   if (publicPage) {
     const currentPath = fileName === "index.html" ? "/" : "/" + fileName.replace(/\.html$/, "") + "/";
     const items = [
-      ["/classes/", "Classes"], ["/privates/", "Private training"],
+      ["/classes/", "Classes"], ["/zouk-bnb/", "Zouk BNB"], ["/privates/", "Private training"],
       ["/mentorship/", "Mentorship"], ["/method/", "Method"],
       ["/work-with-gab/", "Work with Gab"], ["/about/", "About"],
     ];

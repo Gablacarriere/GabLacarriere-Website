@@ -67,3 +67,5 @@
 .publicSite .classGuidance>.btn{flex-shrink:0}
 .publicSite .contactHint{font-size:.875rem;color:#c4cad4;margin:12px 0 0}
 @media(max-width:760px){.publicSite .classGuidance{align-items:flex-start;flex-direction:column;padding:20px}}
+
+.publicSite .bnbPromo{background:#f3f0e7;color:#203a2c;padding:56px 0}.publicSite .bnbPromoGrid{display:grid;grid-template-columns:minmax(0,1fr) 240px;gap:48px;align-items:center}.publicSite .bnbPromo h2{font-family:Georgia,serif;font-weight:400}.publicSite .bnbPromo .kicker{color:#355343}.publicSite .bnbPromo .lede{color:#354c3f}.publicSite .bnbPromo .btn{background:#294a38;color:#fff}.publicSite .bnbPromo img{width:100%;height:auto;display:block;border-radius:16px}.publicSite .bnbPromo a:focus-visible{outline-color:#294a38}@media(max-width:1250px){.publicSite .primary{display:none!important}.publicSite .mobileMenu{display:block}}@media(max-width:650px){.publicSite .bnbPromoGrid{grid-template-columns:1fr;gap:28px}.publicSite .bnbPromo img{max-width:260px}}
