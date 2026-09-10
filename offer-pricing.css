@@ -1,0 +1,15 @@
+/* Confirmed offer prices, shared across class and private training pages. */
+#tuesday-memberships{scroll-margin-top:100px}
+.membershipGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px;margin-top:28px}
+.membershipCard{background:#10151d;border:1px solid #ffffff25;border-radius:20px;padding:28px;min-width:0}
+.membershipCard h3{font-size:1.6rem;margin-bottom:8px}
+.membershipLength{color:#7dd8ff;font-weight:700;margin:0 0 24px}
+.membershipOption{padding:24px 0;border-top:1px solid #ffffff20}
+.membershipOption:last-child{padding-bottom:0}
+.membershipOption h4{font-size:1.1rem;margin:0 0 10px}
+.offerPrice,.card p.offerPrice{font-size:2.4rem;font-weight:800;color:#f2dfc5;line-height:1.2;margin:14px 0}
+.offerPrice span{font-size:1rem;font-weight:500;color:#c4cad4}
+.pricingNote{max-width:820px;color:#c4cad4;font-size:.94rem;margin:22px 0 0}
+.pricingNote a{color:#7dd8ff;text-decoration:underline;text-underline-offset:3px}
+.membershipOption .btn{margin-top:8px}
+@media(max-width:700px){.membershipGrid{grid-template-columns:1fr}.membershipCard{padding:24px}.offerPrice{font-size:2.1rem}}
