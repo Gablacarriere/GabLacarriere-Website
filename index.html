@@ -7,6 +7,22 @@
 .mobileMenu{display:none;position:relative}.mobileMenu summary{list-style:none;cursor:pointer;border:1px solid #ffffff2a;border-radius:999px;padding:9px 13px;font-weight:800}.mobileMenu summary::-webkit-details-marker{display:none}.mobilePanel{position:absolute;right:0;top:48px;min-width:220px;padding:10px;background:#111721;border:1px solid #ffffff1f;border-radius:16px;box-shadow:0 18px 44px #0008;display:grid}.mobilePanel a{padding:11px 12px;border-radius:10px}.mobilePanel a:hover{background:#ffffff0a}
 @media(max-width:920px){.primary{display:none!important}.mobileMenu{display:block}.n{min-height:68px}}
 
+
+/* Student-focused homepage, using the existing brand palette. */
+.heroLayout{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:48px;align-items:center}
+.hero h1{font-size:clamp(2.6rem,5.5vw,4.75rem);line-height:1.08;margin-top:22px;letter-spacing:-.045em}
+.accent{color:#7dd8ff}.heroPortrait{margin:0;min-width:0}
+.heroPortrait img{display:block;width:100%;height:auto;aspect-ratio:4/5;object-fit:cover;object-position:center 25%;border-radius:24px}
+.heroPortrait figcaption{font-size:.875rem;color:#aeb6c2;margin-top:12px}
+.cardLink{display:block;color:#7dd8ff;font-weight:750;margin-top:24px}.smallHeading{font-size:2rem;line-height:1.15}
+.tag,.kicker{font-size:.875rem}.tag{display:inline-block}
+.card h3{line-height:1.25}.card{min-width:0}
+a:focus-visible,summary:focus-visible{outline:3px solid #7dd8ff;outline-offset:5px}
+.skipLink{position:absolute;left:18px;top:-100px;z-index:100;padding:12px 18px;background:#f2dfc5;color:#10141a;border-radius:8px}.skipLink:focus{top:12px}
+footer{padding-bottom:100px}
+@media(max-width:1050px){.primary{display:none!important}.mobileMenu{display:block}}
+@media(max-width:760px){.heroLayout{grid-template-columns:1fr;gap:32px}.hero{padding:48px 0}.heroPortrait{max-width:420px}.sec{padding:48px 0}.heroPortrait img{aspect-ratio:4/3;object-position:center 20%}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.card{transition:none}.card:hover{transform:none}}
 </style><script async src="https://www.googletagmanager.com/gtag/js?id=G-RHMDH35TBJ"></script>
 <script>
 window.dataLayer=window.dataLayer||[];
@@ -15,30 +31,32 @@ gtag('js',new Date());
 gtag('config','G-RHMDH35TBJ');
 </script>
 </head><body>
-<nav><div class="w n"><a class="brand" href="/">GAB LACARRIERE</a>
+<a class="skipLink" href="#main">Skip to content</a>
+<nav aria-label="Main navigation"><div class="w n"><a class="brand" href="/">GAB LACARRIERE</a>
 <div class="primary"><a href="/learn/">Learn</a><a href="/method/">Method</a><a href="/mentorship/">Mentorship</a><a href="/work-with-gab/">Work With Gab</a><a href="/about/">About</a><a class="btn" href="/mentorship-hub/">Member Login</a></div>
 <details class="mobileMenu"><summary>Menu</summary><div class="mobilePanel"><a href="/learn/">Learn</a><a href="/method/">Method</a><a href="/mentorship/">Mentorship</a><a href="/work-with-gab/">Work With Gab</a><a href="/about/">About</a><a href="/mentorship-hub/">Member Login</a></div></details>
 </div></nav>
 
-<section class="hero"><div class="w"><span class="tag">Zouk · Lambada · Movement Education · NYC</span><h1>Learn movement. Build adaptability. Dance freely.</h1>
-<p class="lede">Gab Lacarriere teaches Brazilian Zouk and Lambada through a pedagogy-led system built around movement understanding, deliberate practice, feedback and transfer.</p>
-<div class="actions"><a class="btn" href="/learn/">Start Learning</a><a class="btn ghost" href="/mentorship/">Explore Mentorship</a></div>
-<div class="sectionIndex"><a href="/learn/">Learn</a><a href="/method/">Method</a><a href="/mentorship/">Mentorship</a><a href="/work-with-gab/">Work With Gab</a><a href="/about/">About</a></div></div></section>
+<main id="main">
+<section class="hero"><div class="w heroLayout"><div>
+<span class="tag">Brazilian Zouk · Lambada · New York City</span>
+<h1>Understand the movement.<br><span class="accent">Dance freely.</span></h1>
+<p class="lede">Train with Gab Lacarriere to build clearer connection, stronger timing and more confidence on the dance floor. Explore group classes, focused private coaching and ongoing mentorship.</p>
+<div class="actions"><a class="btn" href="/classes/">Explore NYC classes</a><a class="btn ghost" href="/privates/">Find private training</a></div>
+</div><figure class="heroPortrait"><img src="/081524OGContact%20-%20653A5417.jpeg" alt="Gab Lacarriere" width="1000" height="1500" fetchpriority="high"><figcaption>Gab Lacarriere · Teacher &amp; movement educator</figcaption></figure></div></section>
 
-<section class="sec soft"><div class="w"><div class="kicker">Choose your path</div><h2>One website. Five clear destinations.</h2><div class="grid">
-<a class="card" href="/learn/"><h3>Learn</h3><p>Classes, private training, Lambada, Zouk and the learning library.</p><div class="arrow">→</div></a>
-<a class="card" href="/method/"><h3>Method</h3><p>The pedagogy behind the training: movement architecture, kinesthetic learning and deliberate practice.</p><div class="arrow">→</div></a>
-<a class="card" href="/mentorship/"><h3>Mentorship</h3><p>Long-term development with goals, feedback, SRS, deliberate practice and a private training portal.</p><div class="arrow">→</div></a>
-<a class="card" href="/work-with-gab/"><h3>Work With Gab</h3><p>Festivals, workshops, events, performances, DJ work and professional collaborations.</p><div class="arrow">→</div></a>
-<a class="card" href="/about/"><h3>About</h3><p>Background, teaching experience, philosophy, credentials and professional story.</p><div class="arrow">→</div></a>
+<section class="sec soft"><div class="w"><div class="kicker">Train with Gab</div><h2>Find your way into the dance.</h2><div class="grid">
+<a class="card" href="/classes/"><h3>Weekly classes</h3><p>Build your skills alongside other dancers. Explore Brazilian Zouk on Tuesdays and Lambada on Thursdays in New York City.</p><span class="cardLink">See class details →</span></a>
+<a class="card" href="/privates/"><h3>Private training</h3><p>Work on the parts of your dancing that need individual attention, with personal feedback and focused practice.</p><span class="cardLink">Explore private coaching →</span></a>
+<a class="card" href="/mentorship/"><h3>Ongoing mentorship</h3><p>Give your progress a clear direction with training goals, coaching and guided practice between sessions.</p><span class="cardLink">Explore mentorship →</span></a>
 </div></div></section>
 
-<section class="sec"><div class="w"><div class="kicker">Train</div><h2>For dancers in New York.</h2><div class="grid">
-<a class="card" href="/classes/"><h3>Weekly Classes</h3><p>Consistent group training in Brazilian Zouk and Lambada.</p><div class="arrow">→</div></a>
-<a class="card" href="/privates/"><h3>Private Training</h3><p>Individual diagnosis, technical coaching and kinesthetic practice.</p><div class="arrow">→</div></a>
-<a class="card" href="/mentorship/"><h3>Mentorship</h3><p>A structured learning system for dancers who want sustained progress.</p><div class="arrow">→</div></a>
-</div></div></section>
+<section class="sec"><div class="w"><div class="kicker">The teaching approach</div><h2>Understand. Feel. Practice. Adapt.</h2><p class="lede">Explore how timing, direction and connection shape a movement. Feel it in your body, practice with a clear focus, then learn to adapt with different partners and music.</p><div class="actions"><a class="btn ghost" href="/method/">Discover the method</a><a class="btn ghost" href="/learn/">Explore the learning library</a></div></div></section>
 
-<section class="sec warm"><div class="w"><div class="kicker">Architecture principle</div><h2>Visitors should always know where they are and what to do next.</h2><p class="lede muted">SEO landing pages remain available to search engines and direct visitors, but they no longer compete for space in the primary navigation.</p></div></section>
+<section class="sec soft"><div class="w"><div class="grid two">
+<a class="card" href="/about/"><h2 class="smallHeading">Meet Gab.</h2><p>Get to know the experience and teaching philosophy behind your training.</p><span class="cardLink">About Gab →</span></a>
+<a class="card" href="/work-with-gab/"><h2 class="smallHeading">Bring Gab to your event.</h2><p>Explore workshops, festivals, performances, DJ work and professional collaborations.</p><span class="cardLink">Work with Gab →</span></a>
+</div></div></section>
+</main>
 <footer><div class="w">Gab Lacarriere · Brazilian Zouk · Lambada · Movement Education · New York City</div></footer>
 <a class="waFloat" href="https://wa.me/19295864994?text=Hi%20Gab%2C%20I%27m%20interested%20in%20working%20with%20you." target="_blank" rel="noopener">WhatsApp · Contact</a></body></html>
