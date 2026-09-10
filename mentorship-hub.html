@@ -110,11 +110,11 @@ body.studentView .adminOnly{display:none!important}
     <h2 style="margin-top:18px">Mentorship Hub</h2>
     <p class="muted">Individual access for current mentorship students.</p>
     <form id="loginForm" class="form">
-      <div class="field"><label>Email</label><input id="email" type="email" autocomplete="email" required></div>
-      <div class="field"><label>Password</label><input id="password" type="password" autocomplete="current-password" required></div>
+      <div class="field"><label for="email">Email</label><input id="email" type="email" autocomplete="email" required></div>
+      <div class="field"><label for="password">Password</label><input id="password" type="password" autocomplete="current-password" required></div>
       <button class="btn" type="submit">Sign in</button>
       <button id="forgotPasswordBtn" class="linkBtn" type="button">Forgot your password?</button>
-      <p id="loginMessage" class="muted"></p>
+      <p id="loginMessage" class="muted" role="status"></p>
     </form>
   </section>
 
@@ -134,7 +134,7 @@ body.studentView .adminOnly{display:none!important}
   <section id="passwordChangeView" class="authCard hidden">
     <span class="tag">First login</span>
     <h2 style="margin-top:18px">Create your private password.</h2>
-    <p class="muted">For security, replace the temporary password before opening your mentorship dashboard.</p>
+    <p class="muted">Welcome to your training space. Choose a password with at least 10 characters to finish setting up your account.</p>
     <form id="passwordChangeForm" class="form">
       <div class="field">
         <label for="newPassword">New password</label>
@@ -145,7 +145,7 @@ body.studentView .adminOnly{display:none!important}
         <input id="confirmPassword" type="password" minlength="10" autocomplete="new-password" required>
       </div>
       <button class="btn" type="submit">Set my password</button>
-      <p id="passwordChangeMessage" class="muted"></p>
+      <p id="passwordChangeMessage" class="muted" role="status"></p>
     </form>
   </section>
 
@@ -461,24 +461,47 @@ function itemHTML(title, body='') {
   return `<div class="item"><h3>${esc(title)}</h3>${body ? `<p>${esc(body)}</p>` : ''}</div>`;
 }
 
+// Capture link state before Supabase consumes and removes the URL fragment.
+const authLinkParams = new URLSearchParams(location.hash.slice(1));
+let passwordFlow = ['invite', 'recovery'].includes(authLinkParams.get('type'))
+  ? authLinkParams.get('type') : null;
+
+function showPasswordFlow(flow) {
+  passwordFlow = flow;
+  for (const id of ['loginView', 'dashboardView', 'passwordChangeView', 'recoveryView']) {
+    document.getElementById(id).classList.add('hidden');
+  }
+  document.getElementById(flow === 'recovery' ? 'recoveryView' : 'passwordChangeView').classList.remove('hidden');
+}
+
 async function initPortal() {
   if (!cfg.supabaseUrl || cfg.supabaseUrl.includes('PASTE_') || !cfg.supabaseAnonKey || cfg.supabaseAnonKey.includes('PASTE_')) {
     showMessage('Portal setup is not connected yet.');
     return;
   }
-  sb = supabase.createClient(cfg.supabaseUrl, cfg.supabaseAnonKey);
-
-  sb.auth.onAuthStateChange(async (event, session) => {
-    if (event === 'PASSWORD_RECOVERY') {
-      document.getElementById('loginView').classList.add('hidden');
-      document.getElementById('dashboardView').classList.add('hidden');
-      document.getElementById('passwordChangeView').classList.add('hidden');
-      document.getElementById('recoveryView').classList.remove('hidden');
+  try {
+    sb = supabase.createClient(cfg.supabaseUrl, cfg.supabaseAnonKey);
+    // Keep this callback synchronous: auth API calls here can deadlock.
+    sb.auth.onAuthStateChange((event) => {
+      if (event === 'PASSWORD_RECOVERY') showPasswordFlow('recovery');
+    });
+    const { data: { session }, error } = await sb.auth.getSession();
+    if (authLinkParams.has('error') || authLinkParams.has('error_code') || error) {
+      passwordFlow = null;
+      history.replaceState({}, document.title, '/mentorship-hub/');
+      showMessage('This sign-in link could not be opened. It may have expired or already been used. Enter your email and use “Forgot your password?” to request a fresh link, or contact Gab.');
+      return;
     }
-  });
-
-  const { data: { session } } = await sb.auth.getSession();
-  if (session && !location.hash.includes('type=recovery')) await loadDashboard(session.user);
+    if (session) {
+      if (passwordFlow) showPasswordFlow(passwordFlow);
+      else await loadDashboard(session.user);
+    } else if (passwordFlow) {
+      passwordFlow = null;
+      showMessage('Open the complete invitation link from your email. If it has expired, enter your email and use “Forgot your password?”.');
+    }
+  } catch (_) {
+    showMessage('Unable to connect to your account. Please reload this page and try again.');
+  }
 }
 
 document.getElementById('loginForm').addEventListener('submit', async (e) => {
@@ -518,12 +541,10 @@ document.getElementById('logoutBtn').addEventListener('click', async () => {
 async function loadDashboard(user) {
   currentUser = user;
 
-  // Accounts provisioned from Airtable receive a temporary password.
-  // They must choose their own password before seeing mentorship data.
-  if (user.user_metadata && user.user_metadata.force_password_change === true) {
-    document.getElementById('loginView').classList.add('hidden');
-    document.getElementById('dashboardView').classList.add('hidden');
-    document.getElementById('passwordChangeView').classList.remove('hidden');
+  // This flag controls onboarding only; database policies enforce access.
+  if (user.user_metadata?.force_password_change === true ||
+      (user.invited_at && user.user_metadata?.portal_password_set !== true)) {
+    showPasswordFlow('invite');
     return;
   }
   const { data: profile, error: profileError } = await sb
@@ -1518,9 +1539,11 @@ document.getElementById('recoveryForm').addEventListener('submit', async (e) => 
   if (p1 !== p2) { msg.textContent = 'The passwords do not match.'; return; }
 
   msg.textContent = 'Saving…';
-  const { data, error } = await sb.auth.updateUser({ password:p1 });
+  const { data, error } = await sb.auth.updateUser({ password:p1, data:{force_password_change:false, portal_password_set:true} });
   if (error) { msg.textContent = error.message; return; }
 
+  passwordFlow = null;
+  document.getElementById('recoveryForm').reset();
   history.replaceState({}, document.title, '/mentorship-hub/');
   document.getElementById('recoveryView').classList.add('hidden');
   msg.textContent = '';
@@ -1538,11 +1561,14 @@ document.getElementById('passwordChangeForm').addEventListener('submit', async (
   msg.textContent = 'Saving…';
   const { data, error } = await sb.auth.updateUser({
     password: p1,
-    data: { force_password_change: false }
+    data: { force_password_change: false, portal_password_set: true }
   });
   if (error) { msg.textContent = error.message; return; }
 
   msg.textContent = '';
+  passwordFlow = null;
+  document.getElementById('passwordChangeForm').reset();
+  history.replaceState({}, document.title, '/mentorship-hub/');
   document.getElementById('passwordChangeView').classList.add('hidden');
   await loadDashboard(data.user);
 });
