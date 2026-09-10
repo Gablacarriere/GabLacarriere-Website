@@ -60,6 +60,8 @@ function walk(dir) {
 
 function patchHtml(file) {
   let html = fs.readFileSync(file, "utf8");
+  const fileName = path.basename(file);
+  const publicPage = !["mentorship-hub.html", "practice-planner.html"].includes(fileName);
 
   html = html.replace(
     /<a\s+class=["']brand["']\s+href=["']([^"']+)["']\s*>([\s\S]*?)<\/a>/i,
@@ -81,6 +83,32 @@ function patchHtml(file) {
 
   if (!html.includes('href="/favicon.ico"')) {
     html = html.replace("</head>", `${HEAD_TAGS}\n</head>`);
+  }
+
+  if (publicPage) {
+    const currentPath = fileName === "index.html" ? "/" : "/" + fileName.replace(/\.html$/, "") + "/";
+    const items = [
+      ["/classes/", "Classes"], ["/privates/", "Private training"],
+      ["/mentorship/", "Mentorship"], ["/method/", "Method"],
+      ["/work-with-gab/", "Work with Gab"], ["/about/", "About"],
+    ];
+    const links = items.map(([href, label]) => `<a href="${href}"${currentPath === href ? ' aria-current="page"' : ''}>${label}</a>`).join("");
+    const member = '<a class="memberLink" href="/mentorship-hub/">Member login</a>';
+    const nav = `<nav aria-label="Main navigation"><div class="w n"><a class="brand publicBrand" href="/" aria-label="Gab Lacarriere home"><img src="/favicon-192.png" alt="" width="40" height="40"><span>Gab Lacarriere</span></a><div class="primary">${links}${member}</div><details class="mobileMenu"><summary>Menu</summary><div class="mobilePanel">${links}${member}</div></details></div></nav>`;
+    html = html.replace(/<nav\b[^>]*>[\s\S]*?<\/nav>/i, nav);
+    html = html.replace(/<body([^>]*)>/i, (match, attrs) => {
+      if (/\bclass=/.test(attrs)) return match.replace(/class="([^"]*)"/, 'class="$1 publicSite"');
+      return `<body${attrs} class="publicSite">`;
+    });
+    if (!/<main\b/i.test(html)) {
+      html = html.replace('</nav>', '</nav>\n<main id="main" tabindex="-1">');
+      html = html.replace(/<footer\b/i, '</main>\n<footer');
+    } else {
+      html = html.replace('<main id="main">', '<main id="main" tabindex="-1">');
+    }
+    if (!/class="skipLink"/.test(html)) html = html.replace(/(<body[^>]*>)/i, '$1\n<a class="skipLink" href="#main">Skip to content</a>');
+    html = html.replace('</head>', '<link rel="stylesheet" href="/public-experience.css">\n</head>');
+    html = html.replace('</footer>', '<div class="w footerLinks"><a href="/learn/">Learning library</a><a href="/classes/">Class details</a><a href="mailto:riseadance@gmail.com">Email Gab</a></div></footer>');
   }
 
   return html;

@@ -29,8 +29,8 @@ gtag('config','G-RHMDH35TBJ');
 
 <section class="hero"><div class="w">
   <span class="tag">Mentorship · Brazilian Zouk + Lambada · NYC</span>
-  <h1>A training system, not a collection of lessons.</h1>
-  <p class="lede">Long-term development with private coaching, kinesthetic practice, partner fundamentals, deliberate practice, feedback, spaced review and a private learning portal.</p>
+  <h1>A clear direction for your dancing.</h1>
+  <p class="lede">Work on what matters to you with private coaching, guided practice and feedback. Build skills you can use with different partners and music, with a personal training space to support practice between sessions.</p>
   <div class="breadcrumb"><a href="/">Home</a><span>→</span><span>Mentorship</span></div>
   <div class="actions"><a class="btn" href="#apply">Apply to Mentorship</a><a class="btn ghost" href="/mentorship-hub/">Current Member Login</a></div>
 </div></section>
@@ -61,8 +61,8 @@ gtag('config','G-RHMDH35TBJ');
   <div class="portalPreview">
     <div class="kicker">Private learning environment</div>
     <h2 style="font-size:clamp(1.8rem,4vw,3rem)">Your training continues between sessions.</h2>
-    <p class="muted">Members use the Mentorship Hub to see their current mission, Learning Constellation, review queue, coach assignments, XP history and feedback signals.</p>
-    <div class="mini"><span>Mission Control</span><span>Learning Constellation</span><span>SRS Reviews</span><span>Coach Signals</span><span>Flight Log</span></div>
+    <p class="muted">See your current training priorities, find your assigned practice, revisit earlier material and share feedback with Gab. Your progress and resources stay together in your member space.</p>
+    <div class="mini"><span>Training goals</span><span>Practice assignments</span><span>Review reminders</span><span>Coach feedback</span><span>Progress history</span></div>
   </div>
 </div></section>
 
@@ -92,7 +92,7 @@ gtag('config','G-RHMDH35TBJ');
 </div></section>
 
 <section class="sec soft"><div class="w">
-  <div class="kicker">How mentorship fits the site</div>
+  <div class="kicker">Explore the approach</div>
   <h2>The Method becomes a personal training system.</h2>
   <div class="grid">
     <a class="card" href="/method/"><h3>Method</h3><p>Understand the pedagogy and learning principles behind the program.</p><div class="arrow">→</div></a>
@@ -114,30 +114,34 @@ gtag('config','G-RHMDH35TBJ');
 <section class="sec soft" id="apply"><div class="w">
   <div class="kicker">Application</div>
   <h2>Apply to the Mentorship Program.</h2>
-  <p class="muted">This is a fit application, not automatic enrollment.</p>
-  <form class="form" id="f">
-    <div class="field"><label>Name *</label><input name="name" required></div>
-    <div class="field"><label>Email *</label><input name="email" type="email" required></div>
-    <div class="field"><label>Zouk experience *</label><select name="experience" required><option value="">Choose one</option><option>Less than 6 months</option><option>6–12 months</option><option>1–2 years</option><option>2–4 years</option><option>4+ years</option></select></div>
-    <div class="field"><label>Current dance focus *</label><select name="focus" required><option value="">Choose one</option><option>Brazilian Zouk</option><option>Lambada</option><option>Both Zouk and Lambada</option></select></div>
-    <div class="field"><label>Main goal *</label><textarea name="goal" required></textarea></div>
-    <div class="field"><label>Current challenge *</label><textarea name="challenge" required></textarea></div>
-    <div class="field"><label>Why this Mentorship Program? *</label><textarea name="why" required></textarea></div>
-    <button class="btn">Submit application</button>
+  <p class="muted">Tell Gab about your dancing to start a conversation about fit. Applying does not enroll you or take a payment.</p>
+  <p id="application-help">This form prepares an email for you to review and send to <a href="mailto:riseadance@gmail.com">riseadance@gmail.com</a>. Nothing is sent when you prepare the email. Fields marked * are required.</p>
+  <form class="form" id="f" aria-describedby="application-help" action="mailto:riseadance@gmail.com" method="post" enctype="text/plain">
+    <div class="field"><label for="app-name">Name *</label><input id="app-name" name="name" autocomplete="name" maxlength="120" required></div>
+    <div class="field"><label for="app-email">Email *</label><input id="app-email" name="email" type="email" autocomplete="email" maxlength="254" required></div>
+    <div class="field"><label for="app-experience">Partner-dance experience *</label><select id="app-experience" name="experience" required><option value="">Choose one</option><option>New to partner dance</option><option>Less than 6 months</option><option>6–12 months</option><option>1–2 years</option><option>2–4 years</option><option>4+ years</option></select></div>
+    <div class="field"><label for="app-focus">Current dance focus *</label><select id="app-focus" name="focus" required><option value="">Choose one</option><option>Brazilian Zouk</option><option>Lambada</option><option>Both Zouk and Lambada</option></select></div>
+    <div class="field"><label for="app-goal">What would you like to improve? *</label><textarea id="app-goal" name="goal" required maxlength="1200" aria-describedby="goal-help"></textarea><span class="fieldHint" id="goal-help">A few sentences are enough. For example: feeling more comfortable adapting to different partners.</span></div>
+    <details class="applicationExtra"><summary>Add more context (optional)</summary>
+      <div class="field"><label for="app-challenge">What feels difficult right now?</label><textarea id="app-challenge" name="challenge" maxlength="1200"></textarea></div>
+      <div class="field"><label for="app-why">What interests you about mentorship?</label><textarea id="app-why" name="why" maxlength="1200"></textarea></div>
+    </details>
+    <button class="btn" id="prepare-application" type="submit" hidden>Prepare application email</button>
+    <noscript><p>Email your name, dance experience and goal directly to <a href="mailto:riseadance@gmail.com?subject=Mentorship%20inquiry">riseadance@gmail.com</a>.</p></noscript>
+    <section class="applicationDraft" id="application-draft" aria-labelledby="draft-heading" hidden>
+      <h3 id="draft-heading" tabindex="-1">Your email is ready to review.</h3>
+      <p>Send it to <a href="mailto:riseadance@gmail.com">riseadance@gmail.com</a>. You still need to press Send in your email app or webmail.</p>
+      <div class="field"><label for="application-text">Application text</label><textarea id="application-text" readonly rows="10"></textarea></div>
+      <div class="actions"><a class="btn" id="open-application-email">Open email app</a><button type="button" class="btn ghost" id="copy-application">Copy email text</button></div>
+      <p class="fieldHint">If your email app does not open, copy the text into your usual email service. Editing your answers above will let you prepare a new version.</p>
+      <p id="application-status" role="status" aria-live="polite"></p>
+    </section>
   </form>
 </div></section>
 
 <footer><div class="w">Gab Lacarriere · Brazilian Zouk · Lambada · Movement Education · New York City</div></footer>
 <a class="waFloat" href="https://wa.me/19295864994?text=Hi%20Gab%2C%20I%27m%20interested%20in%20your%20mentorship%20program." target="_blank" rel="noopener">WhatsApp · Contact</a>
 
-<script>
-const f=document.getElementById('f');
-f.onsubmit=e=>{
-  e.preventDefault();
-  let d=new FormData(f),n=d.get('name'),
-  b=['Name: '+n,'Email: '+d.get('email'),'Zouk experience: '+d.get('experience'),'Current dance focus: '+d.get('focus'),'Main goal: '+d.get('goal'),'Current challenge: '+d.get('challenge'),'Why this Mentorship Program: '+d.get('why')].join('\n\n');
-  location.href='mailto:riseadance@gmail.com?subject='+encodeURIComponent('Mentorship Program Application — '+n)+'&body='+encodeURIComponent(b)
-};
-</script>
+<script src="/application-email.js" defer></script>
 </body>
 </html>
