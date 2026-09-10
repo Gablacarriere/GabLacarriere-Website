@@ -94,7 +94,7 @@ function patchHtml(file) {
     ];
     const links = items.map(([href, label]) => `<a href="${href}"${currentPath === href ? ' aria-current="page"' : ''}>${label}</a>`).join("");
     const member = '<a class="memberLink" href="/mentorship-hub/">Member login</a>';
-    const nav = `<nav aria-label="Main navigation"><div class="w n"><a class="brand publicBrand" href="/" aria-label="Gab Lacarriere home"><img src="/favicon-192.png" alt="" width="40" height="40"><span>Gab Lacarriere</span></a><div class="primary">${links}${member}</div><details class="mobileMenu"><summary>Menu</summary><div class="mobilePanel">${links}${member}</div></details></div></nav>`;
+    const nav = `<nav aria-label="Main navigation"><div class="w n"><a class="brand publicBrand" href="/" aria-label="Gab Lacarriere home"><img src="/gab-logo-header.png" alt="Gab Lacarriere" width="1200" height="190"></a><div class="primary">${links}${member}</div><details class="mobileMenu"><summary>Menu</summary><div class="mobilePanel">${links}${member}</div></details></div></nav>`;
     html = html.replace(/<nav\b[^>]*>[\s\S]*?<\/nav>/i, nav);
     html = html.replace(/<body([^>]*)>/i, (match, attrs) => {
       if (/\bclass=/.test(attrs)) return match.replace(/class="([^"]*)"/, 'class="$1 publicSite"');
@@ -107,7 +107,7 @@ function patchHtml(file) {
       html = html.replace('<main id="main">', '<main id="main" tabindex="-1">');
     }
     if (!/class="skipLink"/.test(html)) html = html.replace(/(<body[^>]*>)/i, '$1\n<a class="skipLink" href="#main">Skip to content</a>');
-    html = html.replace('</head>', '<link rel="stylesheet" href="/public-experience.css">\n</head>');
+    html = html.replace('</head>', '<link rel="stylesheet" href="/public-experience.css?v=visual-2">\n</head>');
     html = html.replace('</footer>', '<div class="w footerLinks"><a href="/learn/">Learning library</a><a href="/classes/">Class details</a><a href="mailto:riseadance@gmail.com">Email Gab</a></div></footer>');
   }
 

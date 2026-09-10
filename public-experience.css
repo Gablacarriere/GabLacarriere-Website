@@ -69,3 +69,76 @@
 @media(max-width:760px){.publicSite .classGuidance{align-items:flex-start;flex-direction:column;padding:20px}}
 
 .publicSite .bnbPromo{background:#f3f0e7;color:#203a2c;padding:56px 0}.publicSite .bnbPromoGrid{display:grid;grid-template-columns:minmax(0,1fr) 240px;gap:48px;align-items:center}.publicSite .bnbPromo h2{font-family:Georgia,serif;font-weight:400}.publicSite .bnbPromo .kicker{color:#355343}.publicSite .bnbPromo .lede{color:#354c3f}.publicSite .bnbPromo .btn{background:#294a38;color:#fff}.publicSite .bnbPromo img{width:100%;height:auto;display:block;border-radius:16px}.publicSite .bnbPromo a:focus-visible{outline-color:#294a38}@media(max-width:1250px){.publicSite .primary{display:none!important}.publicSite .mobileMenu{display:block}}@media(max-width:650px){.publicSite .bnbPromoGrid{grid-template-columns:1fr;gap:28px}.publicSite .bnbPromo img{max-width:260px}}
+
+/* Shared visual system: the original wordmark, readable type and consistent rhythm. */
+.publicSite{font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:1.7;-webkit-font-smoothing:antialiased}
+.publicSite nav{background:#faf9f5;color:#242a2c;backdrop-filter:none;border-bottom:1px solid #1e2a2820;box-shadow:0 3px 18px #0000000a}
+.publicSite nav .w{width:min(1240px,calc(100% - 48px))}
+.publicSite .n{min-height:92px;gap:24px}
+.publicSite .publicBrand{display:block;width:266px;height:68px;flex:0 0 266px;overflow:hidden;border-radius:0}
+.publicSite .publicBrand img{width:100%;height:100%;max-width:none;object-fit:cover;object-position:left center}
+.publicSite .primary{gap:17px;font-size:.82rem;color:#3e4744;font-weight:600}
+.publicSite .primary a{padding:12px 0}
+.publicSite .primary a:hover{color:#0050a4}
+.publicSite nav a[aria-current="page"]{color:#174f85;text-decoration-thickness:2px;text-underline-offset:8px}
+.publicSite .memberLink{color:#59635e;font-size:.78rem}
+.publicSite .mobileMenu summary{color:#253a30;border:1px solid #869489;border-radius:10px;font-size:.875rem;background:transparent}
+.publicSite .mobilePanel{background:#faf9f5;color:#26332c;border-color:#c9d0c7;box-shadow:0 18px 44px #0002;top:54px}
+.publicSite .mobilePanel a{border-radius:6px;font-size:.95rem}
+.publicSite .mobilePanel a:hover{background:#e9ede5}
+.publicSite nav a:focus-visible,.publicSite nav summary:focus-visible{outline-color:#175ca0}
+.publicSite:not(.bnbPage) .hero{padding:64px 0 56px;background:radial-gradient(ellipse at 85% 0,#182b37 0,transparent 60%),#0a0d12}
+.publicSite:not(.bnbPage) .hero h1{font-size:clamp(2.6rem,4.7vw,4.5rem);line-height:1.1;letter-spacing:-.045em;font-weight:720;margin-top:20px;max-width:940px;text-wrap:balance}
+.publicSite:not(.bnbPage) h2{font-size:clamp(2rem,3.5vw,3.1rem);line-height:1.15;letter-spacing:-.035em;font-weight:680;text-wrap:balance}
+.publicSite:not(.bnbPage) h3{line-height:1.25;font-weight:650;letter-spacing:-.015em}
+.publicSite .lede{line-height:1.65;font-size:clamp(1.05rem,1.5vw,1.2rem)}
+.publicSite .tag{font-size:.75rem;font-weight:700;letter-spacing:.08em;padding:7px 12px;background:#dce9ec;color:#19333e;border-radius:6px}
+.publicSite .kicker{font-size:.75rem;font-weight:750;letter-spacing:.12em;margin-bottom:16px}
+.publicSite .sec{padding:64px 0}
+.publicSite .actions{gap:12px;margin-top:26px}
+.publicSite .btn{padding:13px 19px;border-radius:10px;font-size:.93rem;font-weight:700;letter-spacing:0;box-shadow:none}
+.publicSite .btn:hover{filter:brightness(1.06)}
+.publicSite .card{border-radius:16px;padding:28px;min-height:0;border-color:#ffffff20;box-shadow:none}
+.publicSite .card:hover{transform:none}
+.publicSite a.card:hover{border-color:#7dd8ff80;background:#151e29}
+.publicSite .card p{line-height:1.7;color:#bdc5d0}
+.publicSite .grid{gap:24px}
+.publicSite .g2{gap:32px}
+.publicSite .list li{padding:14px 0;line-height:1.65}
+.publicSite .breadcrumb{font-size:.82rem}
+.publicSite .heroPortrait img,.publicSite .aboutPortrait img{border-radius:16px}
+.publicSite .classGuidance h2{font-size:1.5rem}
+.publicSite #schedule .g2 h2{font-size:clamp(1.75rem,2.5vw,2.2rem)}
+.publicSite #schedule .g2>div{display:flex;flex-direction:column;border-radius:16px}
+.publicSite #schedule .classFlyer{padding-top:24px;margin-top:auto}
+.publicSite .classesPhoto{box-shadow:none;border-radius:16px}
+.publicSite .classFlyer img{border-radius:8px}
+.publicSite .smallHeading{font-size:2rem}
+.publicSite .bnbPromo h2{font-family:Georgia,serif;font-weight:400}
+.publicSite .waFloat{position:static;display:flex;align-items:center;justify-content:center;width:fit-content;max-width:calc(100% - 36px);margin:0 auto 28px;padding:12px 20px;border-radius:10px;box-shadow:none}
+.publicSite footer{padding:40px 0 28px;background:#0a0d12;color:#b4bdc6;font-size:.875rem}
+.publicSite .footerLinks{gap:12px 24px}
+.publicSite .footerLinks a{font-size:.875rem}
+.publicSite .form{max-width:860px}
+.publicSite input,.publicSite select,.publicSite textarea{font:inherit;font-size:1rem;border-radius:8px}
+.publicSite .bnbSection .package{border-radius:16px}
+.publicSite.bnbPage nav{background:#faf9f5;color:#242a2c}
+@media(min-width:1100px){.publicSite .primary{display:flex!important}.publicSite .mobileMenu{display:none!important}}
+@media(max-width:1099px){.publicSite .primary{display:none!important}.publicSite .mobileMenu{display:block!important}}
+@media(max-width:760px){
+.publicSite nav .w{width:calc(100% - 32px)}
+.publicSite .n{min-height:78px;gap:12px}
+.publicSite .publicBrand{width:220px;height:56px;flex-basis:220px}
+.publicSite:not(.bnbPage) .hero{padding:36px 0 40px}
+.publicSite:not(.bnbPage) .hero h1{font-size:clamp(2.25rem,8.5vw,3.25rem);line-height:1.12}
+.publicSite:not(.bnbPage) h2{font-size:clamp(1.8rem,7vw,2.5rem)}
+.publicSite .sec{padding:44px 0}
+.publicSite .card{padding:22px}
+.publicSite .grid,.publicSite .grid.two,.publicSite .g2{grid-template-columns:1fr;gap:20px}
+.publicSite .classGuidance h2{font-size:1.5rem}
+.publicSite .heroPortrait,.publicSite .aboutPortrait{width:100%;max-width:420px}
+.publicSite .heroPortrait img{aspect-ratio:4/5}
+.publicSite .bnbPromo{padding:44px 0}
+.publicSite .formatCard .actions{padding-top:16px}
+}
+@media(max-width:360px){.publicSite .publicBrand{width:188px;height:48px;flex-basis:188px}.publicSite .mobileMenu summary{padding:10px 12px}}
