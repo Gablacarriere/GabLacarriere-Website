@@ -126,7 +126,7 @@ gtag('config','G-RHMDH35TBJ');
   <div class="kicker">Application</div>
   <h2>Tell Gab what you want to work on.</h2>
   <p class="muted">Tell Gab about your dancing to start a conversation about fit. Applying does not enroll you or take a payment.</p>
-  <p id="application-help">This form prepares an email for you to review and send to <a href="mailto:riseadance@gmail.com">riseadance@gmail.com</a>. Nothing is sent when you prepare the email. Fields marked * are required.</p>
+  <p id="application-help">Prepare a message, review it, then choose WhatsApp or email. Nothing is sent or saved to the website when you prepare it. Fields marked * are required.</p>
   <form class="form" id="f" aria-describedby="application-help" action="mailto:riseadance@gmail.com" method="post" enctype="text/plain">
     <div class="field"><label for="app-name">Name *</label><input id="app-name" name="name" autocomplete="name" maxlength="120" required></div>
     <div class="field"><label for="app-email">Email *</label><input id="app-email" name="email" type="email" autocomplete="email" maxlength="254" required></div>
@@ -137,14 +137,14 @@ gtag('config','G-RHMDH35TBJ');
       <div class="field"><label for="app-challenge">What feels difficult right now?</label><textarea id="app-challenge" name="challenge" maxlength="1200"></textarea></div>
       <div class="field"><label for="app-why">What interests you about mentorship?</label><textarea id="app-why" name="why" maxlength="1200"></textarea></div>
     </details>
-    <button class="btn" id="prepare-application" type="submit" hidden>Prepare application email</button>
+    <button class="btn" id="prepare-application" type="submit" hidden>Review my application</button>
     <noscript><p>Email your name, dance experience and goal directly to <a href="mailto:riseadance@gmail.com?subject=Mentorship%20inquiry">riseadance@gmail.com</a>.</p></noscript>
     <section class="applicationDraft" id="application-draft" aria-labelledby="draft-heading" hidden>
-      <h3 id="draft-heading" tabindex="-1">Your email is ready to review.</h3>
-      <p>Send it to <a href="mailto:riseadance@gmail.com">riseadance@gmail.com</a>. You still need to press Send in your email app or webmail.</p>
+      <h3 id="draft-heading" tabindex="-1">Your application is ready to review.</h3>
+      <p>Choose how to contact Gab below. You still need to press Send in WhatsApp or your email app.</p>
       <div class="field"><label for="application-text">Application text</label><textarea id="application-text" readonly rows="10"></textarea></div>
-      <div class="actions"><a class="btn" id="open-application-email">Open email app</a><button type="button" class="btn ghost" id="copy-application">Copy email text</button></div>
-      <p class="fieldHint">If your email app does not open, copy the text into your usual email service. Editing your answers above will let you prepare a new version.</p>
+      <div class="actions"><a class="btn" id="open-application-whatsapp" target="_blank" rel="noopener">Continue in WhatsApp ↗</a><a class="btn ghost" id="open-application-email">Open email app</a><button type="button" class="btn ghost" id="copy-application">Copy application</button></div>
+      <p class="fieldHint">If neither app opens, copy your application into a message to Gab or email riseadance@gmail.com. Editing an answer above hides this draft until you prepare it again.</p>
       <p id="application-status" role="status" aria-live="polite"></p>
     </section>
   </form>
@@ -200,6 +200,6 @@ gtag('config','G-RHMDH35TBJ');
 <footer><div class="w">Gab Lacarriere · Brazilian Zouk · Lambada · Movement Education · New York City</div><div class="w footerDirectory" role="navigation" aria-label="Footer navigation"><div class="footerGroup"><h2>Train in NYC</h2><a href="/classes/">Weekly classes</a><a href="/privates/">Private training</a><a href="/mentorship/" aria-current="page">Monthly mentorship</a><a href="/zouk-bnb/">Zouk BNB · stay &amp; train</a></div><div class="footerGroup"><h2>Explore</h2><a href="/reviews/">Student reviews</a><a href="/feedback/">Give feedback</a><a href="/journal/">The Journal</a><a href="/learn/">Learning library</a><a href="/method/">Teaching method</a><a href="/about/">About Gab</a><a href="/work-with-gab/">Events &amp; collaborations</a></div><div class="footerGroup"><h2>Your next step</h2><a href="/mentorship-hub/">Member sign in</a><a href="/classes/#schedule">Class schedule</a><a href="mailto:riseadance@gmail.com">Email Gab</a></div></div></footer>
 <a class="waFloat" href="https://wa.me/19295864994?text=Hi%20Gab%2C%20I%27m%20interested%20in%20your%20mentorship%20program." target="_blank" rel="noopener">WhatsApp · Contact</a>
 
-<script src="/application-email.js" defer></script>
+<script src="/application-email.js?v=channels-2" defer></script>
 <section class="sec"><div class="w"><h2>Help shape what comes next.</h2><p>Share private feedback on your experience, suggest improvements, or choose to contribute a testimonial.</p><p><a href="/feedback/">Share feedback &amp; your story →</a></p></div></section></body>
 </html>
