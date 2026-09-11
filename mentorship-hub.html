@@ -106,7 +106,8 @@ window.GAB_PORTAL = {
 };
 
 </script>
-<link rel="stylesheet" href="/mentorship-crew.css?v=crew-3"><script src="/mentorship-crew.js"></script><link rel="stylesheet" href="/hub-navigation.css?v=help-1">
+<link rel="stylesheet" href="/mentorship-crew.css?v=crew-3"><script src="/mentorship-crew.js"></script><link rel="stylesheet" href="/hub-navigation.css?v=unread-1">
+<script src="/echo-unread.js?v=1"></script>
 </head>
 <body>
 <nav class="portalNavigation"><div class="w n"><a class="portalBrand" href="/" aria-label="Gab Lacarriere home"><img src="/gab-logo-header.png" alt="Gab Lacarriere" width="1200" height="190"></a><div class="links"><a href="/mentorship/">Mentorship</a><a class="btn" href="/">Public Site</a></div></div></nav>
@@ -171,7 +172,7 @@ window.GAB_PORTAL = {
   </section>
 
   <section id="dashboardView" class="hidden"><div class="crewLinkRow"><a class="crewQuickLink" href="/zouk-map/#map">Open the Zouk Atlas →</a><a class="crewQuickLink" href="#mentorshipCrew">Meet your flight crew ↓</a></div>
-    <div class="portalTop">
+    <aside id="echoHubNotice" class="echoHubNotice"><a href="/comms-deck/">ECHO · Comms Deck →</a><p id="echoHubStatus" role="status">Checking crew updates…</p></aside><div class="portalTop">
       <div>
         <span class="badge" id="roleBadge">Mentee</span>
         <h1 style="font-size:clamp(2.6rem,7vw,5.4rem);margin-top:12px">Welcome, <span id="studentName">dancer</span>.</h1>
@@ -577,6 +578,11 @@ async function loadDashboard(user) {
   }
 
   currentProfile = profile;
+  window.hubEcho?.stop();
+  window.hubEcho = window.ECHO_UNREAD.start(sb,user.id,rows=>{
+    const el=document.getElementById('echoHubStatus');
+    el.textContent=rows===null?'Unread updates unavailable. Open ECHO or return here to retry.':rows.length?rows.length+' unread conversation'+(rows.length===1?'':'s')+' · '+rows.filter(r=>r.channel==='announcements').length+' in announcements.':'You’re caught up. Open ECHO to talk with your crew.';
+  });
   document.getElementById('mentorshipCrew').innerHTML = window.GAB_CREW.markup;
   document.getElementById('crewShipIcon').innerHTML = window.GAB_CREW.saucer;
   document.getElementById('loginView').classList.add('hidden');
