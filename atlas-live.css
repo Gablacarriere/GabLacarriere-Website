@@ -7,3 +7,5 @@
 .atlasAccount [hidden],#reset[hidden]{display:none!important}
 @media(max-width:700px){.atlasAccount{padding:12px 16px}.atlasAccount label{width:100%}.atlasAccount select{flex:1;min-width:0}.conceptChoice{grid-template-columns:1fr}.atlasLessonForm{padding:18px}.liveLogin{display:block!important;margin-left:0}}
 #previewToggle[hidden]{display:none!important}
+.rail nav a[hidden]{display:none!important}.importSource{margin:24px 0;border-color:#dcb57955}.importSource h2{font-size:22px;line-height:1.5}.importSource h3{margin-top:24px}.importSource summary{cursor:pointer;color:#e7c78e}.atlasLessonForm .importConfirmation{display:flex;align-items:flex-start;gap:12px}.atlasLessonForm .importConfirmation input{width:20px;height:20px;flex-shrink:0;margin:3px 0}.importSource .lessonText{font-size:13px}
+@media(max-width:700px){.rail nav:has(#atlasImportsLink:not([hidden])){grid-template-columns:repeat(3,1fr)}}

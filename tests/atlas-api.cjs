@@ -11,7 +11,7 @@ if(table==='profiles')return{data:filters.find(x=>x[0]==='id')?.[1]==='coach'?co
 if(verb==='insert'){if(rows.some(x=>x.id===record.id))return{error:{code:'23505'}};rows.push({...record,created_at:'2026-09-10T12:00:00Z',voided:false});return{data:{id:record.id}};}
 const row=rows.find(r=>filters.every(([k,v])=>r[k]===v));if(row&&verb==='update')Object.assign(row,record);return row?{data:{id:row.id}}:{error:{}};
 },
-then(resolve){resolve({data:[coach,student],error:null});}
+then(resolve){resolve({data:table==='profiles'?[coach,student]:[],error:null});}
 };return query;}};
 const ctx={URL,URLSearchParams,location:{search:'?student=student',href:'https://example.test/zouk-map/?student=student'},history:{replaceState(){}},setTimeout,CustomEvent:class{constructor(t,o){this.detail=o.detail}},window:{GAB_PORTAL:{},supabase:{createClient:()=>client},dispatchEvent(e){state=e.detail;events.push(state);}}};
 vm.createContext(ctx);vm.runInContext(fs.readFileSync('zouk-map-auth.js','utf8'),ctx);

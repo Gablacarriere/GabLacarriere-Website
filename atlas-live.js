@@ -13,7 +13,7 @@
     const list=active(s),coach=s.viewer.role==='coach',p=progress(s);
     if(view==='journey')return '<div class="topline"><div><p class="eyebrow">SAVED JOURNEY</p><h1>'+esc(s.student.display_name)+'’s voyage</h1><p>'+Object.keys(p).length+' concepts explored across '+list.length+' recorded lessons.</p></div></div><div class="box focusBox wide"><h2>'+(list.length?'Build on your latest lesson.':'Your map is ready for its first lesson.')+'</h2><p>'+(list.length?esc(list[0].summary):'Your Captain or Co-Captain will record the concepts you cover together. They will appear here and on your map.')+'</p><a class="primaryButton" href="#map">Explore the map →</a> <a class="secondaryButton" href="#sessions">Open lessons →</a></div>';
     if(view==='practice')return '<h1>Practice between lessons</h1><p>Your latest recorded practice focus. Earlier notes remain in Sessions.</p>'+(list.find(l=>l.practice)?card(list.find(l=>l.practice)):'<div class="box"><h2>No practice note yet.</h2><p>Your coach can add one with your next recorded lesson.</p></div>')+'<p><a class="secondaryButton" href="/mentorship-hub/#hub-practice">Open assignments & training tools →</a></p>';
-    return '<h1>'+esc(s.student.display_name)+'’s sessions</h1><p>Coach-recorded lessons · Granola importing is not connected yet.</p>'+(coach?form(s):'')+((coach?s.lessons:list).length?s.lessons.filter(l=>coach||!l.voided).map(l=>card(l)+(coach?'<p><button class="secondaryButton" data-void-lesson="'+esc(l.id)+'" data-voided="'+String(!l.voided)+'">'+(l.voided?'Restore lesson':'Remove lesson from map')+'</button></p>':'')).join(''):'<div class="box"><h2>No recorded lessons yet.</h2><p>New discoveries will appear after a coach saves your first lesson.</p></div>')+'<p id="lessonActionStatus" role="status"></p>';
+    return '<h1>'+esc(s.student.display_name)+'’s sessions</h1><p>Coach-reviewed lessons and discoveries.</p>'+(coach?form(s):'')+((coach?s.lessons:list).length?s.lessons.filter(l=>coach||!l.voided).map(l=>card(l)+(coach?'<p><button class="secondaryButton" data-void-lesson="'+esc(l.id)+'" data-voided="'+String(!l.voided)+'">'+(l.voided?'Restore lesson':'Remove lesson from map')+'</button></p>':'')).join(''):'<div class="box"><h2>No recorded lessons yet.</h2><p>New discoveries will appear after a coach saves your first lesson.</p></div>')+'<p id="lessonActionStatus" role="status"></p>';
   }
   function detail(id,s){
     const list=active(s).filter(l=>Object.hasOwn(l.concepts,id)),latest=list[0];
@@ -22,17 +22,17 @@
   function bind(s){
     const form=document.getElementById('atlasLessonForm');
     if(form){
-      const requestId=crypto.randomUUID();let busy=false;
+      const requestId=crypto.randomUUID(),draft=window.ATLAS_IMPORTS?.selected(s);let busy=false;
       form.addEventListener('submit',async event=>{
         event.preventDefault();if(busy||!form.reportValidity())return;
         const concepts={};form.querySelectorAll('[data-concept]').forEach(el=>{if(el.value)concepts[el.dataset.concept]=el.value;});
         const status=document.getElementById('lessonSaveStatus');
         if(!Object.keys(concepts).length){status.textContent='Choose at least one concept covered in this lesson.';return;}
-        const record={id:requestId,student_id:s.student.id,lesson_date:form.elements.lesson_date.value,summary:form.elements.summary.value.trim(),practice:form.elements.practice.value.trim(),concepts};
+        const record={id:requestId,student_id:draft?form.elements.review_student_id.value:s.student.id,lesson_date:form.elements.lesson_date.value,summary:form.elements.summary.value.trim(),practice:form.elements.practice.value.trim(),concepts};
         if(!record.summary){status.textContent='Add a short lesson summary.';return;}
         busy=true;form.querySelector('button[type=submit]').disabled=true;document.getElementById('atlasStudentSelect')?.setAttribute('disabled','');
         status.textContent='Saving lesson…';
-        try{await window.ATLAS_API.saveLesson(record);document.getElementById('announcement').textContent='Lesson saved. The student’s map has been updated.';}
+        try{if(draft)await window.ATLAS_API.approveImport(draft.id,record);else await window.ATLAS_API.saveLesson(record);document.getElementById('announcement').textContent='Lesson saved. The student’s map has been updated.';if(draft&&document.getElementById('importActionStatus'))document.getElementById('importActionStatus').textContent='Lesson approved. The student’s map has been updated.';}
         catch(error){status.textContent=error.message;}
         finally{busy=false;form.querySelector('button[type=submit]').disabled=false;document.getElementById('atlasStudentSelect')?.removeAttribute('disabled');}
       });
@@ -43,5 +43,5 @@
       catch(error){document.getElementById('lessonActionStatus').textContent=error.message;button.disabled=false;}
     }));
   }
-  window.ATLAS_LIVE={progress,markup,detail,bind,active};
+  window.ATLAS_LIVE={progress,markup,detail,bind,active,form};
 })();

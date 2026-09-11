@@ -28,14 +28,31 @@
         if(result.error)throw result.error;
         lessons.push(...result.data);if(result.data.length<500)break;
       }
+      let imports=[],importsError=false;
+      if(viewer.role==='coach'){
+        const result=await client.from('atlas_imports').select('id,source_title,source_excerpt,student_id,lesson_date,summary,practice,concepts,mapping_notes,status').eq('status','pending').order('lesson_date',{ascending:false});
+        if(result.error)importsError=true;else imports=result.data;
+      }
       if(run!==generation)return;
       targetId=student.id;
-      emit({mode:'ready',viewer,student,students,lessons,fullAccess:viewer.role==='coach'&&student.id===viewer.id});
+      emit({mode:'ready',viewer,student,students,lessons,imports,importsError,fullAccess:viewer.role==='coach'&&student.id===viewer.id});
     }catch(_){if(run===generation)emit({mode:'error',message:'Your saved map could not be loaded. Please retry or sign in again. No progress has been changed.'});}
   }
   window.ATLAS_API={
     refresh,
     selectStudent(id){if(state.mode!=='ready'||state.viewer.role!=='coach')return;targetId=id;const url=new URL(location.href);url.searchParams.set('student',id);history.replaceState(null,'',url);return refresh();},
+    async approveImport(id,record){
+      if(state.mode!=='ready'||state.viewer.role!=='coach'||!state.imports.some(d=>d.id===id))throw Error('This draft is not available for review.');
+      const result=await client.rpc('approve_atlas_import',{p_import_id:id,p_student_id:record.student_id,p_lesson_date:record.lesson_date,p_summary:record.summary,p_practice:record.practice,p_concepts:record.concepts});
+      if(result.error)throw Error('Approval could not be confirmed. Your review is still here. Retry or refresh the inbox; retrying will not duplicate the lesson.');
+      targetId=record.student_id;await refresh();
+    },
+    async dismissImport(id){
+      if(state.mode!=='ready'||state.viewer.role!=='coach')throw Error('Coach access required.');
+      const result=await client.from('atlas_imports').update({status:'dismissed'}).eq('id',id).eq('status','pending').select('id').single();
+      if(result.error)throw Error('Could not dismiss this draft. Refresh the inbox and retry.');
+      await refresh();
+    },
     async saveLesson(record){
       if(state.mode!=='ready'||state.viewer.role!=='coach'||record.student_id!==state.student.id)throw Error('Choose a student while signed in as a coach.');
       const result=await client.from('atlas_lessons').insert(record).select('id').single();
