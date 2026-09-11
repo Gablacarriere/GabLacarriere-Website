@@ -61,7 +61,7 @@ function walk(dir) {
 function patchHtml(file) {
   let html = fs.readFileSync(file, "utf8");
   const fileName = path.basename(file);
-  const publicPage = !["mentorship-hub.html", "practice-planner.html"].includes(fileName);
+  const publicPage = !["mentorship-hub.html", "practice-planner.html", "zouk-map.html"].includes(fileName);
 
   html = html.replace(
     /<a\s+class=["']brand["']\s+href=["']([^"']+)["']\s*>([\s\S]*?)<\/a>/i,

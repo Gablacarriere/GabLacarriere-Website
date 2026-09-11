@@ -4,6 +4,14 @@
   "outputDirectory": "public",
   "rewrites": [
     {
+      "source": "/zouk-map/",
+      "destination": "/zouk-map.html"
+    },
+    {
+      "source": "/zouk-map",
+      "destination": "/zouk-map.html"
+    },
+    {
       "source": "/zouk-bnb/",
       "destination": "/zouk-bnb.html"
     },
