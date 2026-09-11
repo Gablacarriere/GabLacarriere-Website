@@ -21,18 +21,34 @@ function tile(symbol,index=0){
  return `<svg class="island" viewBox="0 0 220 175" aria-hidden="true"><ellipse cx="110" cy="163" rx="66" ry="8" fill="#364365" opacity=".12"/><path d="M22 104 110 146 110 160 22 120Z" fill="var(--left)"/><path d="M110 146 198 104 198 120 110 160Z" fill="var(--right)"/><path d="M22 104 110 60 198 104 110 146Z" fill="var(--top)"/><path d="M38 105 110 69 182 105" fill="none" stroke="#fff9e0" opacity=".5"/>${structure}<path d="M157 113v-14" stroke="#688d93" stroke-width="3"/><circle cx="157" cy="96" r="8" fill="#87b0a5"/><circle cx="163" cy="99" r="6" fill="#679795"/><text x="39" y="99" fill="#385665" font-size="14">${symbol}</text></svg>`;
 }
 const CHAPTERS={
- welcome:['00','A world of small discoveries','Enter your practice world',0],
- journey:['01','The departure garden','Make this journey yours',1],
- today:['02','The sunrise terrace','One small step, today',0],
- practice:['03','The stepping courtyard','Find your own rhythm of practice',2],
- skills:['04','The floating islands','Follow your foundations',3],
- rhythm:['05','The echo observatory','Listen. Step. Repeat.',4],
- social:['06','The twilight garden','Carry your practice into the dance',5],
- coach:['07','The architect’s atelier','Shape the next discovery',1]
+ welcome:['00','A world of small discoveries','Enter your practice world','welcome'],
+ journey:['01','Your traveling camp','Make this journey yours','journey'],
+ today:['02','The sunrise garden','One small step, today','today'],
+ practice:['03','The quiet crossing','Find your own rhythm of practice','practice'],
+ skills:['04','The floating islands','Follow your foundations','skills'],
+ rhythm:['05','The sound garden','Listen. Step. Repeat.','rhythm'],
+ social:['06','The lantern grove','Carry your practice into the dance','social'],
+ coach:['07','The creative workshop','Shape the next discovery','coach']
 };
-function scene(chapter,seed,prefs){
- const [number,title,caption,index]=CHAPTERS[chapter]||CHAPTERS.today;
- return `<section class="chapter-scene" aria-label="${title}"><div class="chapter-copy"><p class="eyebrow">ZOUKABLE / ${number}</p><p class="chapter-title">${title}</p><p class="chapter-caption">${caption}</p></div><div class="chapter-landscape" aria-hidden="true"><span class="chapter-sun"></span><span class="chapter-orbit"></span><span class="chapter-cloud cloud-one"></span><span class="chapter-cloud cloud-two"></span><div class="chapter-distant">${tile('·',(index+1)%6)}</div><div class="chapter-monument">${tile('✧',index)}<span class="chapter-explorer">${explorer(seed,'',prefs)}</span></div><span class="chapter-water"></span></div></section>`;
+function scenery(kind){
+ if(kind==='skills')return tile('✧',3);
+ const ground='<ellipse cx="115" cy="148" rx="94" ry="19" fill="#749598" opacity=".12"/><ellipse cx="111" cy="133" rx="89" ry="24" fill="var(--left)"/><ellipse cx="111" cy="126" rx="89" ry="24" fill="var(--top)"/>';
+ const tree='<path d="M161 121V64M161 88 144 73M161 79 177 60" stroke="#758f93" stroke-width="5" stroke-linecap="round"/><ellipse cx="158" cy="48" rx="29" ry="35" fill="#99b9b1"/><ellipse cx="177" cy="59" rx="21" ry="27" fill="#739e9c"/><ellipse cx="145" cy="62" rx="22" ry="25" fill="#b7cdb5"/>';
+ const flower=(x,y)=>`<path d="M${x} ${y}v-14" stroke="#779c8f" stroke-width="2"/><circle cx="${x}" cy="${y-17}" r="5" fill="#e6a9ae"/><circle cx="${x}" cy="${y-17}" r="2" fill="#fff1c8"/>`;
+ const tent='<path d="M46 113 91 49 139 108 98 133Z" fill="#d1a8b6"/><path d="M46 113 91 49 98 133Z" fill="#f5e4cc"/><path d="M65 120 89 79 93 130Z" fill="#797389"/><path d="M43 117 37 128M139 108 153 122" stroke="#ac979d" stroke-width="2"/><path d="M90 49V31L111 38 90 44" fill="#e8bd78" stroke="#bc9472" stroke-width="2"/>';
+ const pool='<ellipse cx="110" cy="123" rx="93" ry="29" fill="#a4cccf"/><ellipse cx="111" cy="120" rx="77" ry="21" fill="none" stroke="#e7f5ed"/><ellipse cx="119" cy="124" rx="42" ry="10" fill="none" stroke="#d5ece6"/>';
+ let art='';
+ if(kind==='journey'||kind==='welcome')art=ground+tree+tent+flower(172,131)+flower(39,114);
+ if(kind==='today')art=ground+tree+'<path d="M50 125Q96 124 112 101" fill="none" stroke="#fff6dd" stroke-width="12"/>'+[45,65,96,184].map((x,i)=>flower(x,110+i%2*20)).join('')+'<path d="M100 106 115 99 129 108 113 116Z" fill="#e5bd8f"/><path d="M105 111v13M124 112v10" stroke="#a68f85" stroke-width="3"/>';
+ if(kind==='practice')art=pool+[[48,137],[82,122],[118,111],[157,97]].map(([x,y])=>`<ellipse cx="${x}" cy="${y+5}" rx="19" ry="9" fill="var(--right)"/><ellipse cx="${x}" cy="${y}" rx="19" ry="9" fill="var(--top)"/>`).join('')+'<path d="M184 122V86M190 122V99" stroke="#779e92" stroke-width="3"/><ellipse cx="184" cy="84" rx="4" ry="12" fill="#c1b38a"/>';
+ if(kind==='rhythm')art=pool+'<path d="M52 122V64Q110 21 176 64V119" fill="none" stroke="#a5a0bf" stroke-width="5"/>'+[65,111,158].map((x,i)=>`<path d="M${x} ${i===1?44:55}V${[87,74,92][i]}" stroke="#a49ab7" stroke-width="2"/><circle class="sound-orb" data-sound-orb="${i}" cx="${x}" cy="${[90,77,95][i]}" r="13" fill="${['#edd5a0','#b7b4dc','#95c5bf'][i]}"/><ellipse cx="${x}" cy="${[116,109,123][i]}" rx="17" ry="5" fill="none" stroke="#ecf5ed"/>`).join('');
+ if(kind==='social')art=ground+tree+'<path d="M42 63Q108 101 163 51" fill="none" stroke="#8b839d" stroke-width="2"/>'+[[53,71],[86,80],[120,77],[145,66]].map(([x,y])=>`<path d="M${x} ${y}v12" stroke="#8b839d"/><rect x="${x-6}" y="${y+12}" width="12" height="17" rx="5" fill="#f7dcaa"/><circle cx="${x}" cy="${y+21}" r="14" fill="#f6dbaf" opacity=".15"/>`).join('')+flower(184,132);
+ if(kind==='coach')art=ground+'<path d="M90 136 107 49 144 134M100 108h42" fill="none" stroke="#b29a87" stroke-width="5"/><path d="M95 53 144 57 140 108 90 104Z" fill="#ffefd3"/><circle cx="118" cy="76" r="12" fill="#d7b0b6"/><path d="M95 98 112 81 132 103Z" fill="#9ebcb6"/><path d="M153 119 183 103 201 113 172 128Z" fill="#e6cda9"/><path d="M158 121v16M194 119v16" stroke="#a68d81" stroke-width="4"/><path d="M174 108v-18M182 107 190 88" stroke="#799a9a" stroke-width="3"/>';
+ return `<svg class="island scenery-${kind}" viewBox="0 0 220 175" aria-hidden="true">${art}</svg>`;
 }
-const api={state,tile,explorer,scene,CHAPTERS};root.ZoukableWorld=api;if(typeof module!=='undefined')module.exports=api;
+function scene(chapter,seed,prefs){
+ const [number,title,caption,kind]=CHAPTERS[chapter]||CHAPTERS.today;
+ return `<section class="chapter-scene" aria-label="${title}"><div class="chapter-copy"><p class="eyebrow">ZOUKABLE / ${number}</p><p class="chapter-title">${title}</p><p class="chapter-caption">${caption}</p></div><div class="chapter-landscape" aria-hidden="true"><span class="chapter-sun"></span><span class="chapter-cloud cloud-one"></span><span class="chapter-cloud cloud-two"></span><div class="chapter-monument">${scenery(kind)}<span class="chapter-explorer">${explorer(seed,'',prefs)}</span></div><span class="chapter-water"></span></div></section>`;
+}
+const api={state,tile,explorer,scene,scenery,CHAPTERS};root.ZoukableWorld=api;if(typeof module!=='undefined')module.exports=api;
 })(typeof window!=='undefined'?window:globalThis);
