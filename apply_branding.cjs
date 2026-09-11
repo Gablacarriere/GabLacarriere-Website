@@ -78,7 +78,7 @@ function patchHtml(file) {
       const clean = label.replace(/<[^>]+>/g, "").replace(/\s+/g, " ").trim();
       const isMentorship = /MENTORSHIP/i.test(clean);
       const context = isMentorship ? '<span class="brand-context">MENTORSHIP</span>' : "";
-      return `<a class="brand brand-logo" href="${href}" aria-label="Gab Lacarriere${isMentorship ? " Mentorship" : ""}"><img src="/gab-logo-header.png" alt="Gab Lacarriere">${context}</a>`;
+      return `<a class="brand brand-logo" href="${href}" aria-label="Gab Lacarriere${isMentorship ? " Mentorship" : ""}"><img src="/assets/editorial/logo-746.webp" srcset="/assets/editorial/logo-240.webp 240w, /assets/editorial/logo-480.webp 480w, /assets/editorial/logo-746.webp 746w, /gab-logo-header.png 1200w" sizes="(max-width: 520px) 304px, (max-width: 920px) 354px, 430px" alt="Gab Lacarriere">${context}</a>`;
     }
   );
 
@@ -103,7 +103,7 @@ function patchHtml(file) {
     ];
     const links = items.map(([href, label]) => `<a href="${href}"${currentPath === href ? ' aria-current="page"' : ''}>${label}</a>`).join("");
     const member = '<a class="memberLink" href="/mentorship-hub/">Member login</a>';
-    const nav = `<nav aria-label="Main navigation"><div class="w n"><a class="brand publicBrand" href="/" aria-label="Gab Lacarriere home"><img src="/gab-logo-header.png" alt="Gab Lacarriere" width="1200" height="190"></a><div class="primary">${links}${member}</div><details class="mobileMenu"><summary>Menu</summary><div class="mobilePanel">${links}${member}</div></details></div></nav>`;
+    const nav = `<nav aria-label="Main navigation"><div class="w n"><a class="brand publicBrand" href="/" aria-label="Gab Lacarriere home"><img src="/assets/editorial/logo-746.webp" srcset="/assets/editorial/logo-240.webp 240w, /assets/editorial/logo-480.webp 480w, /assets/editorial/logo-746.webp 746w, /gab-logo-header.png 1200w" sizes="(max-width: 520px) 304px, (max-width: 920px) 354px, 430px" alt="Gab Lacarriere" width="1200" height="190"></a><div class="primary">${links}${member}</div><details class="mobileMenu"><summary>Menu</summary><div class="mobilePanel">${links}${member}</div></details></div></nav>`;
     html = html.replace(/<nav\b[^>]*>[\s\S]*?<\/nav>/i, nav);
     html = html.replace('</nav>', '</nav><div class="studentVoiceBar" aria-label="Student feedback and reviews"><div class="w"><a href="/reviews/">Student Reviews &amp; Stories</a><a href="/feedback/">Give Feedback →</a></div></div>');
     html = html.replace(/<body([^>]*)>/i, (match, attrs) => {
