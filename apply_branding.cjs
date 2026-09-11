@@ -116,7 +116,7 @@ function patchHtml(file) {
     if (/\bclass=/.test(attrs)) return match.replace(/class="([^"]*)"/, 'class="$1 ' + theme + '"');
     return `<body${attrs} class="${theme}">`;
   });
-  html = html.replace('</head>', '<link rel="stylesheet" href="/bauhaus.css?v=1">\n<script defer src="/bauhaus.js?v=1"></script>\n</head>');
+  html = html.replace('</head>', '<link rel="stylesheet" href="/bauhaus.css?v=art-2">\n<script defer src="/art-discoveries.js?v=1"></script>\n<script defer src="/bauhaus.js?v=art-2"></script>\n</head>');
   return html;
 }
 

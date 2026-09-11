@@ -86,3 +86,8 @@ body.bhMember{--gold:#f1c52c;--ink:#f5f0e7;--panel:#181d29;--bg:#0b1020;--line:#
 .bhSite.publicSite .portalPreview .mini span{border-radius:0;border-color:#77786f;background:transparent}
 .bhSite.publicSite .bnbDark a:not(.btn),.bhSite.publicSite .featured a:not(.btn){color:#fff}
 @media(min-width:1100px) and (max-width:1199px){.bhSite.publicSite .primary{display:none!important}.bhSite.publicSite .mobileMenu{display:block!important}}
+/* Page-specific finds: discreet visual marks, without covering text or controls. */
+.artDock{display:flex;min-height:36px;margin:0 0 8px;max-width:100%;clear:both}.artDockRight{justify-content:flex-end}.artDockLeft{justify-content:flex-start}.artDock .artSecret{color:#5a5c52}.bhMember .artDock .artSecret{color:#aebad0}.bhColophon .artSecret{color:#e6dec8}
+.bhSecret.artSecret span{width:auto;height:auto;display:block;background:none!important;border-radius:0!important;clip-path:none!important;font:400 16px/1 Georgia,serif;opacity:.8;transform:none}.bhSecret.artSecret:hover span,.bhSecret.artSecret:focus-visible span{opacity:1;color:#bc3025}.bhMember .artSecret:hover span,.bhColophon .artSecret:hover span{color:#f1c52c}
+.bhCabinet .artArtist{font-size:.875rem;font-weight:800;letter-spacing:.02em;color:#8e261e}.bhCabinet img{max-height:45dvh;object-fit:contain;background:#e6dfd1}
+@media(max-width:760px){.artDock{margin-bottom:2px}.bhCabinet img{max-height:35dvh}}
