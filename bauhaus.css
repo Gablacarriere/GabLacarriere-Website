@@ -1,0 +1,88 @@
+/* Gab's Bauhaus-inspired interface: geometry supports movement and clear choices. */
+:root{--bh-paper:#f4f0e6;--bh-ink:#181918;--bh-blue:#1748b6;--bh-red:#bc3025;--bh-yellow:#f1c52c}
+body.bhSite{font-family:Futura,'Century Gothic',Avenir,'Trebuchet MS',sans-serif;-webkit-font-smoothing:antialiased}
+.bhSite h1,.bhSite h2,.bhSite h3,.bhSite h4{font-family:Futura,'Century Gothic',Avenir,'Trebuchet MS',sans-serif;font-weight:800;letter-spacing:-.04em}
+.bhSite :is(button,input,select,textarea){font-family:inherit}
+.bhSite :is(a,button,summary,input,select,textarea):focus-visible{outline:3px solid #d34329;outline-offset:4px}
+/* Public pages: editorial paper, asymmetric rules and primary-color wayfinding. */
+body.publicSite.bhSite{background:var(--bh-paper);color:var(--bh-ink);line-height:1.65}
+.bhSite.publicSite nav{background:var(--bh-paper);border-bottom:2px solid var(--bh-ink);box-shadow:none}
+.bhSite.publicSite .n{min-height:92px}
+.bhSite.publicSite .primary{font-size:.875rem;color:var(--bh-ink)}
+.bhSite.publicSite .primary a[aria-current],.bhSite.publicSite nav a:hover{color:var(--bh-blue)}
+.bhSite.publicSite .memberLink{border:1px solid var(--bh-ink);padding:10px 13px;color:var(--bh-ink)}
+.bhSite.publicSite .mobileMenu summary,.bhSite.publicSite .mobilePanel{border-radius:0;border-color:var(--bh-ink);background:var(--bh-paper);color:var(--bh-ink)}
+.bhSite.publicSite .mobilePanel a:hover{background:#e7dfcb;color:var(--bh-ink)}
+.bhSite.publicSite .hero,.bhSite.publicSite:not(.bnbPage) .hero,.bhSite.publicSite .bnbHero{background:var(--bh-paper);padding:72px 0 64px;border-bottom:2px solid var(--bh-ink);position:relative;overflow:hidden}
+.bhSite.publicSite .hero:before,.bhSite.publicSite .bnbHero:before{content:'';display:block;width:84px;height:12px;background:linear-gradient(90deg,var(--bh-red) 0 33.33%,var(--bh-yellow) 33.33% 66.66%,var(--bh-blue) 66.66%);margin:0 max(18px,calc((100% - 1120px)/2)) 32px}
+.bhSite.publicSite .hero h1,.bhSite.publicSite:not(.bnbPage) .hero h1,.bhSite.publicSite .bnbHero h1{font-family:inherit;font-weight:900;letter-spacing:-.055em;line-height:1.03;font-size:clamp(2.7rem,5.4vw,5.2rem);margin-top:20px;text-wrap:balance}
+.bhSite.publicSite h2,.bhSite.publicSite:not(.bnbPage) h2{font-family:inherit;font-weight:800;font-size:clamp(2rem,3.6vw,3.5rem);line-height:1.08}
+.bhSite.publicSite h3{font-weight:800;line-height:1.2}
+.bhSite.publicSite :is(.accent,h1 em){color:var(--bh-blue);font-style:normal}
+.bhSite.publicSite :is(.lede,.muted,.small,.mini,.fieldHint,.contactHint,.pricingNote,.breadcrumb,.bioLead,.bioText,.editorialPhoto figcaption,.heroPortrait figcaption,.card p,.classGuidance p,.bnbPromo .lede){color:#454841!important}
+.bhSite.publicSite :is(.kicker,.eyebrow){color:var(--bh-red);font-size:.875rem;letter-spacing:.13em;font-weight:800}
+.bhSite.publicSite .tag{background:var(--bh-yellow);color:var(--bh-ink);border-radius:0;padding:7px 11px;font-size:.8rem;border-left:5px solid var(--bh-ink)}
+.bhSite.publicSite :is(.btn,.waFloat){border-radius:0;background:var(--bh-blue);color:#fff;border:2px solid var(--bh-blue);box-shadow:4px 4px 0 var(--bh-ink);font-weight:800;min-height:46px}
+.bhSite.publicSite .btn.ghost{background:transparent;color:var(--bh-ink);border-color:var(--bh-ink);box-shadow:none}
+.bhSite.publicSite .btn:hover,.bhSite.publicSite .waFloat:hover{filter:none;background:var(--bh-ink);border-color:var(--bh-ink);color:#fff;transform:translateY(-2px)}
+.bhSite.publicSite :is(.sec,.bnbSection){padding:72px 0}
+.bhSite.publicSite :is(.soft,.warm,.bnbSoft,.bnbFinal){background:#e9e3d5;color:var(--bh-ink)}
+.bhSite.publicSite :is(.card,.formatCard,.membershipCard,.package,.classGuidance,.applicationDraft,.portalPreview){border-radius:0;background:var(--bh-paper);border:1px solid #77786f;color:var(--bh-ink);box-shadow:none}
+.bhSite.publicSite .card{border-top:6px solid var(--bh-blue);padding:28px}
+.bhSite.publicSite .card:nth-child(3n+2){border-top-color:var(--bh-red)}
+.bhSite.publicSite .card:nth-child(3n+3){border-top-color:var(--bh-yellow)}
+.bhSite.publicSite a.card:hover{background:#fffdf6;border-color:var(--bh-ink);transform:translateY(-3px)}
+.bhSite.publicSite :is(.cardLink,.footerLinks a,.classFlyer figcaption a,.textLink){color:var(--bh-blue);text-decoration:underline;text-underline-offset:4px}
+.bhSite.publicSite :is(.grid,.formatCards){gap:24px}
+.bhSite.publicSite :is(.row,.list li,.membershipOption,.schedule,.applicationExtra,.bookingSteps,.step){border-color:#88887e}
+.bhSite.publicSite :is(.row b,.offerPrice,.price,.packagePrice){color:var(--bh-ink)}
+.bhSite.publicSite :is(.heroPortrait img,.aboutPortrait img,.editorialPhoto img,.classesPhoto,.classFlyer img,.bnbArt img,.rooms img,.bnbPromo img,.pizzaRow img){border-radius:0}
+.bhSite.publicSite .heroPortrait{border-bottom:12px solid var(--bh-blue);padding-bottom:12px;position:relative}
+.bhSite.publicSite .heroPortrait:after{content:'';position:absolute;right:-16px;top:-16px;width:40px;height:40px;border-radius:50%;background:var(--bh-red);border:6px solid var(--bh-paper)}
+.bhSite.publicSite .heroLayout{grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:64px;align-items:center}
+.bhSite.publicSite .bnbPromo{background:var(--bh-yellow);color:var(--bh-ink);border-block:2px solid var(--bh-ink)}
+.bhSite.publicSite .bnbPromo h2{font-family:inherit;font-weight:800}.bhSite.publicSite .bnbPromo .kicker{color:var(--bh-ink)}
+.bhSite.publicSite .bnbDark,.bhSite.publicSite .featured{background:var(--bh-blue);color:#fff}
+.bhSite.publicSite :is(.bnbDark,.featured) :is(h2,h3,p,li,.packagePrice,.small,.eyebrow){color:#fff!important}
+.bhSite.publicSite .featured .btn{background:var(--bh-yellow);color:var(--bh-ink);border-color:var(--bh-yellow)}
+.bhSite.publicSite :is(input,select,textarea){border:1px solid #73776f!important;border-radius:0!important;background:#fffdf7!important;color:var(--bh-ink)!important;font-size:1rem}
+.bhSite.publicSite :is(input,textarea)::placeholder{color:#66695f}
+.bhSite.publicSite footer{background:var(--bh-ink);color:var(--bh-paper);border-top:6px solid var(--bh-red);padding-bottom:30px}
+.bhSite.publicSite footer a{color:#f1c52c!important}
+.bhSite.publicSite .sectionIndex a,.bhSite.publicSite .path span{border-radius:0;border-color:#75776f;background:transparent;color:var(--bh-ink)}
+/* Member tools retain a dark cockpit, with the same typography and geometry. */
+body.bhMember{--gold:#f1c52c;--ink:#f5f0e7;--panel:#181d29;--bg:#0b1020;--line:#414858;background:#0b1020;color:#f5f0e7}
+.bhMember :is(.portalNavigation,.atlasHeader){background:var(--bh-paper)!important;border-bottom:4px solid var(--bh-blue)}
+.bhMember .brand-context{color:var(--bh-ink)}
+.bhMember :is(.authCard,.dashCard,.toolBox,.box,.detail,.coachOverviewCard,.editorPanel,.accountPanel,.missionCard,.crewSection,.crewProfile,.atlasAccount,.galaxyFrame){border-radius:0!important;border-color:#596073}
+.bhMember :is(.btn,.primaryButton){border-radius:0;background:var(--bh-yellow);color:#161918;border:1px solid var(--bh-yellow);font-weight:800}
+.bhMember :is(.btn.ghost,.secondaryButton){border-radius:0;background:transparent;color:#f1c52c;border:1px solid #f1c52c}
+.bhMember :is(input,select,textarea){border-radius:0!important;font-size:1rem}
+.bhMember :is(.tag,.badge){border-radius:0;background:#f1c52c;color:#161918}
+.bhMember :is(.hubNav a,.rail nav a,.flightControls button,.filter,.smallBtn){border-radius:0!important}
+.bhMember .rail nav a[aria-current=page]{border-left:4px solid #f1c52c;background:#183c85;color:#fff}
+.bhMember .hero{background:#0b1020;border-bottom:3px solid var(--bh-blue)}
+.bhMember .crewIntro h2,.bhMember .focusBox h2{font-family:inherit;font-weight:800}
+/* A quiet colophon: small visible marks, comfortably sized keyboard/touch targets. */
+.bhColophon{display:flex;justify-content:flex-end;gap:2px;padding:10px max(18px,calc((100% - 1120px)/2));background:var(--bh-ink);border-top:1px solid #555;color:var(--bh-paper)}
+.bhSecret{display:grid;place-items:center;width:44px;height:44px;padding:0;background:transparent;border:0;color:inherit;cursor:pointer}
+.bhSecret span{width:9px;height:9px;background:#f1c52c;display:block}.bhSecret:nth-child(1) span{border-radius:50%;background:#e74938}.bhSecret:nth-child(3) span{background:#729bff;clip-path:polygon(50% 0,100% 100%,0 100%)}
+.bhSecret:hover span{transform:scale(1.4)}
+.bhCabinet{width:min(680px,calc(100% - 32px));max-height:85dvh;overflow:auto;padding:28px;background:var(--bh-paper);color:var(--bh-ink);border:2px solid var(--bh-ink);box-shadow:10px 10px 0 #1748b6;font:16px/1.65 Futura,'Trebuchet MS',sans-serif}
+.bhCabinet::backdrop{background:#080b17cc}.bhCabinet h2{font:800 clamp(1.8rem,5vw,2.8rem)/1.1 Futura,'Trebuchet MS',sans-serif;margin:16px 0}.bhCabinet .bhClose{display:block;margin-left:auto;background:#181918;color:#fff;padding:10px 16px;border:0;font:inherit;cursor:pointer}.bhCabinet img{display:block;width:100%;height:auto;margin:20px 0}.bhCabinet a{color:#1748b6;text-decoration:underline}.bhCabinet small{display:block;font-size:.875rem}.bhCabinet .bhDate{font-size:3rem;font-weight:900;color:#bc3025;line-height:1.1}.bhCabinet .bhExperiment{display:flex;gap:12px;margin:24px 0;align-items:center}.bhExperiment i{width:40px;height:40px;background:#1748b6}.bhExperiment i:first-child{background:#bc3025;border-radius:50%}.bhExperiment i:last-child{background:#f1c52c;clip-path:polygon(50% 0,100% 100%,0 100%)}
+@media(max-width:760px){.bhSite.publicSite .heroLayout{grid-template-columns:1fr;gap:36px}.bhSite.publicSite .hero,.bhSite.publicSite:not(.bnbPage) .hero,.bhSite.publicSite .bnbHero{padding:36px 0 40px}.bhSite.publicSite :is(.sec,.bnbSection){padding:44px 0}.bhSite.publicSite .hero:before,.bhSite.publicSite .bnbHero:before{margin-bottom:24px}.bhSite.publicSite .heroPortrait{max-width:420px;margin-right:16px}.bhSite.publicSite .hero h1,.bhSite.publicSite:not(.bnbPage) .hero h1,.bhSite.publicSite .bnbHero h1{font-size:clamp(2.5rem,10vw,3.8rem)}.bhCabinet{padding:20px}.bhSite.publicSite .n{min-height:78px}}
+@media(prefers-reduced-motion:reduce){.bhSite *{scroll-behavior:auto!important}.bhSite .card,.bhSite .btn,.bhSecret span{transition:none!important;transform:none!important}}
+/* Legacy page-specific callouts now use the shared light surface. */
+.bhSite.publicSite main [style*="background"]{background:var(--bh-paper)!important;color:var(--bh-ink)!important;border-color:#77786f!important;border-radius:0!important}
+.bhSite.publicSite main [style*="color"]{color:var(--bh-ink)!important}
+.bhSite.publicSite :is(.breadcrumb a,.membershipLength,.offerPrice small,.offerPrice span,.classIntro,.membershipOption span,.quote,.fit,.timeline,.step p){color:#454841}
+.bhSite.publicSite main a[style*="color"]{color:var(--bh-blue)!important}
+.bhSite.publicSite #schedule .g2>div{background:var(--bh-paper);border:1px solid #77786f;border-top:6px solid var(--bh-blue);border-radius:0}
+.bhSite.publicSite #schedule .g2>div:nth-child(2){border-top-color:var(--bh-red)}
+.bhSite.publicSite #application-help a,.bhSite.publicSite .pricingNote a,.bhSite.publicSite .space span{color:var(--bh-blue)}
+.bhSite.publicSite .space span{background:transparent;border-color:#77786f;border-radius:0}
+.bhSite.publicSite main a:not(.btn):not(.card){color:var(--bh-blue)}
+.bhSite.publicSite :is(.timeline b,.step b,.portalPreview .mini span,.aboutPortrait figcaption){color:#454841}
+.bhSite.publicSite .portalPreview .mini span{border-radius:0;border-color:#77786f;background:transparent}
+.bhSite.publicSite .bnbDark a:not(.btn),.bhSite.publicSite .featured a:not(.btn){color:#fff}
+@media(min-width:1100px) and (max-width:1199px){.bhSite.publicSite .primary{display:none!important}.bhSite.publicSite .mobileMenu{display:block!important}}

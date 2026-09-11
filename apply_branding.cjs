@@ -111,6 +111,12 @@ function patchHtml(file) {
     html = html.replace('</footer>', '<div class="w footerLinks"><a href="/learn/">Learning library</a><a href="/classes/">Class details</a><a href="mailto:riseadance@gmail.com">Email Gab</a></div></footer>');
   }
 
+  html = html.replace(/<body([^>]*)>/i, (match, attrs) => {
+    const theme = publicPage ? 'bhSite' : 'bhSite bhMember';
+    if (/\bclass=/.test(attrs)) return match.replace(/class="([^"]*)"/, 'class="$1 ' + theme + '"');
+    return `<body${attrs} class="${theme}">`;
+  });
+  html = html.replace('</head>', '<link rel="stylesheet" href="/bauhaus.css?v=1">\n<script defer src="/bauhaus.js?v=1"></script>\n</head>');
   return html;
 }
 
