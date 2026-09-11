@@ -12,6 +12,41 @@
 .mobileMenu{display:none;position:relative}.mobileMenu summary{list-style:none;cursor:pointer;border:1px solid #ffffff2a;border-radius:999px;padding:9px 13px;font-weight:800}.mobileMenu summary::-webkit-details-marker{display:none}.mobilePanel{position:absolute;right:0;top:48px;min-width:220px;padding:10px;background:#111721;border:1px solid #ffffff1f;border-radius:16px;box-shadow:0 18px 44px #0008;display:grid}.mobilePanel a{padding:11px 12px;border-radius:10px}.mobilePanel a:hover{background:#ffffff0a}
 @media(max-width:920px){.primary{display:none!important}.mobileMenu{display:block}.n{min-height:68px}}
 
+
+/* Official Gab Lacarriere brand lockup */
+.brand.brand-logo{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  flex:0 0 auto;
+  line-height:0;
+  letter-spacing:0;
+  font-size:inherit;
+}
+.brand.brand-logo img{
+  display:block;
+  width:auto;
+  height:56px;
+  max-width:min(360px,44vw);
+  object-fit:contain;
+}
+.brand-context{
+  font-size:.68rem;
+  line-height:1;
+  letter-spacing:.12em;
+  font-weight:850;
+  color:#c9ced8;
+  white-space:nowrap;
+}
+@media(max-width:920px){
+  .brand.brand-logo img{height:50px;max-width:245px}
+  .brand-context{font-size:.62rem}
+}
+@media(max-width:520px){
+  .brand.brand-logo img{height:44px;max-width:205px}
+  .brand-context{display:none}
+}
+
 </style>
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-RHMDH35TBJ"></script>
 <script>
@@ -21,12 +56,22 @@ gtag('js',new Date());
 gtag('config','G-RHMDH35TBJ');
 </script>
 <link rel="stylesheet" href="/mentorship-worlds.css?v=1">
+
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/favicon-180.png">
+<meta name="theme-color" content="#0a0d12">
+
+<link rel="stylesheet" href="/public-experience.css?v=voices-1">
+<link rel="stylesheet" href="/bauhaus.css?v=art-2">
+<script defer src="/art-discoveries.js?v=1"></script>
+<script defer src="/bauhaus.js?v=art-2"></script>
+<link rel="stylesheet" href="/art-directions.css?v=2">
 </head>
-<body>
-<nav><div class="w n"><a class="brand" href="/">GAB LACARRIERE</a>
-<div class="primary"><a href="/learn/">Learn</a><a href="/method/">Method</a><a href="/mentorship/">Mentorship</a><a href="/work-with-gab/">Work With Gab</a><a href="/about/">About</a><a class="btn" href="/mentorship-hub/">Member Login</a></div>
-<details class="mobileMenu"><summary>Menu</summary><div class="mobilePanel"><a href="/learn/">Learn</a><a href="/method/">Method</a><a href="/mentorship/">Mentorship</a><a href="/work-with-gab/">Work With Gab</a><a href="/about/">About</a><a href="/mentorship-hub/">Member Login</a></div></details>
-</div></nav>
+<body class="publicSite bhSite" data-art="garden" data-page="mentorship">
+<a class="skipLink" href="#main">Skip to content</a>
+<nav aria-label="Main navigation"><div class="w n"><a class="brand publicBrand" href="/" aria-label="Gab Lacarriere home"><img src="/gab-logo-header.png" alt="Gab Lacarriere" width="1200" height="190"></a><div class="primary"><a href="/zoukable/" data-zoukable-link="1">Zoukable</a><a href="/classes/">Classes</a><a href="/zouk-bnb/">Zouk BNB</a><a href="/privates/">Private training</a><a href="/mentorship/" aria-current="page">Mentorship</a><a href="/method/">Method</a><a href="/work-with-gab/">Work with Gab</a><a href="/journal/">Journal</a><a href="/about/">About</a><a class="memberLink" href="/mentorship-hub/">Member login</a></div><details class="mobileMenu"><summary>Menu</summary><div class="mobilePanel"><a href="/zoukable/" data-zoukable-link="1">Zoukable</a><a href="/classes/">Classes</a><a href="/zouk-bnb/">Zouk BNB</a><a href="/privates/">Private training</a><a href="/mentorship/" aria-current="page">Mentorship</a><a href="/method/">Method</a><a href="/work-with-gab/">Work with Gab</a><a href="/journal/">Journal</a><a href="/about/">About</a><a class="memberLink" href="/mentorship-hub/">Member login</a></div></details></div></nav>
+<main id="main" tabindex="-1"><div class="studentVoiceBar" aria-label="Student feedback and reviews"><div class="w"><a href="/reviews/">Student Reviews &amp; Stories</a><a href="/feedback/">Give Feedback →</a></div></div>
 
 <section class="hero"><div class="w">
   <span class="tag">Mentorship · Brazilian Zouk + Lambada · NYC</span>
@@ -151,7 +196,8 @@ gtag('config','G-RHMDH35TBJ');
 </div></section>
 
 
-<section class="sec"><div class="w"><h2>Hear from students.</h2><p>Explore student experiences, shared in their own words and with their permission.</p><p><a href="/reviews/">Read student reviews →</a></p></div></section><footer><div class="w">Gab Lacarriere · Brazilian Zouk · Lambada · Movement Education · New York City</div></footer>
+<section class="sec"><div class="w"><h2>Hear from students.</h2><p>Explore student experiences, shared in their own words and with their permission.</p><p><a href="/reviews/">Read student reviews →</a></p></div></section></main>
+<footer><div class="w">Gab Lacarriere · Brazilian Zouk · Lambada · Movement Education · New York City</div><div class="w footerDirectory" role="navigation" aria-label="Footer navigation"><div class="footerGroup"><h2>Train in NYC</h2><a href="/classes/">Weekly classes</a><a href="/privates/">Private training</a><a href="/mentorship/" aria-current="page">Monthly mentorship</a><a href="/zouk-bnb/">Zouk BNB · stay &amp; train</a></div><div class="footerGroup"><h2>Explore</h2><a href="/reviews/">Student reviews</a><a href="/feedback/">Give feedback</a><a href="/journal/">The Journal</a><a href="/learn/">Learning library</a><a href="/method/">Teaching method</a><a href="/about/">About Gab</a><a href="/work-with-gab/">Events &amp; collaborations</a></div><div class="footerGroup"><h2>Your next step</h2><a href="/mentorship-hub/">Member sign in</a><a href="/classes/#schedule">Class schedule</a><a href="mailto:riseadance@gmail.com">Email Gab</a></div></div></footer>
 <a class="waFloat" href="https://wa.me/19295864994?text=Hi%20Gab%2C%20I%27m%20interested%20in%20your%20mentorship%20program." target="_blank" rel="noopener">WhatsApp · Contact</a>
 
 <script src="/application-email.js" defer></script>
