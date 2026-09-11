@@ -54,8 +54,11 @@ async function boot(){
    $('#connection').textContent=S.profile.display_name||'Member';
   }else $('#connection').textContent='Mentorship sign-in';
  }catch(e){S.profile=null;notice(e.message||'Unable to load your account.',true);$('#connection').textContent='Connection unavailable';}
+ const requestedPage=new URLSearchParams(location.search).get('page');
+ if(S.profile&&validPage(requestedPage))S.tab=requestedPage;
  const requested=new URLSearchParams(location.search).get('skill');
  if(S.profile&&requested){const skill=S.skills.find(x=>x.slug===requested);if(skill){S.tab='skills';render();const b=[...document.querySelectorAll('[data-world]')].find(b=>b.dataset.world===skill.id);b?.click();notice('Connected from Atlas. These are your own practice options; discoveries are unchanged.');return;}notice('That linked skill is not available here yet. Your other practice remains available.',true);}
+ if(S.profile)writePage(S.tab,true);
  render();
 }
 function loginView(){
@@ -71,9 +74,12 @@ function startDemo(){
  S.drills=[{id:'demo-drill',version:1,title:'Your familiar foundation',objective:'Explore the practice workflow with a movement you already know.',instructions:'Choose a familiar, comfortable movement from your own training. This sample demonstrates the timer and feedback flow; it is not a published Zoukable lesson.',cue:'Keep it comfortable. You can always stop.',simplification:'Use a smaller, slower version of your familiar movement. Pause whenever needed.',common_mistakes:'This sample has no teacher assessment criteria yet.',primary_skill_id:'skill-0',secondary_skills:[],min_seconds:30,target_seconds:60,partner_mode:'either',role:'either',side_specific:true,physical_load:'low',status:'published',bpm:75,rhythm_id:'pulse',requires_clearance:false,corrective_only:false}];
  S.attempts=[];S.reviews=[];S.notes=[];S.social=[];S.clearances=[];$('#connection').textContent='Demo · not saved';go('today');
 }
-function go(tab){if(run)return notice('Finish or stop your current practice first.',true);player.stop();if(tab!=='journey')activeDiagnostic=null;S.tab=tab;notice('');render();$('#main').focus({preventScroll:true});}
+function validPage(tab){return ['journey','today','practice','skills','rhythm','social'].includes(tab)||(tab==='coach'&&coach());}
+function writePage(tab,replace=false){const url=new URL(location.href);url.searchParams.set('page',tab);url.searchParams.delete('skill');history[replace?'replaceState':'pushState']({zoukable:tab},'',url);}
+function go(tab,{fromHistory=false}={}){if(!validPage(tab))return;if(run){if(fromHistory)writePage(S.tab,true);return notice('Finish or stop your current practice first.',true);}player.stop();if(tab!=='journey')activeDiagnostic=null;if(!fromHistory&&tab!==S.tab)writePage(tab);S.tab=tab;notice('');render();$('#main').focus({preventScroll:true});window.scrollTo({top:0,behavior:'instant'});}
+window.addEventListener('popstate',()=>{if(!S.profile)return;const params=new URLSearchParams(location.search),tab=params.get('page')||(params.has('skill')?'skills':'today');if(validPage(tab)){go(tab,{fromHistory:true});if(!run&&tab==='skills'&&params.has('skill')){const skill=S.skills.find(x=>x.slug===params.get('skill'));if(skill)[...document.querySelectorAll('[data-world]')].find(b=>b.dataset.world===skill.id)?.click();}}else{writePage(S.tab,true);}});
 function render(){
- document.querySelectorAll('#tabs button').forEach(b=>b.classList.toggle('active',b.dataset.tab===S.tab));$('#breadcrumb').textContent='ZOUKABLE / '+S.tab.toUpperCase();
+ document.querySelectorAll('#tabs button').forEach(b=>{const current=b.dataset.tab===S.tab;b.classList.toggle('active',current);if(current)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current');});$('#breadcrumb').textContent='ZOUKABLE / '+S.tab.toUpperCase();
  if(!S.profile){loginView();return;}
  ({today:todayView,practice:practiceView,skills:skillsView,rhythm:rhythmView,social:socialView,coach:teacherView,journey:journeyView}[S.tab]||todayView)();
 }
