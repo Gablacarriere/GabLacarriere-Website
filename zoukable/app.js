@@ -54,6 +54,8 @@ async function boot(){
    $('#connection').textContent=S.profile.display_name||'Member';
   }else $('#connection').textContent='Mentorship sign-in';
  }catch(e){S.profile=null;notice(e.message||'Unable to load your account.',true);$('#connection').textContent='Connection unavailable';}
+ const requested=new URLSearchParams(location.search).get('skill');
+ if(S.profile&&requested){const skill=S.skills.find(x=>x.slug===requested);if(skill){S.tab='skills';render();const b=[...document.querySelectorAll('[data-world]')].find(b=>b.dataset.world===skill.id);b?.click();notice('Connected from Atlas. These are your own practice options; discoveries are unchanged.');return;}notice('That linked skill is not available here yet. Your other practice remains available.',true);}
  render();
 }
 function loginView(){
@@ -153,6 +155,7 @@ async function stopAttempt(){
  try{await finishRecord({status:'stopped',practice_seconds:Math.floor(run.seconds),hint_used:run.hint});closeRun();render();notice('Practice stopped. Your XP and review schedule were not reduced.');}catch(e){$('#attempt-error').textContent='Practice is stopped, but the record could not sync. You can close this window; no completion is claimed. '+e.message;const b=document.createElement('button');b.className='btn secondary';b.textContent='Close without syncing';b.onclick=closeRun;$('#attempt-content').append(b);}
 }
 function closeRun(){clearInterval(ticker);player.stop();run=null;$('#attempt-dialog').close();}
+function atlasLinks(skill){const links=window.GAB_CURRICULUM_LINKS?.forSkill(skill.slug)||[];return links.length?`<section class="atlas-connection"><h4>Explore the related ideas in Atlas</h4>${links.map(x=>`<p><a href="/zouk-map/?concept=${encodeURIComponent(x.concept)}#map">${E(x.title)} ↗</a></p>`).join('')}<p class="help">Atlas records lesson discoveries; Zoukable records practice. These links do not change either record.</p></section>`:'';}
 function worldData(skill){
  const evidence=L.evidence(skill,S.attempts,S.drills,S.notes,S.social,S.ctx);
  return {skill,evidence,...W.state(evidence,S.drills.filter(d=>d.primary_skill_id===skill.id),gateFor,d=>eligible(d))};
@@ -167,7 +170,7 @@ function bindWorld(){
  document.querySelectorAll('[data-world]').forEach(b=>b.onclick=()=>{
   const x=worldData(S.skills.find(s=>s.id===b.dataset.world));document.querySelector('.map-explorer')?.remove();b.insertAdjacentHTML('beforeend',`<span class="map-explorer arriving">${W.explorer(S.user.id,'',learningProfile)}</span>`);
   document.querySelectorAll('[data-world]').forEach(n=>n.setAttribute('aria-pressed',String(n===b)));
-  $('#world-detail').innerHTML=`<div><p class="eyebrow">${E(x.label)} · ${E(S.ctx.role)} · ${E(S.ctx.side)}</p><h3>${E(x.skill.name)}</h3><p>${E(x.skill.description||'Explore this skill through teacher-authored practice.')}</p><p class="help">${x.evidence.direct} direct practice bouts · ${x.evidence.days} days with independent successes · ${x.evidence.natural} natural social uses reported.</p>${x.evidence.teacher?`<p class="help">Teacher observation: ${E(x.evidence.teacher.status)}. ${E(x.evidence.teacher.note)}</p>`:''}<p class="help">Preparation: ${(x.skill.prerequisites||[]).map(id=>E(skillName(id))).join(', ')||'No prerequisite skills listed.'}</p>${x.access==='locked'?S.drills.filter(d=>d.primary_skill_id===x.skill.id&&d.status==='published').map(d=>`<p class="help">${E(d.title)}: ${E(readiness(d))}</p>`).join(''):''}</div><button class="btn" id="world-practice">${x.drill?'Practice this skill →':x.access==='setup'?'Change practice setup':x.access==='locked'?'Review practice requirements':coach()?'Open Teacher studio':'Explore rhythm studio'}</button>`;
+  $('#world-detail').innerHTML=`<div><p class="eyebrow">${E(x.label)} · ${E(S.ctx.role)} · ${E(S.ctx.side)}</p><h3>${E(x.skill.name)}</h3><p>${E(x.skill.description||'Explore this skill through teacher-authored practice.')}</p><p class="help">${x.evidence.direct} direct practice bouts · ${x.evidence.days} days with independent successes · ${x.evidence.natural} natural social uses reported.</p>${x.evidence.teacher?`<p class="help">Teacher observation: ${E(x.evidence.teacher.status)}. ${E(x.evidence.teacher.note)}</p>`:''}<p class="help">Preparation: ${(x.skill.prerequisites||[]).map(id=>E(skillName(id))).join(', ')||'No prerequisite skills listed.'}</p>${atlasLinks(x.skill)}${x.access==='locked'?S.drills.filter(d=>d.primary_skill_id===x.skill.id&&d.status==='published').map(d=>`<p class="help">${E(d.title)}: ${E(readiness(d))}</p>`).join(''):''}</div><button class="btn" id="world-practice">${x.drill?'Practice this skill →':x.access==='setup'?'Change practice setup':x.access==='locked'?'Review practice requirements':coach()?'Open Teacher studio':'Explore rhythm studio'}</button>`;
   $('#world-practice').onclick=()=>{if(x.drill){S.queue=[{drill:x.drill,seconds:x.drill.target_seconds,reason:'From your skill map'}];prepare(0);}else go(x.access==='locked'||x.access==='setup'?'practice':coach()?'coach':'rhythm');};
   $('#world-detail').focus({preventScroll:true});
   $('#world-detail').scrollIntoView({behavior:'auto',block:'nearest'});
