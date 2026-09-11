@@ -107,8 +107,14 @@ function patchHtml(file) {
       html = html.replace('<main id="main">', '<main id="main" tabindex="-1">');
     }
     if (!/class="skipLink"/.test(html)) html = html.replace(/(<body[^>]*>)/i, '$1\n<a class="skipLink" href="#main">Skip to content</a>');
-    html = html.replace('</head>', '<link rel="stylesheet" href="/public-experience.css?v=photos-1">\n</head>');
-    html = html.replace('</footer>', '<div class="w footerLinks"><a href="/learn/">Learning library</a><a href="/classes/">Class details</a><a href="mailto:riseadance@gmail.com">Email Gab</a></div></footer>');
+    html = html.replace('</head>', '<link rel="stylesheet" href="/public-experience.css?v=paths-1">\n</head>');
+    const footerGroups = [
+      ['Train in NYC', [['/classes/', 'Weekly classes'], ['/privates/', 'Private training'], ['/mentorship/', 'Monthly mentorship'], ['/zouk-bnb/', 'Zouk BNB · stay & train']]],
+      ['Explore', [['/learn/', 'Learning library'], ['/method/', 'Teaching method'], ['/about/', 'About Gab'], ['/work-with-gab/', 'Events & collaborations']]],
+      ['Your next step', [['/mentorship-hub/', 'Member sign in'], ['/classes/#schedule', 'Class schedule'], ['mailto:riseadance@gmail.com', 'Email Gab']]],
+    ];
+    const footerDirectory = footerGroups.map(([heading, entries]) => `<div class="footerGroup"><h2>${heading}</h2>${entries.map(([href, label]) => `<a href="${href}"${currentPath === href ? ' aria-current="page"' : ''}>${label.replace(/&/g, '&amp;')}</a>`).join('')}</div>`).join('');
+    html = html.replace('</footer>', `<div class="w footerDirectory" role="navigation" aria-label="Footer navigation">${footerDirectory}</div></footer>`);
   }
 
   html = html.replace(/<body([^>]*)>/i, (match, attrs) => {

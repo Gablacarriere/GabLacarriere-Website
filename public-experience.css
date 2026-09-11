@@ -153,3 +153,22 @@
 .publicSite .workshopWide{margin-top:40px}
 .publicSite .heroPortrait img[src^="/assets/editorial/"],.publicSite .aboutPortrait img[src^="/assets/editorial/"]{aspect-ratio:auto;height:auto;object-fit:contain}
 @media(max-width:760px){.publicSite .editorialSplit{grid-template-columns:1fr;gap:28px}.publicSite .photoBand{padding:20px 0}}
+
+/* Clear paths through the public site. */
+.publicSite .trainingChoices{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px;margin-top:32px}
+.publicSite .trainingChoice{display:flex;flex-direction:column;position:relative}
+.publicSite .trainingChoice h3{font-size:1.7rem;margin:12px 0}
+.publicSite .choiceNumber{font-size:.875rem;font-weight:800;letter-spacing:.1em;color:var(--bh-blue)}
+.publicSite .trainingChoice dl{margin:24px 0;line-height:1.55}
+.publicSite .trainingChoice dt{font-size:.875rem;font-weight:800;margin-top:14px}
+.publicSite .trainingChoice dd{margin:4px 0 0;font-size:1rem}
+.publicSite .trainingChoice .cardLink{margin-top:auto;padding-top:16px}
+.publicSite .startingHelp{display:flex;align-items:center;justify-content:space-between;gap:32px;padding:32px 0;margin-top:28px;border-block:2px solid var(--bh-ink)}
+.publicSite .startingHelp h3{font-size:1.4rem}.publicSite .startingHelp p{max-width:640px;margin-bottom:0}.publicSite .startingHelp .btn{flex-shrink:0}
+.publicSite .choiceNote{font-size:.875rem;margin-top:20px}
+.publicSite :is(#find-your-training,#learning-library,#training-formats,#nyc-dancing){scroll-margin-top:110px}
+.publicSite .footerDirectory{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px;padding-top:28px;margin-top:28px;border-top:1px solid #77786f}
+.publicSite .footerGroup{display:flex;flex-direction:column;align-items:flex-start;gap:2px}
+.publicSite.bhSite .footerGroup h2{font-size:1rem;letter-spacing:0;margin:0 0 12px;line-height:1.3}
+.publicSite .footerGroup a{display:inline-flex;align-items:center;min-height:44px;padding:7px 0;text-decoration:underline;text-underline-offset:4px;color:var(--bh-blue);font-size:1rem}
+@media(max-width:760px){.publicSite .trainingChoices{grid-template-columns:1fr;gap:20px}.publicSite .startingHelp{flex-direction:column;align-items:flex-start;gap:20px}.publicSite .footerDirectory{grid-template-columns:1fr;gap:28px}}
