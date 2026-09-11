@@ -9,3 +9,6 @@
 #previewToggle[hidden]{display:none!important}
 .rail nav a[hidden]{display:none!important}.importSource{margin:24px 0;border-color:#dcb57955}.importSource h2{font-size:22px;line-height:1.5}.importSource h3{margin-top:24px}.importSource summary{cursor:pointer;color:#e7c78e}.atlasLessonForm .importConfirmation{display:flex;align-items:flex-start;gap:12px}.atlasLessonForm .importConfirmation input{width:20px;height:20px;flex-shrink:0;margin:3px 0}.importSource .lessonText{font-size:13px}
 @media(max-width:700px){.rail nav:has(#atlasImportsLink:not([hidden])){grid-template-columns:repeat(3,1fr)}}
+
+.atlasHelp{display:block;color:#b6dfdb;padding:14px 0;font-size:14px;text-decoration:underline;min-height:44px}.atlasAccount>div{flex:1;min-width:200px;max-width:720px}.atlasAccount p{line-height:1.6;margin:6px 0}.atlasHelp:focus-visible{outline:3px solid #8ad8d0;outline-offset:3px}.lessonText{overflow-wrap:anywhere}@media(max-width:700px){.atlasAccount .primaryButton{width:100%;text-align:center;min-height:44px}.atlasLessonForm input,.atlasLessonForm textarea,.atlasLessonForm select,.atlasAccount select{font-size:16px}.flightControls button,.topic,.discoveryBar select{min-height:44px}.flightControls{flex-wrap:wrap}.atlasHelp{padding:12px 0}}
+.atlasAccount a.primaryButton{color:#10141a}

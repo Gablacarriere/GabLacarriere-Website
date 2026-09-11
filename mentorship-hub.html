@@ -98,18 +98,19 @@ body.studentView .adminOnly{display:none!important}
 
 
 </style>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.116.0"></script>
   <script src="/supabase-config.js"></script>
-<link rel="stylesheet" href="/mentorship-crew.css?v=crew-3"><script src="/mentorship-crew.js"></script><link rel="stylesheet" href="/hub-navigation.css?v=1">
+<link rel="stylesheet" href="/mentorship-crew.css?v=crew-3"><script src="/mentorship-crew.js"></script><link rel="stylesheet" href="/hub-navigation.css?v=launch-1">
 </head>
 <body>
 <nav class="portalNavigation"><div class="w n"><a class="portalBrand" href="/" aria-label="Gab Lacarriere home"><img src="/gab-logo-header.png" alt="Gab Lacarriere" width="1200" height="190"></a><div class="links"><a href="/mentorship/">Mentorship</a><a class="btn" href="/">Public Site</a></div></div></nav>
 
 <div class="portalShell">
+  <aside class="memberHelp"><strong>Need a hand?</strong> <a href="mailto:riseadance@gmail.com?subject=Mentorship%20website%20help">Email Gab for help →</a><span>Tell me which page you’re on and what happened. Never send your password.</span></aside>
   <section id="loginView" class="authCard">
     <span class="tag">Private mentorship area</span>
     <h2 style="margin-top:18px">Mentorship Hub</h2>
-    <p class="muted">Individual access for current mentorship students.</p>
+    <p class="muted">Your practice, lesson notes and personal Zouk map, in one place.</p><p class="muted">First visit? Open your invitation email to create your password, then return here to sign in. Use the same email address that received your invitation.</p>
     <form id="loginForm" class="form">
       <div class="field"><label for="email">Email</label><input id="email" type="email" autocomplete="email" required></div>
       <div class="field"><label for="password">Password</label><input id="password" type="password" autocomplete="current-password" required></div>
@@ -125,8 +126,8 @@ body.studentView .adminOnly{display:none!important}
     <h2 style="margin-top:18px">Choose a new password.</h2>
     <p class="muted">You opened a secure password-reset link from your email.</p>
     <form id="recoveryForm" class="accountForm">
-      <input id="recoveryPassword" type="password" minlength="10" autocomplete="new-password" placeholder="New password" required>
-      <input id="recoveryPasswordConfirm" type="password" minlength="10" autocomplete="new-password" placeholder="Confirm new password" required>
+      <label for="recoveryPassword">New password · at least 10 characters</label><input id="recoveryPassword" type="password" minlength="10" autocomplete="new-password" placeholder="New password" required>
+      <label for="recoveryPasswordConfirm">Confirm new password</label><input id="recoveryPasswordConfirm" type="password" minlength="10" autocomplete="new-password" placeholder="Confirm new password" required>
       <button class="btn" type="submit">Set new password</button>
       <p id="recoveryMessage" class="muted"></p>
     </form>
@@ -1582,7 +1583,7 @@ document.getElementById('passwordChangeForm').addEventListener('submit', async (
 
 initPortal();
 </script>
-<script src="/hub-navigation.js?v=1"></script>
+<script src="/hub-navigation.js?v=launch-1"></script>
 <script src="/coach-alerts.js"></script>
 </body>
 </html>
