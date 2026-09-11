@@ -98,8 +98,14 @@ body.studentView .adminOnly{display:none!important}
 
 
 </style>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.116.0"></script>
-  <script src="/supabase-config.js"></script>
+  <script src="/vendor/supabase-2.116.0.js"></script>
+  <script>
+window.GAB_PORTAL = {
+  supabaseUrl: "https://lftguwmyagkehqmaxjig.supabase.co",
+  supabaseAnonKey: "sb_publishable_YzhfBB0z3emKU-rM8f_18A_Z0RUJUYt"
+};
+
+</script>
 <link rel="stylesheet" href="/mentorship-crew.css?v=crew-3"><script src="/mentorship-crew.js"></script><link rel="stylesheet" href="/hub-navigation.css?v=launch-1">
 </head>
 <body>
@@ -478,7 +484,7 @@ function showPasswordFlow(flow) {
 
 async function initPortal() {
   if (!cfg.supabaseUrl || cfg.supabaseUrl.includes('PASTE_') || !cfg.supabaseAnonKey || cfg.supabaseAnonKey.includes('PASTE_')) {
-    showMessage('Portal setup is not connected yet.');
+    showMessage('Your account connection did not load. Reload this page, or open it in Safari or Chrome outside your email app. If it still fails, contact Gab using the help link above.');
     return;
   }
   try {
@@ -502,13 +508,13 @@ async function initPortal() {
       showMessage('Open the complete invitation link from your email. If it has expired, enter your email and use “Forgot your password?”.');
     }
   } catch (_) {
-    showMessage('Unable to connect to your account. Please reload this page and try again.');
+    showMessage('Unable to connect to your account. Reload this page, or open it in Safari or Chrome outside your email app. Your account has not been changed.');
   }
 }
 
 document.getElementById('loginForm').addEventListener('submit', async (e) => {
   e.preventDefault();
-  if (!sb) return showMessage('Portal setup is not connected yet.');
+  if (!sb) return showMessage('Your account connection did not load. Reload this page, or open it in Safari or Chrome outside your email app. If it still fails, contact Gab using the help link above.');
   showMessage('Signing in…');
   const email = document.getElementById('email').value.trim();
   const password = document.getElementById('password').value;
@@ -519,7 +525,7 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
 });
 
 document.getElementById('forgotPasswordBtn').addEventListener('click', async () => {
-  if (!sb) return showMessage('Portal setup is not connected yet.');
+  if (!sb) return showMessage('Your account connection did not load. Reload this page, or open it in Safari or Chrome outside your email app. If it still fails, contact Gab using the help link above.');
   const email = document.getElementById('email').value.trim();
   if (!email) {
     showMessage('Enter your email above first, then tap “Forgot your password?”.');
