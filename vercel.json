@@ -4,6 +4,14 @@
   "outputDirectory": "public",
   "rewrites": [
     {
+      "source": "/for-teachers/",
+      "destination": "/for-teachers.html"
+    },
+    {
+      "source": "/for-teachers",
+      "destination": "/for-teachers.html"
+    },
+    {
       "source": "/alex-de-carvalho/",
       "destination": "/alex-de-carvalho.html"
     },
