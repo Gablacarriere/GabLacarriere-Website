@@ -34,3 +34,7 @@ The component emits `cabinet-interaction` events with `action` and `focus` only.
 ## Verification
 
 Phone and desktop: exhibit selection, keyboard slider, rhythm changes, play/stop, stop on exhibit switch, map state, surprise selection, and horizontal overflow. All teaching paths remain visible with JavaScript disabled. No data writes are involved.
+
+## Exhibit refinement
+
+The first exhibit is now an opt-in animated duet, with together, echo and individual-expression modes plus manual scrubbing. Two distinct spheres retain their own space. The map now narrates a five-stop example of a rushed step, with coaching, independent exploration, Zoukable practice, Atlas review and transfer into other dances. The rhythm interface has playable low/mid/high percussion pads, a 60–130 BPM slider, a transport button and a sequencer display. Existing rhythm offsets are preserved. All motion and sound stop when switching exhibits or leaving the cabinet; nothing autoplays.
