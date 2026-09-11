@@ -110,7 +110,7 @@ function patchHtml(file) {
     html = html.replace('</head>', '<link rel="stylesheet" href="/public-experience.css?v=paths-1">\n</head>');
     const footerGroups = [
       ['Train in NYC', [['/classes/', 'Weekly classes'], ['/privates/', 'Private training'], ['/mentorship/', 'Monthly mentorship'], ['/zouk-bnb/', 'Zouk BNB · stay & train']]],
-      ['Explore', [['/journal/', 'The Journal'], ['/learn/', 'Learning library'], ['/method/', 'Teaching method'], ['/about/', 'About Gab'], ['/work-with-gab/', 'Events & collaborations']]],
+      ['Explore', [['/reviews/', 'Student reviews'], ['/journal/', 'The Journal'], ['/learn/', 'Learning library'], ['/method/', 'Teaching method'], ['/about/', 'About Gab'], ['/work-with-gab/', 'Events & collaborations']]],
       ['Your next step', [['/mentorship-hub/', 'Member sign in'], ['/classes/#schedule', 'Class schedule'], ['mailto:riseadance@gmail.com', 'Email Gab']]],
     ];
     const footerDirectory = footerGroups.map(([heading, entries]) => `<div class="footerGroup"><h2>${heading}</h2>${entries.map(([href, label]) => `<a href="${href}"${currentPath === href ? ' aria-current="page"' : ''}>${label.replace(/&/g, '&amp;')}</a>`).join('')}</div>`).join('');

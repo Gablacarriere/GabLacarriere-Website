@@ -4,6 +4,14 @@
   "outputDirectory": "public",
   "rewrites": [
     {
+      "source": "/reviews/",
+      "destination": "/reviews.html"
+    },
+    {
+      "source": "/reviews",
+      "destination": "/reviews.html"
+    },
+    {
       "source": "/feedback/",
       "destination": "/feedback.html"
     },
