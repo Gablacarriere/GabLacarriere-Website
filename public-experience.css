@@ -172,3 +172,5 @@
 .publicSite.bhSite .footerGroup h2{font-size:1rem;letter-spacing:0;margin:0 0 12px;line-height:1.3}
 .publicSite .footerGroup a{display:inline-flex;align-items:center;min-height:44px;padding:7px 0;text-decoration:underline;text-underline-offset:4px;color:var(--bh-blue);font-size:1rem}
 @media(max-width:760px){.publicSite .trainingChoices{grid-template-columns:1fr;gap:20px}.publicSite .startingHelp{flex-direction:column;align-items:flex-start;gap:20px}.publicSite .footerDirectory{grid-template-columns:1fr;gap:28px}}
+
+.publicSite .studentVoiceBar{background:#e3eeea;border-bottom:1px solid #829c97;color:#183b3a}.publicSite .studentVoiceBar .w{display:flex;justify-content:flex-end;gap:24px;flex-wrap:wrap;padding:4px 0}.publicSite .studentVoiceBar a{display:inline-flex;align-items:center;min-height:44px;font-size:14px;font-weight:750;text-decoration:underline;text-underline-offset:4px}@media(max-width:550px){.publicSite .studentVoiceBar .w{justify-content:center;gap:16px}.publicSite .studentVoiceBar a{font-size:12px}}

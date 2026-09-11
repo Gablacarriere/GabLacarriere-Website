@@ -96,6 +96,7 @@ function patchHtml(file) {
     const member = '<a class="memberLink" href="/mentorship-hub/">Member login</a>';
     const nav = `<nav aria-label="Main navigation"><div class="w n"><a class="brand publicBrand" href="/" aria-label="Gab Lacarriere home"><img src="/gab-logo-header.png" alt="Gab Lacarriere" width="1200" height="190"></a><div class="primary">${links}${member}</div><details class="mobileMenu"><summary>Menu</summary><div class="mobilePanel">${links}${member}</div></details></div></nav>`;
     html = html.replace(/<nav\b[^>]*>[\s\S]*?<\/nav>/i, nav);
+    html = html.replace('</nav>', '</nav><div class="studentVoiceBar" aria-label="Student feedback and reviews"><div class="w"><a href="/reviews/">Student Reviews &amp; Stories</a><a href="/feedback/">Give Feedback →</a></div></div>');
     html = html.replace(/<body([^>]*)>/i, (match, attrs) => {
       if (/\bclass=/.test(attrs)) return match.replace(/class="([^"]*)"/, 'class="$1 publicSite"');
       return `<body${attrs} class="publicSite">`;
@@ -107,10 +108,10 @@ function patchHtml(file) {
       html = html.replace('<main id="main">', '<main id="main" tabindex="-1">');
     }
     if (!/class="skipLink"/.test(html)) html = html.replace(/(<body[^>]*>)/i, '$1\n<a class="skipLink" href="#main">Skip to content</a>');
-    html = html.replace('</head>', '<link rel="stylesheet" href="/public-experience.css?v=paths-1">\n</head>');
+    html = html.replace('</head>', '<link rel="stylesheet" href="/public-experience.css?v=voices-1">\n</head>');
     const footerGroups = [
       ['Train in NYC', [['/classes/', 'Weekly classes'], ['/privates/', 'Private training'], ['/mentorship/', 'Monthly mentorship'], ['/zouk-bnb/', 'Zouk BNB · stay & train']]],
-      ['Explore', [['/reviews/', 'Student reviews'], ['/journal/', 'The Journal'], ['/learn/', 'Learning library'], ['/method/', 'Teaching method'], ['/about/', 'About Gab'], ['/work-with-gab/', 'Events & collaborations']]],
+      ['Explore', [['/reviews/', 'Student reviews'], ['/feedback/', 'Give feedback'], ['/journal/', 'The Journal'], ['/learn/', 'Learning library'], ['/method/', 'Teaching method'], ['/about/', 'About Gab'], ['/work-with-gab/', 'Events & collaborations']]],
       ['Your next step', [['/mentorship-hub/', 'Member sign in'], ['/classes/#schedule', 'Class schedule'], ['mailto:riseadance@gmail.com', 'Email Gab']]],
     ];
     const footerDirectory = footerGroups.map(([heading, entries]) => `<div class="footerGroup"><h2>${heading}</h2>${entries.map(([href, label]) => `<a href="${href}"${currentPath === href ? ' aria-current="page"' : ''}>${label.replace(/&/g, '&amp;')}</a>`).join('')}</div>`).join('');

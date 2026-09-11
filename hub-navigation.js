@@ -33,7 +33,7 @@
   attach('.adminOnly','students');
   const nav=document.createElement('nav');
   nav.className='hubNavigation';nav.setAttribute('aria-label','Member area');
-  nav.innerHTML=sections.map(([key,label])=>'<a href="#hub-'+key+'" data-hub-link="'+key+'">'+label+'</a>').join('')+'<a class="hubAtlasLink" href="/zouk-map/#map">Zouk Atlas ↗</a><a href="/comms-deck/">ECHO · Comms Deck ↗</a><a href="/feedback/">Feedback &amp; stories ↗</a>';
+  nav.innerHTML=sections.map(([key,label])=>'<a href="#hub-'+key+'" data-hub-link="'+key+'">'+label+'</a>').join('')+'<a class="hubAtlasLink" href="/zouk-map/#map">Zouk Atlas ↗</a><a href="/comms-deck/">ECHO · Comms Deck ↗</a><a href="/feedback/">Give Feedback ↗</a><a href="/reviews/">Student Reviews ↗</a>';
   const heading=document.createElement('div');heading.className='hubPageHeading';heading.tabIndex=-1;
   dashboard.querySelector('.portalTop').after(nav,heading);
   dashboard.querySelector('.crewLinkRow')?.remove();
@@ -56,6 +56,7 @@
       else link.removeAttribute('aria-current');
     });
     heading.innerHTML='<h2>'+info[2]+'</h2><p>'+info[3]+'</p>'+(current==='today'&&!isCoach?'<section class="startHere" aria-labelledby="startHereTitle"><p class="kicker">START HERE</p><h3 id="startHereTitle">Welcome aboard.</h3><p>This is the first version of your mentorship space. Start with your coach’s practice focus, then explore how your lessons connect on your map.</p><ol><li><strong>Find your focus.</strong> Open My practice for your latest coach-reviewed note.</li><li><strong>Explore your discoveries.</strong> Select a concept on your map to revisit its lesson.</li><li><strong>Return after your next lesson.</strong> Gab or Steph reviews and records new discoveries.</li></ol><div class="actions"><a class="btn" href="/zouk-map/#practice">Open my practice →</a><a class="crewQuickLink" href="/zouk-map/#map">Explore my map →</a></div><p class="muted">An empty map means your lessons have not been recorded yet. It is not an assessment of your ability.</p></section>':'');
+    if(current==='today') heading.insertAdjacentHTML('beforeend','<div class="crewLinkRow"><a class="btn" href="/feedback/">Give Feedback →</a><a class="btn" href="/reviews/">Student Reviews →</a>'+(isCoach?'<a class="btn" href="/feedback/#feedbackInbox">Review Feedback →</a>':'')+'</div>');
     if (['today','practice'].includes(current)) heading.insertAdjacentHTML('beforeend',window.GAB_CREW.adventure(current==='today'?'cockpit':'explore'));
     if(focus)heading.focus({preventScroll:true});
   }
