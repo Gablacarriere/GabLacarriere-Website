@@ -5,7 +5,7 @@ const root=process.cwd(),out=path.join(root,'public');
 if(!fs.existsSync(out))throw new Error('Run the existing website build first.');
 // Restore the isolated app shell so public-site branding never alters app controls.
 fs.mkdirSync(path.join(out,'zoukable'),{recursive:true});
-for(const file of ['index.html','app.js','core.js','learning-core.js','style.css']){
+for(const file of ['index.html','app.js','core.js','learning-core.js','style.css','world.js','world.css']){
  fs.copyFileSync(path.join(root,'zoukable',file),path.join(out,'zoukable',file));
 }
 let linked=0;
