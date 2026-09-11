@@ -1,0 +1,16 @@
+#dashboardView [data-hub-section][hidden],.hubNavigation a[hidden]{display:none!important}
+#dashboardView .coachModeTabs{display:none!important}
+.hubNavigation{position:static;display:flex;flex-wrap:wrap;gap:6px;padding:10px;background:#121c29;border:1px solid #ffffff20;border-radius:16px;margin:0 0 28px;backdrop-filter:none;scroll-margin-top:90px}
+.hubNavigation a{padding:10px 15px;border-radius:10px;color:#bac6d5;font-size:14px;font-weight:650}
+.hubNavigation a:hover{background:#ffffff0b;color:#fff}
+.hubNavigation a[aria-current=page]{background:#f2dfc5;color:#111923}
+.hubNavigation .hubAtlasLink{margin-left:auto;color:#8ad8d0;border:1px solid #8ad8d044}
+.hubNavigation a:focus-visible{outline:3px solid #8ad8d0;outline-offset:3px}
+.hubPageHeading{margin-bottom:25px}
+.hubPageHeading h2{font:400 clamp(26px,4vw,36px)/1.2 Georgia,serif;letter-spacing:-.02em}
+.hubPageHeading p{color:#aab9cc;margin:8px 0 0}
+.hubPageHeading:focus{outline:none}
+#dashboardView>.portalTop h1{font-size:clamp(30px,5vw,48px)!important}
+#dashboardView>.portalTop .lede{font-size:15px}
+#dashboardView [data-hub-section].sec{padding-top:20px}
+@media(max-width:700px){.hubNavigation{gap:4px;padding:7px}.hubNavigation a{flex:1 0 25%;text-align:center;padding:10px 8px;font-size:13px}.hubNavigation .hubAtlasLink{flex-basis:100%;margin:4px 0 0}.hubPageHeading{margin-bottom:20px}}
