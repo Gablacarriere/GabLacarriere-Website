@@ -349,7 +349,7 @@ body.studentView .adminOnly{display:none!important}
             <div class="dashCard">
               <span class="badge">Editing student</span>
               <h2 id="coachStudentName" style="margin-top:12px">Student</h2>
-              <p id="coachStudentEmail" class="muted"></p>
+              <p id="coachStudentEmail" class="muted"></p><p><a id="coachStudentAtlas" class="btn" href="/zouk-map/#sessions">Record lesson & open student map →</a></p>
               <p id="coachStatus" class="coachStatus"></p>
             </div>
             <section class="editorSection spaceCard">
@@ -1357,6 +1357,7 @@ async function selectStudent(student) {
   document.getElementById('coachEditor').classList.remove('hidden');
   document.getElementById('coachStudentName').textContent = student.display_name || student.email;
   document.getElementById('coachStudentEmail').textContent = student.email || '';
+  document.getElementById('coachStudentAtlas').href='/zouk-map/?student='+encodeURIComponent(student.id)+'#sessions';
   coachMessage('Loading…');
   resetAllForms();
   await Promise.allSettled([
