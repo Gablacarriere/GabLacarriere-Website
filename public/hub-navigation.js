@@ -33,7 +33,9 @@
   attach('.adminOnly','students');
   const nav=document.createElement('nav');
   nav.className='hubNavigation';nav.setAttribute('aria-label','Member area');
-  nav.innerHTML=sections.map(([key,label])=>'<a href="#hub-'+key+'" data-hub-link="'+key+'">'+label+'</a>').join('')+'<a class="hubAtlasLink" href="/zouk-map/#map">Zouk Atlas ↗</a><a href="/comms-deck/">ECHO · Comms Deck ↗</a><a href="/feedback/">Give Feedback ↗</a><a href="/reviews/">Student Reviews ↗</a>';
+  nav.innerHTML='<div class="hubPrimaryLinks">'+sections.map(([key,label])=>'<a href="#hub-'+key+'" data-hub-link="'+key+'">'+label+'</a>').join('')+'</div><details class="hubOtherSpaces"><summary>Atlas, community & more</summary><div class="hubOtherLinks"><a href="/zouk-map/#map"><strong>Zouk Atlas</strong><span>Your map and lesson notes ↗</span></a><a href="/zoukable/"><strong>Zoukable</strong><span>Rhythm, practice and your hangar ↗</span></a><a href="/comms-deck/"><strong>ECHO</strong><span>Conversations with the crew ↗</span></a><a href="/feedback/"><strong>Give feedback</strong><span>Help improve your experience ↗</span></a><a href="/reviews/"><strong>Student stories</strong><span>Read shared experiences ↗</span></a></div></details>';
+  const otherSpaces=nav.querySelector('.hubOtherSpaces');
+  nav.addEventListener('keydown',event=>{if(event.key==='Escape'&&otherSpaces.open){otherSpaces.open=false;otherSpaces.querySelector('summary').focus();}});
   const heading=document.createElement('div');heading.className='hubPageHeading';heading.tabIndex=-1;
   dashboard.querySelector('.portalTop').after(nav,heading);
   dashboard.querySelector('.crewLinkRow')?.remove();
@@ -64,7 +66,7 @@
   nav.addEventListener('click',event=>{
     const link=event.target.closest('[data-hub-link]');
     if(!link)return;
-    event.preventDefault();history.pushState(null,'',link.getAttribute('href'));
+    event.preventDefault();otherSpaces.open=false;history.pushState(null,'',link.getAttribute('href'));
     show(link.dataset.hubLink,true);nav.scrollIntoView({block:'start',behavior:'auto'});
   });
   // Keep existing alert shortcuts into the coaching deck working.
