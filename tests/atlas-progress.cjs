@@ -17,3 +17,17 @@ s.viewer.role='coach';const coach=api.markup('sessions',s);assert(coach.includes
 assert(api.markup('journey',s).includes('2 concepts explored'));
 assert(api.detail('organization-0',s).includes('2026-09-10'));
 console.log('PASS: persisted concept keys, latest-lesson precedence, removal/restore, escaped notes, student read-only UI, 56-concept coach form.');
+const journey=api.markup('journey',s);
+assert(journey.includes('Open my practice'));
+assert(journey.includes('Practice &lt;safely&gt;'));
+s.lessons[1].practice='';
+const earlier=api.markup('practice',s);
+assert(earlier.includes('earlier lesson'));
+assert(earlier.includes('2026-09-01'));
+assert(!earlier.includes('<script>'));
+s.lessons[0].voided=true;
+assert(api.markup('practice',s).includes('No practice note yet.'));
+assert(!api.markup('journey',s).includes('Open my practice'));
+s.lessons=[];
+assert(api.markup('journey',s).includes('first lesson'));
+console.log('PASS: next-step practice, explicit older focus, removed-note exclusion, safe text, empty journey.');
