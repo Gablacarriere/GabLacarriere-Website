@@ -1,40 +1,43 @@
-#curiosity{padding:72px 0 54px;background:#f6f1e8;color:#304151;overflow:hidden}
-#curiosity .curiosityHeading{display:flex;align-items:end;justify-content:space-between;gap:32px;margin-bottom:34px}
-#curiosity .curiosityHeading h2{font:clamp(2.3rem,5vw,4.3rem)/1.05 Georgia,serif;letter-spacing:-.045em;color:#304151;margin:12px 0 0;max-width:650px}
-#curiosity .kicker{color:#765f86}
-#curiosity .curiosityHeading>p{font:16px/1.7 system-ui,sans-serif;max-width:270px;color:#62716e;margin:0}
-#curiosity .curiosityChoices{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border-bottom:1px solid #cec6ba}
-#curiosity .curiosityChoices button{font:650 14px/1.5 system-ui,sans-serif;color:#52616b;padding:18px 12px;background:transparent;border:0;border-bottom:3px solid transparent;cursor:pointer;min-height:64px;text-align:left}
-#curiosity .curiosityChoices button span{font:12px/1.5 Georgia,serif;padding-right:10px;color:#8c7464}
-#curiosity .curiosityChoices button[aria-pressed=true]{border-color:#806996;color:#342d41;background:#e9e0ed}
-#curiosity .curiosityChoices button:hover{background:#eee7dd}
-#curiosity .curiosityPanel{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);min-height:470px;align-items:center;background:#eee4d7;border-radius:0 0 60px 0;transition:background .35s}
-#curiosity .curiosityPanel[data-door=practice]{background:#e0eae3}
-#curiosity .curiosityPanel[data-door=stories]{background:#f0e1d8}
-#curiosity .curiosityPanel[data-door=crew]{background:#e8e2f0}
-#curiosity .curiosityStage{min-width:0;position:relative;padding:24px 0 45px}
-#curiosity-art svg{display:block;width:100%;height:auto;max-height:410px;overflow:visible}
-#curiosity .curiosityPlate{display:block;font:11px/1.5 system-ui,sans-serif;text-transform:uppercase;letter-spacing:.15em;text-align:center;color:#536574}
-#curiosity .curiosityCopy{padding:42px 48px 42px 22px;min-width:0}
-#curiosity-eyebrow{font:650 11px/1.6 system-ui,sans-serif;letter-spacing:.12em;text-transform:uppercase;color:#765f86}
-#curiosity-name{font:clamp(2rem,3.5vw,3.2rem)/1.12 Georgia,serif;letter-spacing:-.03em;white-space:pre-line;color:#304151;margin:20px 0}
-#curiosity-description{font:16px/1.8 system-ui,sans-serif;color:#52616b;max-width:420px}
-#curiosity-link{display:inline-block;border-bottom:2px solid #806996;padding:10px 0;color:#4e395f;font:750 16px/1.6 system-ui,sans-serif;text-decoration:none;margin-top:12px}
-#curiosity-secondary{display:block;color:#52616b;font:14px/1.6 system-ui,sans-serif;text-decoration:underline;text-underline-offset:4px;margin-top:17px}
-#curiosity-instrument{border-top:1px solid #bacfc4;margin-top:24px;padding-top:14px}
-#curiosity-instrument p{font:13px/1.6 system-ui,sans-serif;color:#52616b;margin:0 0 10px}
-#curiosity .curiosityNotes{display:flex;gap:12px}
-#curiosity .curiosityNotes button{width:48px;height:48px;border:1px solid #8ea69e;border-radius:50%;background:#f7f6ee;color:#806996;font-size:22px;cursor:pointer}
-#curiosity .curiosityNotes button:nth-child(1){color:#a65f4b}
-#curiosity .curiosityNotes button:nth-child(3){color:#967329}
-#curiosity-sound{display:block;background:transparent;border:0;text-decoration:underline;text-underline-offset:4px;font:13px/1.5 system-ui,sans-serif;color:#445e57;padding:12px 0;cursor:pointer;min-height:44px}
-#curiosity-instrument small{font:11px/1.5 system-ui,sans-serif;color:#52616b}
-#curiosity .curiosityStatus{position:absolute;width:1px;height:1px;padding:0;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+#curiosity{--ink:#263e40;--accent:#416b60;background:#f5f0e6;color:var(--ink);padding:78px 0 50px;overflow:hidden}
+#curiosity *{box-sizing:border-box}
+#curiosity .curiosityHeading{display:grid;grid-template-columns:1.3fr 1fr;gap:60px;align-items:end;margin-bottom:36px}
+#curiosity .kicker{font:650 11px/1.6 system-ui,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:#6e5948}
+#curiosity h2{font:clamp(2.4rem,5vw,4.4rem)/1.05 Georgia,serif;letter-spacing:-.045em;margin:14px 0 0;color:var(--ink)}
+#curiosity .curiosityHeading>p{font:16px/1.8 system-ui,sans-serif;max-width:390px;margin:0;color:#52615a}
+#curiosity .curiosityChoices{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border-top:1px solid #beb7aa;border-bottom:1px solid #beb7aa;margin-bottom:30px}
+#curiosity .curiosityChoices button{display:flex;align-items:center;gap:13px;text-align:left;min-height:76px;padding:16px 19px;font:650 15px/1.4 system-ui,sans-serif;border:0;border-radius:0;background:transparent;color:var(--ink);cursor:pointer;border-bottom:3px solid transparent}
+#curiosity .curiosityChoices button+button{border-left:1px solid #d4cdbf}
+#curiosity .curiosityChoices button>span{font:italic 18px Georgia,serif;opacity:.7}
+#curiosity .curiosityChoices button>b{margin-left:auto;font-size:20px;font-weight:400}
+#curiosity .curiosityChoices button[aria-pressed=true]{background:#dbe7dd;border-bottom-color:#416b60}
+#curiosity .curiosityChoices button:nth-child(2)[aria-pressed=true]{background:#ede0d2;border-bottom-color:#985d43}
+#curiosity .curiosityChoices button:nth-child(3)[aria-pressed=true]{background:#e4ddec;border-bottom-color:#72547e}
+#curiosity .curiosityChoices button:hover{box-shadow:inset 0 -3px currentColor}
+#curiosity .curiosityStudy{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(28px,5vw,76px);align-items:center;margin:0 0 25px}
+#curiosity .curiosityPhoto{position:relative;margin:0;min-width:0;padding:0 20px 25px 0}
+#curiosity .curiosityPhoto:before{content:'';position:absolute;inset:26px 0 0 26px;background:#d5dfd3;border-radius:120px 0 0 0}
+#curiosity [data-study=musicality] .curiosityPhoto:before{background:#dfbca7;border-radius:0 0 100px 0}
+#curiosity [data-study=progress] .curiosityPhoto:before{background:#c9bfd8;border-radius:100px 100px 0 0}
+#curiosity .curiosityPhoto img{display:block;position:relative;width:100%;height:460px;object-fit:cover;object-position:35% center;border-radius:100px 0 0 0;filter:none}
+#curiosity [data-study=musicality] img{object-position:50% center;border-radius:0 0 90px 0}
+#curiosity [data-study=progress] img{object-position:50% 25%;border-radius:100px 100px 0 0}
+#curiosity .curiosityPhoto figcaption{position:relative;font:11px/1.5 system-ui,sans-serif;letter-spacing:.05em;margin:15px 0 0;padding-left:32px;color:#4c5e57}
+#curiosity .curiositySeal{position:absolute;right:0;bottom:64px;background:#f5f0e6;border:1px solid #b9b5a7;display:grid;place-items:center;width:74px;height:74px;border-radius:50%;font:36px Georgia,serif;color:var(--accent)}
+#curiosity .curiosityCopy{padding:16px 0;min-width:0}
+#curiosity .studyNumber{font:650 11px/1.6 system-ui,sans-serif;letter-spacing:.15em;text-transform:uppercase;color:#6e5948}
+#curiosity h3{font:clamp(2rem,3.4vw,3rem)/1.1 Georgia,serif;letter-spacing:-.03em;color:var(--ink);margin:18px 0}
+#curiosity .curiosityCopy>p,#curiosity .curiosityMethod p{font:16px/1.75 system-ui,sans-serif;color:#52615a;max-width:490px}
+#curiosity .curiosityMethod{border-left:2px solid #829582;margin:24px 0;padding-left:20px}
+#curiosity .curiosityMethod>span{font:700 11px/1.5 system-ui,sans-serif;text-transform:uppercase;letter-spacing:.09em;color:#416b60}
+#curiosity .curiosityMethod p{margin:7px 0 0;font-size:15px}
+#curiosity .curiosityCta{display:inline-flex;align-items:center;gap:28px;background:#294d46;color:#fffaf0;padding:14px 23px;border-radius:3px;font:650 15px/1.5 system-ui,sans-serif;text-decoration:none;min-height:50px}
+#curiosity .curiosityCta:hover{background:#193b34;text-decoration:underline;text-underline-offset:4px}
+#curiosity .curiosityCopy .curiosityDetail{font-size:12px;line-height:1.6;margin:9px 0 18px}
+#curiosity .curiositySecondary,#curiosity .curiosityFoot a{font:600 14px/1.6 system-ui,sans-serif;color:#395b53;text-underline-offset:5px}
+#curiosity .curiosityFoot{display:flex;justify-content:space-between;align-items:center;gap:24px;border-top:1px solid #cec6b8;padding-top:23px}
+#curiosity .curiosityFoot p{font:13px/1.8 system-ui,sans-serif;color:#52615a;margin:0}
+#curiosity .curiosityFoot strong{color:var(--ink)}
 #curiosity [hidden]{display:none!important}
-#curiosity :focus-visible{outline:3px solid #725386;outline-offset:5px}
-#curiosity .curiosityDrift{animation:curiosityFloat 2s ease-in-out 1;transform-box:fill-box;transform-origin:center}
-#curiosity .notePlayed{animation:curiosityNote .6s ease-out;transform-box:fill-box;transform-origin:50% 0}
-@keyframes curiosityFloat{50%{transform:translateY(-9px)}}
-@keyframes curiosityNote{25%{transform:rotate(7deg)}65%{transform:rotate(-4deg)}}
-@media(max-width:760px){#curiosity{padding:46px 0}#curiosity .curiosityHeading{display:block}#curiosity .curiosityHeading>p{margin-top:18px;max-width:none}#curiosity .curiosityChoices{grid-template-columns:1fr 1fr}#curiosity .curiosityChoices button{font-size:13px;padding:12px 9px;min-height:54px}#curiosity .curiosityPanel{grid-template-columns:1fr;min-height:0;border-radius:0 0 36px 0}#curiosity .curiosityStage{padding:10px 8px 0}#curiosity-art svg{max-height:260px}#curiosity .curiosityCopy{padding:24px}#curiosity-name{font-size:2.25rem}#curiosity .curiosityPlate{font-size:10px}}
-@media(prefers-reduced-motion:reduce){#curiosity *{animation:none!important;transition:none!important}#curiosity .notePlayed{stroke:#304151;stroke-width:3}}
+#curiosity :focus-visible{outline:3px solid #985d43;outline-offset:5px}
+#curiosity .curiosityStatus{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+@media(max-width:760px){#curiosity{padding:45px 0 35px}#curiosity .curiosityHeading{grid-template-columns:1fr;gap:20px}#curiosity .curiosityChoices{grid-template-columns:1fr;margin-bottom:24px}#curiosity .curiosityChoices button{min-height:52px;padding:12px 16px}#curiosity .curiosityChoices button+button{border-left:0;border-top:1px solid #d4cdbf}#curiosity .curiosityStudy{grid-template-columns:1fr;gap:12px}#curiosity .curiosityPhoto img{height:290px}#curiosity .curiosityCopy{padding:8px 0}#curiosity .curiositySeal{width:60px;height:60px;font-size:29px}#curiosity .curiosityFoot{align-items:start;flex-direction:column;gap:13px}}
