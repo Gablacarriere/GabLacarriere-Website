@@ -1,0 +1,68 @@
+/* Original interface compositions: cut-paper color, fractured planes, painterly palettes.
+   These are design references, not reproductions of artworks. */
+body[data-art]{--art-a:#164ab0;--art-b:#b63731;--art-tint:#e5edf9;--art-tint2:#f7dfd6;--art-field:#edf1f6;--bh-blue:var(--art-a);--bh-red:var(--art-b)}
+body[data-art=rhythm]{--art-a:#214db2;--art-b:#ae2b44;--art-tint:#e1eafa;--art-tint2:#f9dcd9;--art-field:#f3e4de}
+body[data-art=atelier]{--art-a:#3c554b;--art-b:#923d2c;--art-tint:#e2e9e3;--art-tint2:#f0ded2;--art-field:#e8e3da}
+body[data-art=planes]{--art-a:#294f75;--art-b:#9b472d;--art-tint:#dee8ed;--art-tint2:#edddcf;--art-field:#e5e8e7}
+body[data-art=intimate]{--art-a:#773755;--art-b:#73501b;--art-tint:#f0e0e7;--art-tint2:#ede7d4;--art-field:#f0e7e6}
+body[data-art=garden]{--art-a:#325d65;--art-b:#685080;--art-tint:#deeeea;--art-tint2:#e9e2f2;--art-field:#e4ece9}
+body[data-art=terrace]{--art-a:#255e6a;--art-b:#a23b26;--art-tint:#dceef0;--art-tint2:#f3ddd1;--art-field:#e4eceb}
+body[data-art=pop]{--art-a:#573bac;--art-b:#a92f57;--art-tint:#e9e2fa;--art-tint2:#f7dde8;--art-field:#e8e4f1}
+/* A quieter canvas makes occasional saturated colors more expressive. */
+.bhSite.publicSite[data-art] :is(.soft,.warm,.bnbSoft,.bnbFinal){background:var(--art-field)}
+.bhSite.publicSite[data-art] .tag{background:var(--art-tint2);border-left:3px solid var(--art-b);border-radius:2px 16px 16px 2px}
+.bhSite.publicSite[data-art] .bnbPromo{background:var(--art-tint);border-block:1px solid var(--art-a)}
+.bhSite.publicSite[data-art] footer a{color:#e7efff!important}
+.bhSite.publicSite[data-art] .hero:before,.bhSite.publicSite[data-art] .bnbHero:before{width:116px;height:18px;background:linear-gradient(90deg,var(--art-a) 0 48%,transparent 48% 54%,var(--art-b) 54% 78%,transparent 78% 84%,#cdac40 84%);border-radius:0 20px 0 0}
+.bhSite.publicSite[data-art] .card{background:var(--art-tint);border:0;border-top:3px solid var(--art-a);border-radius:0 0 24px 0}
+.bhSite.publicSite[data-art] .card:nth-child(3n+2){background:var(--art-tint2);border-top-color:var(--art-b);border-radius:24px 0 0 0}
+.bhSite.publicSite[data-art] .card:nth-child(3n+3){background:transparent;border:1px solid var(--art-a);border-radius:0}
+.bhSite.publicSite[data-art] a.card:hover{background:#fffdf8;border-color:var(--art-a)}
+.bhSite.publicSite[data-art] :is(.formatCard,.membershipCard,.package,.classGuidance,.portalPreview){background:var(--art-tint);border-color:var(--art-a)}
+.bhSite.publicSite[data-art] :is(.formatCard,.membershipCard,.package):nth-child(even){background:var(--art-tint2);border-color:var(--art-b)}
+.bhSite.publicSite[data-art] .featured{background:var(--art-a)}
+.bhSite.publicSite[data-art] .featured .btn{background:#fffdf8;border-color:#fffdf8;color:var(--art-a)}
+.bhSite.publicSite[data-art] main [style*="background"]{background:var(--art-tint)!important}
+.bhSite.publicSite[data-art] #schedule .g2>div{background:var(--art-tint);border:0;border-left:5px solid var(--art-a);border-radius:0 28px 0 0}
+.bhSite.publicSite[data-art] #schedule .g2>div:nth-child(2){background:var(--art-tint2);border-color:var(--art-b);border-radius:28px 0 0 0}
+/* Matisse/Fauvist color relationships: curved edges against crisp typography. */
+.bhSite.publicSite[data-art=cutout] .heroPortrait img{border-radius:42% 42% 0 0}
+.bhSite.publicSite[data-art=cutout] .heroPortrait{border-bottom:10px solid var(--art-b)}
+.bhSite.publicSite[data-art=cutout] .trainingChoice:nth-child(1){border-radius:0 60px 0 0}
+.bhSite.publicSite[data-art=cutout] .trainingChoice:nth-child(4){border-radius:0 0 60px 0;background:#e0ece4;border-top-color:#365747}
+/* Cubist emphasis on different planes, without skewing text or changing reading order. */
+.bhSite.publicSite[data-art=planes] .card{border-radius:0;border-left:8px solid var(--art-a);border-top:0}
+.bhSite.publicSite[data-art=planes] .card:nth-child(2n){border-left-color:var(--art-b);border-radius:0}
+.bhSite.publicSite[data-art=planes] .hero{background:linear-gradient(115deg,var(--bh-paper) 0 73%,var(--art-tint) 73% 88%,var(--art-tint2) 88%)}
+/* Portrait and quieter teaching pages borrow the pacing of a gallery wall. */
+.bhSite.publicSite:is([data-art=atelier],[data-art=intimate]) h2{font-family:Georgia,'Times New Roman',serif;font-weight:400;letter-spacing:-.035em}
+.bhSite.publicSite[data-art=atelier] .aboutPortrait img{border:8px solid #fffdf7;box-shadow:9px 9px 0 var(--art-tint2)}
+.bhSite.publicSite[data-art=intimate] .card{border-radius:36px 0 36px 0;border-top:1px solid var(--art-b)}
+.bhSite.publicSite[data-art=garden] .card{border-radius:24px 4px 30px 4px;border-top:1px solid var(--art-a)}
+.bhSite.publicSite[data-art=garden] .hero{background:linear-gradient(125deg,var(--bh-paper),#e0ede8 72%,#e7e1ee)}
+.bhSite.publicSite[data-art=terrace] .bnbArt img{border-radius:90px 90px 0 0}
+.bhSite.publicSite[data-art=terrace] .package{border-radius:0 30px 0 0}
+.bhSite.publicSite[data-art=pop] .card{border:2px solid var(--art-a);box-shadow:6px 6px 0 var(--art-tint2);border-radius:0}
+.bhSite.publicSite[data-art=pop] .hero:before{height:22px;background:radial-gradient(circle,var(--art-a) 3px,transparent 3.5px) 0 0/12px 12px;border-radius:0}
+.bhSite.publicSite[data-art=rhythm] .card{border-left:7px solid var(--art-a);border-top:0;border-radius:0 28px 0 0}
+.bhSite.publicSite[data-art=rhythm] .card:nth-child(even){border-left-color:var(--art-b);border-radius:28px 0 0 0}
+@media(min-width:900px){
+ .bhSite.publicSite[data-art=cutout] .trainingChoices{grid-template-columns:1.12fr 1fr;align-items:start}
+ .bhSite.publicSite[data-art=cutout] .trainingChoice:nth-child(even){margin-top:30px}
+ .bhSite.publicSite[data-art=atelier] .grid{align-items:start}
+ .bhSite.publicSite[data-art=atelier] .grid>.card:nth-child(2){margin-top:24px}
+ .bhSite.publicSite[data-art=planes] .grid:not(.four){grid-template-columns:1.15fr 1fr 1fr}
+}
+/* Kandinsky-like color intervals in the cockpit; the map's saved states stay unchanged. */
+body.bhMember[data-art]{--gold:#9edce0;--art-a:#96dce3;--art-b:#c7b6ed;--bh-blue:#354d83;--bh-red:#a588c8;background:#0d1423}
+.bhMember[data-art] :is(.btn,.primaryButton){background:#a5e2dd;color:#11292e;border-color:#a5e2dd;border-radius:4px 16px 4px 4px}
+.bhMember[data-art] :is(.btn.ghost,.secondaryButton){background:transparent;color:#c7b6ed;border-color:#9981bb;border-radius:4px}
+.bhMember[data-art] :is(.tag,.badge){background:#d4c6ed;color:#261c3a;border-radius:14px 14px 14px 2px}
+.bhMember[data-art] :is(.authCard,.accountPanel,.toolBox,.dashCard){border-radius:16px 3px 16px 3px!important;border-color:#4b6573;background:#14232e}
+.bhMember[data-art] .dashCard:nth-of-type(3n){background:#211e32;border-color:#68567f;border-radius:3px 20px 3px 3px!important}
+.bhMember[data-art] :is(.crewProfile,.missionCard){border-radius:3px 24px 3px 3px!important;border-color:#607691}
+.bhMember[data-art] .rail nav a[aria-current=page]{border-left-color:#a5e2dd;background:#23334d}
+.bhMember[data-art] .startHere{background:#192b33;border-color:#76adaf;border-radius:4px 28px 4px 4px}
+.bhMember[data-art] .galaxyFrame{border-radius:18px 3px 18px 3px!important}
+@media(max-width:760px){.bhSite.publicSite[data-art] .card{padding:23px}.bhSite.publicSite[data-art] .heroPortrait{margin-right:16px}.bhSite.publicSite[data-art=cutout] .trainingChoice:nth-child(1){border-radius:0 36px 0 0}}
+.bhSite.publicSite[data-art] .package.featured{background:var(--art-a);border-color:var(--art-a)}

@@ -123,6 +123,19 @@ function patchHtml(file) {
     return `<body${attrs} class="${theme}">`;
   });
   html = html.replace('</head>', '<link rel="stylesheet" href="/bauhaus.css?v=art-2">\n<script defer src="/art-discoveries.js?v=1"></script>\n<script defer src="/bauhaus.js?v=art-2"></script>\n</head>');
+  // Deliberate variation by page: stable on every visit, with a shared navigation system.
+  const artDirections = {
+    'index':'cutout', 'classes':'rhythm', 'brazilian-zouk-classes-nyc':'cutout',
+    'lambada-classes-nyc':'rhythm', 'about':'atelier', 'method':'planes',
+    'movement-architecture':'planes', 'privates':'intimate', 'wedding':'intimate',
+    'mentorship':'garden', 'how-to-practice-zouk':'garden', 'kinesthetic-practice':'garden',
+    'zouk-bnb':'terrace', 'zouk-nyc-guide':'terrace', 'experience':'atelier',
+    'learn':'planes', 'workshops':'rhythm', 'work-with-gab':'pop', 'creative':'pop',
+    'mentorship-hub':'orbit', 'practice-planner':'orbit', 'zouk-map':'cosmos'
+  };
+  const pageKey = fileName.replace(/\.html$/, '');
+  html = html.replace(/<body([^>]*)>/i, `<body$1 data-art="${artDirections[pageKey] || 'cutout'}" data-page="${pageKey}">`);
+  html = html.replace('</head>', '<link rel="stylesheet" href="/art-directions.css?v=1">\n</head>');
   return html;
 }
 
