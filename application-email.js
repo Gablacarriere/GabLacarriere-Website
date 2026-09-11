@@ -34,7 +34,7 @@
     }
     const body = lines.join('\n\n');
     text.value = 'Subject: ' + subject + '\n\n' + body;
-    open.href = 'mailto:riseadance@gmail.com?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+    open.href = 'mailto:hello@gablacarriere.com?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
     if (whatsapp) whatsapp.href = 'https://wa.me/19295864994?text=' + encodeURIComponent('Hi Gab, I’d like to discuss joining the mentorship.\n\n' + body);
     status.textContent = 'Prepared on this page. Your application has not been sent.';
     draft.hidden = false;
@@ -54,7 +54,7 @@
     try {
       if (!navigator.clipboard) throw new Error('Clipboard unavailable');
       await navigator.clipboard.writeText(text.value);
-      status.textContent = 'Copied. Paste this into WhatsApp with Gab or email riseadance@gmail.com, then send it.';
+      status.textContent = 'Copied. Paste this into WhatsApp with Gab or email hello@gablacarriere.com, then send it.';
     } catch {
       text.focus();
       text.select();
