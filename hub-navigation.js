@@ -33,7 +33,7 @@
   attach('.adminOnly','students');
   const nav=document.createElement('nav');
   nav.className='hubNavigation';nav.setAttribute('aria-label','Member area');
-  nav.innerHTML=sections.map(([key,label])=>'<a href="#hub-'+key+'" data-hub-link="'+key+'">'+label+'</a>').join('')+'<a class="hubAtlasLink" href="/zouk-map/#map">Zouk Atlas ↗</a>';
+  nav.innerHTML=sections.map(([key,label])=>'<a href="#hub-'+key+'" data-hub-link="'+key+'">'+label+'</a>').join('')+'<a class="hubAtlasLink" href="/zouk-map/#map">Zouk Atlas ↗</a><a href="/comms-deck/">ECHO · Comms Deck ↗</a>';
   const heading=document.createElement('div');heading.className='hubPageHeading';heading.tabIndex=-1;
   dashboard.querySelector('.portalTop').after(nav,heading);
   dashboard.querySelector('.crewLinkRow')?.remove();

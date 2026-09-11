@@ -61,7 +61,7 @@ function walk(dir) {
 function patchHtml(file) {
   let html = fs.readFileSync(file, "utf8");
   const fileName = path.basename(file);
-  const publicPage = !["mentorship-hub.html", "practice-planner.html", "zouk-map.html"].includes(fileName);
+  const publicPage = !["mentorship-hub.html", "practice-planner.html", "zouk-map.html", "comms-deck.html"].includes(fileName);
 
   html = html.replace(
     /<a\s+class=["']brand["']\s+href=["']([^"']+)["']\s*>([\s\S]*?)<\/a>/i,
@@ -90,7 +90,7 @@ function patchHtml(file) {
     const items = [
       ["/classes/", "Classes"], ["/zouk-bnb/", "Zouk BNB"], ["/privates/", "Private training"],
       ["/mentorship/", "Mentorship"], ["/method/", "Method"],
-      ["/work-with-gab/", "Work with Gab"], ["/about/", "About"],
+      ["/work-with-gab/", "Work with Gab"], ["/journal/", "Journal"], ["/about/", "About"],
     ];
     const links = items.map(([href, label]) => `<a href="${href}"${currentPath === href ? ' aria-current="page"' : ''}>${label}</a>`).join("");
     const member = '<a class="memberLink" href="/mentorship-hub/">Member login</a>';
@@ -110,7 +110,7 @@ function patchHtml(file) {
     html = html.replace('</head>', '<link rel="stylesheet" href="/public-experience.css?v=paths-1">\n</head>');
     const footerGroups = [
       ['Train in NYC', [['/classes/', 'Weekly classes'], ['/privates/', 'Private training'], ['/mentorship/', 'Monthly mentorship'], ['/zouk-bnb/', 'Zouk BNB · stay & train']]],
-      ['Explore', [['/learn/', 'Learning library'], ['/method/', 'Teaching method'], ['/about/', 'About Gab'], ['/work-with-gab/', 'Events & collaborations']]],
+      ['Explore', [['/journal/', 'The Journal'], ['/learn/', 'Learning library'], ['/method/', 'Teaching method'], ['/about/', 'About Gab'], ['/work-with-gab/', 'Events & collaborations']]],
       ['Your next step', [['/mentorship-hub/', 'Member sign in'], ['/classes/#schedule', 'Class schedule'], ['mailto:riseadance@gmail.com', 'Email Gab']]],
     ];
     const footerDirectory = footerGroups.map(([heading, entries]) => `<div class="footerGroup"><h2>${heading}</h2>${entries.map(([href, label]) => `<a href="${href}"${currentPath === href ? ' aria-current="page"' : ''}>${label.replace(/&/g, '&amp;')}</a>`).join('')}</div>`).join('');
@@ -125,7 +125,7 @@ function patchHtml(file) {
   html = html.replace('</head>', '<link rel="stylesheet" href="/bauhaus.css?v=art-2">\n<script defer src="/art-discoveries.js?v=1"></script>\n<script defer src="/bauhaus.js?v=art-2"></script>\n</head>');
   // Deliberate variation by page: stable on every visit, with a shared navigation system.
   const artDirections = {
-    'index':'cutout', 'classes':'rhythm', 'brazilian-zouk-classes-nyc':'cutout',
+    'journal':'pop', 'comms-deck':'orbit', 'index':'cutout', 'classes':'rhythm', 'brazilian-zouk-classes-nyc':'cutout',
     'lambada-classes-nyc':'rhythm', 'about':'atelier', 'method':'planes',
     'movement-architecture':'planes', 'privates':'intimate', 'wedding':'intimate',
     'mentorship':'garden', 'how-to-practice-zouk':'garden', 'kinesthetic-practice':'garden',
@@ -135,7 +135,7 @@ function patchHtml(file) {
   };
   const pageKey = fileName.replace(/\.html$/, '');
   html = html.replace(/<body([^>]*)>/i, `<body$1 data-art="${artDirections[pageKey] || 'cutout'}" data-page="${pageKey}">`);
-  html = html.replace('</head>', '<link rel="stylesheet" href="/art-directions.css?v=1">\n</head>');
+  html = html.replace('</head>', '<link rel="stylesheet" href="/art-directions.css?v=2">\n</head>');
   return html;
 }
 

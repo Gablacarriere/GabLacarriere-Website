@@ -4,6 +4,22 @@
   "outputDirectory": "public",
   "rewrites": [
     {
+      "source": "/journal/",
+      "destination": "/journal.html"
+    },
+    {
+      "source": "/journal",
+      "destination": "/journal.html"
+    },
+    {
+      "source": "/comms-deck/",
+      "destination": "/comms-deck.html"
+    },
+    {
+      "source": "/comms-deck",
+      "destination": "/comms-deck.html"
+    },
+    {
       "source": "/zouk-map/",
       "destination": "/zouk-map.html"
     },

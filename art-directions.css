@@ -66,3 +66,7 @@ body.bhMember[data-art]{--gold:#9edce0;--art-a:#96dce3;--art-b:#c7b6ed;--bh-blue
 .bhMember[data-art] .galaxyFrame{border-radius:18px 3px 18px 3px!important}
 @media(max-width:760px){.bhSite.publicSite[data-art] .card{padding:23px}.bhSite.publicSite[data-art] .heroPortrait{margin-right:16px}.bhSite.publicSite[data-art=cutout] .trainingChoice:nth-child(1){border-radius:0 36px 0 0}}
 .bhSite.publicSite[data-art] .package.featured{background:var(--art-a);border-color:var(--art-a)}
+
+/* Keep the extended public menu comfortable rather than squeezing labels. */
+@media(max-width:1399px){.bhSite.publicSite .primary{display:none!important}.bhSite.publicSite .mobileMenu{display:block!important}}
+.bhSite.publicSite .primary{gap:12px}
