@@ -1,14 +1,28 @@
 (()=>{'use strict';
 const root=document.getElementById('curiosity');if(!root)return;
-const choices=root.querySelector('.curiosityChoices');
-const buttons=[...choices.querySelectorAll('button[data-focus]')];
-const studies=[...root.querySelectorAll('[data-study]')];
-function select(key,announce){
- if(!studies.some(s=>s.dataset.study===key))return;
- studies.forEach(s=>{s.hidden=s.dataset.study!==key;});
- buttons.forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.focus===key)));
- if(announce)root.querySelector('[role="status"]').textContent=buttons.find(b=>b.dataset.focus===key).textContent.replace('↗','')+' selected. Read the study below.';
-}
+const $=s=>root.querySelector(s),all=s=>[...root.querySelectorAll(s)];
+const buttons=all('button[data-focus]'),studies=all('[data-study]'),seen=new Set();
+let active='connection',audio=null,playing=false,frame=0,start=0,lastTick=-1,delay=0;
+// These events are integration hooks only. No analytics request or personal data is sent.
+const emit=(action,focus=active)=>root.dispatchEvent(new CustomEvent('cabinet-interaction',{bubbles:true,detail:{action,focus}}));
+const rhythms={traditional:{offsets:[0,1,1.5],labels:['1','2','&'],notation:'1 · 2 &'},rnb:{offsets:[0,.5,1],labels:['1','&','2'],notation:'1 & 2 ·'},contemporary:{offsets:[0,.5,1.5],labels:['1','&','&'],notation:'1 & · &'}};
+let rhythm='traditional';
+function stop(){playing=false;cancelAnimationFrame(frame);$('#cabinetPlay').textContent='▶ Play with sound';$('#cabinetPlay').setAttribute('aria-pressed','false');all('[data-step]').forEach(e=>e.classList.remove('isBeat'));$('#rhythmPlayhead').style.left='0%';if(audio&&audio.state==='running')audio.suspend().catch(()=>{});}
+function select(key,announce=false){if(!studies.some(s=>s.dataset.study===key))return;stop();active=key;seen.add(key);studies.forEach(s=>s.hidden=s.dataset.study!==key);buttons.forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.focus===key)));$('#cabinetVisited').textContent=seen.size+' of 3 curiosities opened · Follow whatever interests you.';if(announce){$('.curiosityStatus').textContent=buttons.find(b=>b.dataset.focus===key).querySelector('strong').textContent+' opened. Its experiment and learning links are below.';emit('open');studies.find(s=>s.dataset.study===key).scrollIntoView({block:'start',behavior:matchMedia('(prefers-reduced-motion:reduce)').matches?'instant':'smooth'});}}
 buttons.forEach(b=>b.addEventListener('click',()=>select(b.dataset.focus,true)));
-select('connection',false);choices.hidden=false;
+$('.cabinetSurprise').addEventListener('click',()=>{const unseen=buttons.filter(b=>!seen.has(b.dataset.focus)),pool=unseen.length?unseen:buttons.filter(b=>b.dataset.focus!==active);select(pool[Math.floor(Math.random()*pool.length)].dataset.focus,true);});
+const path=$('.orbitTrack'),length=path.getTotalLength();
+function orbit(){const t=Number($('#orbitDial').value)/100;const a=path.getPointAtLength(t*length),b=path.getPointAtLength(((t-delay+1)%1)*length);[['#orbitLeader',a],['#orbitFollower',b],['#orbitFollowerHalo',b]].forEach(([s,p])=>{$(s).setAttribute('cx',p.x);$(s).setAttribute('cy',p.y);});const line=$('#orbitThread');Object.entries({x1:a.x,y1:a.y,x2:b.x,y2:b.y}).forEach(([k,v])=>line.setAttribute(k,v));}
+$('#orbitDial').addEventListener('input',orbit);$('#orbitDial').addEventListener('change',()=>emit('orbit-adjust'));
+all('[data-delay]').forEach(b=>b.addEventListener('click',()=>{delay=Number(b.dataset.delay);all('[data-delay]').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));orbit();emit('timing-change');}));
+function note(index){if(!audio||audio.state!=='running')return;const o=audio.createOscillator(),g=audio.createGain(),now=audio.currentTime;o.type='sine';o.frequency.setValueAtTime([330,440,550][index],now);g.gain.setValueAtTime(0,now);g.gain.linearRampToValueAtTime(.12,now+.008);g.gain.exponentialRampToValueAtTime(.001,now+.12);o.connect(g);g.connect(audio.destination);o.start(now);o.stop(now+.13);o.onended=()=>{o.disconnect();g.disconnect();};}
+function tick(now){if(!playing)return;const elapsed=(now-start)/1000,beat=elapsed*1.5,slot=Math.floor(beat*2),phase=(beat%2)/2;$('#rhythmPlayhead').style.left=(phase*100)+'%';if(slot!==lastTick){lastTick=slot;const index=rhythms[rhythm].offsets.findIndex(x=>x*2===slot%4);all('[data-step]').forEach((e,i)=>e.classList.toggle('isBeat',i===index));if(index>=0)note(index);}frame=requestAnimationFrame(tick);}
+all('[data-rhythm]').forEach(b=>b.addEventListener('click',()=>{rhythm=b.dataset.rhythm;all('[data-rhythm]').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));$('#rhythmNotation').textContent=rhythms[rhythm].notation;all('[data-step]').forEach((e,i)=>{e.firstChild.textContent=rhythms[rhythm].labels[i];});start=performance.now();lastTick=-1;emit('rhythm-change');}));
+$('#cabinetPlay').addEventListener('click',async()=>{if(playing){stop();return;}const Audio=window.AudioContext||window.webkitAudioContext;if(!Audio){$('#rhythmHint').textContent='Audio is unavailable in this browser. Compare the counts above, or open Zoukable.';return;}$('#cabinetPlay').disabled=true;try{audio=audio||new Audio();await audio.resume();if(active!=='musicality'||document.hidden)return;playing=true;start=performance.now();lastTick=-1;$('#cabinetPlay').textContent='■ Stop sound';$('#cabinetPlay').setAttribute('aria-pressed','true');frame=requestAnimationFrame(tick);emit('rhythm-play');}catch{$('#rhythmHint').textContent='Sound could not start. Try again, or compare the counts above.';}finally{$('#cabinetPlay').disabled=false;}});
+const journey=['A lesson gives you a question to explore.','Zoukable gives you a place to return to that practice.','You revisit it with your coach. Atlas keeps the discoveries connected.'];
+all('[data-journey]').forEach(b=>b.addEventListener('click',()=>{const n=Number(b.dataset.journey);all('[data-journey]').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));all('[data-map-node]').forEach((e,i)=>e.classList.toggle('lit',i<=n));$('#cabinetMapPath').setAttribute('d',['M75 230 L180 165','M75 230 L180 165 L280 215','M75 230 L180 165 L280 215 L400 100'][n]);$('#journeyInsight').textContent=journey[n];emit('journey-explore');}));
+all('[data-cabinet-cta]').forEach(a=>a.addEventListener('click',()=>emit('learning-link',a.dataset.cabinetCta)));
+document.addEventListener('visibilitychange',()=>{if(document.hidden)stop();});window.addEventListener('pagehide',stop);
+if('IntersectionObserver'in window)new IntersectionObserver(entries=>{if(!entries[0].isIntersecting)stop();},{threshold:0}).observe(root);
+select('connection');orbit();$('[data-map-node="0"]').classList.add('lit');$('.curiosityChoices').hidden=false;$('.cabinetSurprise').hidden=false;all('.experimentControls').forEach(e=>e.hidden=false);
 })();

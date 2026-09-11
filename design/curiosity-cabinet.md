@@ -1,23 +1,36 @@
-# Cabinet of curiosities — purposeful discovery, v2
-September 11, 2026
+# Cabinet of curiosities: research and design direction
 
-## Purpose
-Introduce Gab’s teaching through real student questions, then make the relevant next step obvious. The homepage is for prospective students first. Member-world imagery belongs deeper in the learning experience.
+September 11, 2026. A focused shortlist of recent work and enduring references, not a claim to rank every website or prove conversion results.
 
-## Structure
-Three movement studies: connection → private coaching; musicality → NYC classes; lasting practice → mentorship. Each pairs an actual teaching/movement photograph with a question, a concise teaching approach, one prominent training link, factual context and one quieter exploration link. The existing training comparison remains the practical schedule/price overview.
+| Reference | Useful idea | Application to Gab’s website |
+| --- | --- | --- |
+| [Bruno Simon’s current portfolio](https://bruno-simon.com/) | Visitors explore a playable world and find the creator’s work through it. | Give each object a small interaction and an identifiable personality. Keep the booking route direct and optional; no game completion gate. |
+| [Chrome Music Lab](https://musiclab.chromeexperiments.com/) | Immediate hands-on learning, no account required. | A three-step rhythm experiment people can hear and compare before deciding to join a class. |
+| [London Museum Objects & Stories](https://www.londonmuseum.org.uk/collections/) | Objects provide entry points into linked human stories and themed journeys. | Each object opens a teaching question and a relevant route, rather than an unrelated art fact. |
+| [London Museum’s 2025 digital award entry](https://awards.museumsandheritage.com/awards/2025-winners/best-use-of-digital-uk-5/) | Relationships between objects and stories make a collection more connected. | Connection → method/private coaching; rhythm → classes/Zoukable; discovery → mentorship/real student stories. |
+| [Rijksmuseum’s 2021 European Design Award case study](https://awards.europeandesign.org/winner/248792) | Visual storytelling with visitor-specific journeys and accessibility. | Strong object imagery, short focused text, clear onward choices, native keyboard controls. This is an older benchmark, not a new 2026 launch. |
 
-## Brand system
-Warm paper, forest ink, restrained terracotta and lavender; expressive serif questions, clear sans-serif supporting text. Photograph frames vary, while composition and hierarchy remain stable. Small geometric emblems support each topic. No unrelated doors, sound toys, auto-rotation, forced scrolling or decorative login detours. Retain personality through movement, language and art direction.
+## Implemented experience
 
-## Accessibility and performance
-Native focus buttons with pressed states and live announcement. All three studies remain readable without JavaScript. Actual links work without scripts. Lazy native images reuse existing assets. No new library, tracking or audio dependency.
+Three original tactile sculptures invite visitors into interactive exhibits. The orbit lets visitors adjust timing on a shared path; it is explicitly a visual metaphor, not an assessment. The rhythm machine plays Traditional 1, R&B 1 and Contemporary 1 as three events in two beats at 90 BPM. Sound is opt-in and stops on tab hiding, leaving the cabinet or changing exhibits. The unfinished map illustrates notice → practice → revisit, with no account progress written.
 
-## Inspiration and reasoning
-- NN/g, Homepage Design: 5 Fundamental Principles (2024): a clear offering and useful starting point. https://www.nngroup.com/articles/homepage-design-principles/
-- JTB Studios, VCASS case discussion (May 2026): arts disciplines with distinct expression within one identity, and pathways organized for prospective students. https://www.jtbstudios.com.au/awa-2026-website-of-the-year-winner-jtb-studios/
-- Gretel’s brand architecture and experience-design practice: translate complex offerings into a usable hierarchy. https://gretelny.com/company
-These are strategic inspirations; no third-party artwork or website layouts were copied.
+The artwork is original generated imagery, compressed to a 46.7 KB WebP. CSS crops the three objects from one asset. The interaction uses native HTML/SVG and Web Audio with no new framework or rendering dependency. Visual styling blends warm museum paper, playful ceramic objects and the existing muted learning-world palette. Source data and copy are in index.html and curiosity.js; presentation is isolated in curiosity.css.
 
-## Evaluate success
-Observe qualified class/private/mentorship inquiries over comparable periods. If analytics are later connected, use data-cabinet-cta values connection, musicality, progress to distinguish paths; do not treat a click as a booking. No conversion uplift has been measured or promised. Keep feedback from new visitors, especially whether they can explain what Gab teaches and what they should do next.
+## What this is meant to improve
+
+Attention: recognizable objects and an immediate invitation to touch.
+Understanding: visitors experience timing and relationships instead of only reading selling points.
+Relevance: the exhibit they choose offers a matching way to train.
+Brand: art and pedagogy form one experience.
+Trust: no fictional testimonials, skills, awards or progress.
+Maintainability: add one exhibit at a time; preserve native controls, reduced-motion styling and readable no-JavaScript fallbacks.
+
+## How to evaluate it
+
+Compare cabinet visitors who open an exhibit, use its control, follow its learning link, and ultimately submit a genuine inquiry. Look at mobile separately. Longer time on the section alone is not success; confusion can also increase time spent. Collect a short qualitative response from prospective students: “What do you think Gab could help you with?”
+
+The component emits `cabinet-interaction` events with `action` and `focus` only. These are local integration hooks, not a connected analytics service or a saved report. No event is sent to a server by this feature. Connect them to the site’s approved analytics setup before reporting rates or running comparisons. Baseline and post-launch booking data are needed before claiming an engagement or conversion improvement.
+
+## Verification
+
+Phone and desktop: exhibit selection, keyboard slider, rhythm changes, play/stop, stop on exhibit switch, map state, surprise selection, and horizontal overflow. All teaching paths remain visible with JavaScript disabled. No data writes are involved.
