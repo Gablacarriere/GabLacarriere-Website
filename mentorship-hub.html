@@ -100,9 +100,9 @@ body.studentView .adminOnly{display:none!important}
 </style>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="/supabase-config.js"></script>
-</head>
+<link rel="stylesheet" href="/mentorship-crew.css?v=crew-3"><script src="/mentorship-crew.js"></script></head>
 <body>
-<nav><div class="w n"><a class="brand" href="/">GAB LACARRIERE</a><div class="links"><a href="/mentorship/">Mentorship</a><a class="btn" href="/">Public Site</a></div></div></nav>
+<nav class="portalNavigation"><div class="w n"><a class="portalBrand" href="/" aria-label="Gab Lacarriere home"><img src="/gab-logo-header.png" alt="Gab Lacarriere" width="1200" height="190"></a><div class="links"><a href="/mentorship/">Mentorship</a><a class="btn" href="/">Public Site</a></div></div></nav>
 
 <div class="portalShell">
   <section id="loginView" class="authCard">
@@ -149,7 +149,7 @@ body.studentView .adminOnly{display:none!important}
     </form>
   </section>
 
-  <section id="dashboardView" class="hidden">
+  <section id="dashboardView" class="hidden"><div class="crewLinkRow"><a class="crewQuickLink" href="/zouk-map/#map">Open the Zouk Atlas →</a><a class="crewQuickLink" href="#mentorshipCrew">Meet your flight crew ↓</a></div>
     <div class="portalTop">
       <div>
         <span class="badge" id="roleBadge">Mentee</span>
@@ -159,13 +159,13 @@ body.studentView .adminOnly{display:none!important}
       <button id="logoutBtn" class="btn logoutBtn">Sign out</button>
     </div>
 
-    <section class="dashCard spaceCard" style="margin-bottom:18px">
+    <div id="mentorshipCrew"></div><section class="dashCard spaceCard" style="margin-bottom:18px">
       <div class="missionHead">
         <div>
           <div class="kicker">Mission Control</div>
           <div id="missionControl"><p class="muted">Calibrating your ship…</p></div>
         </div>
-        <div class="rocketOrb" aria-hidden="true">🚀</div>
+        <div class="rocketOrb" id="crewShipIcon" aria-hidden="true">🛸</div>
       </div>
     </section>
 
@@ -556,10 +556,12 @@ async function loadDashboard(user) {
   }
 
   currentProfile = profile;
+  document.getElementById('mentorshipCrew').innerHTML = window.GAB_CREW.markup;
+  document.getElementById('crewShipIcon').innerHTML = window.GAB_CREW.saucer;
   document.getElementById('loginView').classList.add('hidden');
   document.getElementById('dashboardView').classList.remove('hidden');
   document.getElementById('studentName').textContent = profile.display_name || user.email.split('@')[0];
-  document.getElementById('roleBadge').textContent = profile.role === 'coach' ? 'Coach + Mentee' : 'Mentee';
+  document.getElementById('roleBadge').textContent = window.GAB_CREW.titleFor(profile);
   if (profile.role === 'coach') {
     document.body.classList.add('isAdmin','studentView');
     bindCoachModeTabs();
