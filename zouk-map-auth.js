@@ -4,6 +4,7 @@
   const emit=next=>{state=next;window.dispatchEvent(new CustomEvent('atlas-state',{detail:next}));};
   if(!cfg||!window.supabase){emit({mode:'error',message:'The member connection did not load. Reload this page to try again.'});return;}
   const client=window.supabase.createClient(cfg.supabaseUrl,cfg.supabaseAnonKey);
+  window.GAB_SESSION?.watch(client);
   async function refresh(){
     const run=++generation;
     emit({mode:'loading'});

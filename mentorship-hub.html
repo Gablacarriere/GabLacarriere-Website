@@ -98,7 +98,7 @@ body.studentView .adminOnly{display:none!important}
 
 
 </style>
-  <script src="/vendor/supabase-2.116.0.js"></script>
+  <script src="/vendor/supabase-2.116.0.js"></script><script src="/session-boundary.js?v=1"></script>
   <script>
 window.GAB_PORTAL = {
   supabaseUrl: "https://lftguwmyagkehqmaxjig.supabase.co",
@@ -503,6 +503,7 @@ async function initPortal() {
   }
   try {
     sb = supabase.createClient(cfg.supabaseUrl, cfg.supabaseAnonKey);
+    window.GAB_SESSION?.watch(sb);
     // Keep this callback synchronous: auth API calls here can deadlock.
     sb.auth.onAuthStateChange((event) => {
       if (event === 'PASSWORD_RECOVERY') showPasswordFlow('recovery');

@@ -83,7 +83,7 @@ $('closeThread').onclick=()=>choose(channel);$('refreshCrew').onclick=()=>{if(co
 $('openCompose').onclick=()=>{$('threadForm').hidden=false;$('threadReader').hidden=true;$('composeStatus').textContent='';$('threadTitle').focus();};$('cancelCompose').onclick=()=>{$('threadForm').hidden=true;};
  document.querySelectorAll('[data-channel]').forEach(b=>b.onclick=()=>choose(b.dataset.channel));
 (async()=>{try{
- if(!window.supabase||!window.GAB_PORTAL)throw Error();client=supabase.createClient(GAB_PORTAL.supabaseUrl,GAB_PORTAL.supabaseAnonKey);
+ if(!window.supabase||!window.GAB_PORTAL)throw Error();client=supabase.createClient(GAB_PORTAL.supabaseUrl,GAB_PORTAL.supabaseAnonKey);window.GAB_SESSION?.watch(client);
  const u=await client.auth.getUser();if(!u.data.user){clean();$('crewStatus').textContent='Sign in with your invited mentorship account to read and post.';return;}user=u.data.user;
  const p=await client.from('profiles').select('id,display_name,role').eq('id',user.id).single();if(p.error||!['mentee','coach'].includes(p.data?.role))throw Error();coach=p.data.role==='coach';
  const membership=await client.from('crew_members').select('id').eq('id',user.id).maybeSingle();if(membership.error)throw membership.error;if(!membership.data){clean();$('crewStatus').textContent='Your account is signed in, but crew access is not enabled. Ask Gab or Steph to add you.';return;}
