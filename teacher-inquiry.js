@@ -5,6 +5,16 @@
   const draft = document.getElementById('inquiry-draft');
   const message = document.getElementById('teacher-message');
   const status = document.getElementById('inquiry-status');
+  const interests = {
+    development: 'Teacher development',
+    curriculum: 'Curriculum design or review',
+    coaching: 'Pedagogical coaching',
+    team: 'Training for a teaching team'
+  };
+  const requested = new URLSearchParams(location.search).get('support');
+  if (Object.hasOwn(interests, requested)) {
+    document.getElementById('teacher-interest').value = interests[requested];
+  }
   form.hidden = false;
   form.addEventListener('input', () => { draft.hidden = true; status.textContent = ''; });
   form.addEventListener('submit', event => {
