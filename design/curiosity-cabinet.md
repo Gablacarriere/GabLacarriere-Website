@@ -42,3 +42,7 @@ The first exhibit is now an opt-in animated duet, with together, echo and indivi
 ## Simplified direction
 
 The duet has been replaced by A Different Lens: three photographic question cards with a single reveal/next button. The rhythm machine keeps its instrument appearance, fixed 90 BPM, three patterns and play/stop; pads are display-only and the tempo control is removed. The five-stage learning map remains unchanged. Prefer this small interaction surface over adding controls for their own sake.
+
+## Original imagery refresh
+
+All three selection images now use cabinet-objects-v2.webp: a brass kaleidoscope on a coral stand, a physical three-pad rhythm machine, and a floating folded star map. The first exhibit uses the kaleidoscope instead of rotating documentary photographs. Question interaction, simplified rhythm controls and the five-stage map are preserved. The coordinated artwork was generated originally for the site and optimized as WebP.

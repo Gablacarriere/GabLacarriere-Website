@@ -11,7 +11,7 @@
 #curiosity .curiosityChoices>button:nth-child(2){border-radius:5px 5px 90px 5px}#curiosity .curiosityChoices>button:nth-child(3){border-radius:6px 100px 6px 6px}
 #curiosity .curiosityChoices>button:hover{transform:translateY(-5px);border-color:#687b82}
 #curiosity .curiosityChoices>button[aria-pressed=true]{border-color:#233d4c;box-shadow:0 5px 0 #233d4c}
-#curiosity .cabinetObject{display:block;width:100%;aspect-ratio:1;background-image:url('/assets/editorial/cabinet-sculptures.webp');background-size:300% auto;background-position:0 50%;background-repeat:no-repeat}
+#curiosity .cabinetObject{display:block;width:100%;aspect-ratio:1;background-image:url('/assets/editorial/cabinet-objects-v2.webp');background-size:300% auto;background-position:0 50%;background-repeat:no-repeat}
 #curiosity .objectMusicality{background-position:50% 50%}#curiosity .objectProgress{background-position:100% 50%}
 #curiosity .objectLabel{display:block;padding:0 24px 24px}#curiosity .objectLabel small{font:650 10px/1.6 system-ui,sans-serif;letter-spacing:.12em;text-transform:uppercase;color:#61666a}
 #curiosity .objectLabel strong{display:block;font:28px/1.15 Georgia,serif;letter-spacing:-.03em;margin:8px 0 10px}#curiosity .objectLabel>span{display:block;font:13px/1.6 system-ui,sans-serif;max-width:260px}#curiosity .objectLabel b{white-space:nowrap}
@@ -73,3 +73,8 @@
 #curiosity .questionCard{padding:24px;background:#faf5e9;min-height:180px}#curiosity .questionEyebrow{font:600 10px/1.5 system-ui;letter-spacing:.15em;color:#7b5549;margin:0 0 12px}#curiosity .questionCard h4{font:30px/1.15 Georgia,serif;font-weight:400;color:#293d40;margin:0}#curiosity #questionAnswer{font:15px/1.75 system-ui;color:#46544e;margin:20px 0 0}#curiosity #questionReveal{width:100%;min-height:48px;border:0;background:#314d49;color:#fff8e8;font:600 13px/1.5 system-ui;padding:14px 16px;border-radius:0 0 4px 4px}
 #curiosity .rhythmSteps>div{cursor:default}#curiosity .rhythmSteps>div:active{transform:none}
 @media(max-width:760px){#curiosity .objectConnection{background-size:cover;background-position:35% center}#curiosity .questionPhoto img{height:200px}}
+
+/* One coordinated set of original curiosity objects. */
+#curiosity .objectConnection{background-image:url('/assets/editorial/cabinet-objects-v2.webp');background-size:300% auto;background-position:0 50%}
+#curiosity .questionArtwork{width:100%;aspect-ratio:1;margin-top:20px;background:url('/assets/editorial/cabinet-objects-v2.webp') 0 50% / 300% auto no-repeat;border-radius:6px}
+@media(max-width:760px){#curiosity .objectConnection{background-size:auto 110px;background-position:0 50%}}
