@@ -112,8 +112,97 @@
       "destination": "/mentorship-hub.html"
     },
     {
-      "source": "/((?!.*\\\\.).*)",
-      "destination": "/index.html"
+      "source": "/brazilian-zouk-classes-nyc",
+      "destination": "/brazilian-zouk-classes-nyc.html"
+    },
+    {
+      "source": "/lambada-classes-nyc",
+      "destination": "/lambada-classes-nyc.html"
+    },
+    {
+      "source": "/privates",
+      "destination": "/privates.html"
+    },
+    {
+      "source": "/mentorship",
+      "destination": "/mentorship.html"
+    },
+    {
+      "source": "/classes",
+      "destination": "/classes.html"
+    },
+    {
+      "source": "/about",
+      "destination": "/about.html"
+    },
+    {
+      "source": "/wedding",
+      "destination": "/wedding.html"
+    },
+    {
+      "source": "/creative",
+      "destination": "/creative.html"
+    },
+    {
+      "source": "/method",
+      "destination": "/method.html"
+    },
+    {
+      "source": "/workshops",
+      "destination": "/workshops.html"
+    },
+    {
+      "source": "/work-with-gab",
+      "destination": "/work-with-gab.html"
+    },
+    {
+      "source": "/kinesthetic-practice",
+      "destination": "/kinesthetic-practice.html"
+    },
+    {
+      "source": "/experience",
+      "destination": "/experience.html"
+    },
+    {
+      "source": "/zouk-nyc-guide",
+      "destination": "/zouk-nyc-guide.html"
+    },
+    {
+      "source": "/movement-architecture",
+      "destination": "/movement-architecture.html"
+    },
+    {
+      "source": "/how-to-practice-zouk",
+      "destination": "/how-to-practice-zouk.html"
+    },
+    {
+      "source": "/learn",
+      "destination": "/learn.html"
+    },
+    {
+      "source": "/practice-planner",
+      "destination": "/practice-planner.html"
+    },
+    {
+      "source": "/mentorship-hub",
+      "destination": "/mentorship-hub.html"
+    }
+  ],
+  "redirects": [
+    {
+      "source": "/classes.html",
+      "destination": "/classes/",
+      "permanent": true
+    },
+    {
+      "source": "/privates.html",
+      "destination": "/privates/",
+      "permanent": true
+    },
+    {
+      "source": "/zouk-bnb.html",
+      "destination": "/zouk-bnb/",
+      "permanent": true
     }
   ]
 }
