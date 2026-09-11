@@ -6,10 +6,10 @@ const RHYTHMS = [
  {id:'tresillo',name:'Tresillo · 3–3–2',hits:[0,3,6],count:'Three attacks across eight sixteenth-note subdivisions'},
  {id:'traditional-1',name:'Traditional 1',hits:[0,4,6],count:'1, 2 &, 3, 4 &, 5, 6 &, 7, 8 &'},
  {id:'rnb-1',name:'R&B 1',hits:[0,2,4],count:'1 & 2, 3 & 4, 5 & 6, 7 & 8'},
- {id:'traditional-2',name:'Traditional 2',hits:null,count:'1 a &, 3 a &, 5 a &, 7 a &'},
- {id:'rnb-2',name:'R&B 2',hits:null,count:'1 a 2, 3 a 4, 5 a 6, 7 a 8'},
- {id:'contemporary-1',name:'Contemporary 1 · Gab',hits:null,count:'1 & &, 3 & &, 5 & &, 7 & &'},
- {id:'contemporary-2',name:'Contemporary 2 · Gab',hits:null,count:'1 & a, 3 & a, 5 & a, 7 & a'}
+ {id:'traditional-2',name:'Traditional 2',hits:[0,3,6],count:'1 a &, 3 a &, 5 a &, 7 a &'},
+ {id:'rnb-2',name:'R&B 2',hits:[0,3,4],count:'1 a 2, 3 a 4, 5 a 6, 7 a 8'},
+ {id:'contemporary-1',name:'Contemporary 1 · Gab',hits:[0,2,6],count:'1 & &, 3 & &, 5 & &, 7 & &'},
+ {id:'contemporary-2',name:'Contemporary 2 · Gab',hits:[0,2,3],count:'1 & a, 3 & a, 5 & a, 7 & a'}
 ];
 const INTERVALS=[1,2,3,5,8,12,18,28];
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -63,7 +63,7 @@ class RhythmPlayer{
   this.audio=this.audio||new AC();await this.audio.resume();
   if(this.audio.state!=='running')throw Error('Audio could not start. Tap Start again.');
   this.running=true;this.step=0;this.next=this.audio.currentTime+.06;this.interval=60/bpm/4*(half?2:1);this.hits=hits;this.volume=Math.min(.7,Math.max(0,volume));
-  const tick=()=>{if(!this.running)return;while(this.next<this.audio.currentTime+.12){const s=this.step%8,t=this.next;if(this.hits.includes(s))this.click(t,s===0);const timer=setTimeout(()=>{this.pending.delete(timer);if(this.running)this.onPulse(s);},Math.max(0,(t-this.audio.currentTime)*1000));this.pending.add(timer);this.step++;this.next+=this.interval;}this.timer=setTimeout(tick,25);};tick();
+  const tick=()=>{if(!this.running)return;while(this.next<this.audio.currentTime+.12){const s=this.step%8,group=Math.floor(this.step/8)%4,t=this.next;if(this.hits.includes(s))this.click(t,s===0);const timer=setTimeout(()=>{this.pending.delete(timer);if(this.running)this.onPulse(s,group);},Math.max(0,(t-this.audio.currentTime)*1000));this.pending.add(timer);this.step++;this.next+=this.interval;}this.timer=setTimeout(tick,25);};tick();
  }
  click(time,accent){const osc=this.audio.createOscillator(),gain=this.audio.createGain();osc.frequency.value=accent?1000:720;gain.gain.setValueAtTime(.0001,time);gain.gain.exponentialRampToValueAtTime(Math.max(.001,this.volume),time+.002);gain.gain.exponentialRampToValueAtTime(.0001,time+.045);osc.connect(gain);gain.connect(this.audio.destination);this.nodes.add(osc);osc.onended=()=>{this.nodes.delete(osc);osc.disconnect();gain.disconnect();};osc.start(time);osc.stop(time+.05);}
  stop(){this.running=false;clearTimeout(this.timer);for(const t of this.pending)clearTimeout(t);this.pending.clear();for(const n of this.nodes){try{n.stop();}catch{}}this.nodes.clear();}
