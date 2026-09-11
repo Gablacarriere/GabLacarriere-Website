@@ -38,7 +38,7 @@
       try{
         const attempts=[];
         for(let offset=0;;offset+=500){const result=await client.from('zoukable_attempts').select('status,completed_at,drill_id,practice_seconds').eq('user_id',student.id).eq('status','completed').order('id').range(offset,offset+499);if(result.error)throw result.error;attempts.push(...result.data);if(result.data.length<500)break;}
-        const pref=await client.from('zoukable_learning_profiles').select('avatar_coat').eq('user_id',student.id).maybeSingle();if(pref.error)throw pref.error;
+        const pref=await client.from('zoukable_learning_profiles').select('avatar_coat,ship_style').eq('user_id',student.id).maybeSingle();if(pref.error)throw pref.error;
         craft=window.GAB_CRAFT.model(attempts,pref.data);
       }catch(_){/* Craft availability must never prevent access to saved lessons. */}
       if(run!==generation)return;
