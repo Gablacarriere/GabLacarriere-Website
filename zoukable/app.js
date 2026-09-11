@@ -20,7 +20,7 @@ const sideOptions=selected=>options([['left','Left'],['right','Right'],['not_app
 function notice(text,error=false){const n=$('#notice');n.textContent=text;n.className='notice'+(error?' error':text.startsWith('Practice saved')?' success':'');n.hidden=!text;}
 function demoBanner(){return S.demo?'<div class="demo-band"><strong>Demo workspace.</strong> Sample tasks only. Nothing here is saved to your student account. <button class="text" id="exit-demo">Exit demo</button></div>':'';}
 function heading(k,title,description){return `<div class="intro"><div><p class="eyebrow">${E(k)}</p><h1>${title}</h1><p class="muted">${E(description)}</p></div><span class="tag">MENTORSHIP PILOT</span></div>`;}
-function setView(html){$('#view').innerHTML=demoBanner()+html;$('#exit-demo')?.addEventListener('click',()=>location.replace('/zoukable/'));}
+function setView(html){const chapter=S.profile?S.tab:'welcome';document.body.dataset.chapter=chapter;$('#view').innerHTML=demoBanner()+W.scene(chapter,S.user?.id,learningProfile)+html;$('#exit-demo')?.addEventListener('click',()=>location.replace('/zoukable/'));}
 function coach(){return !S.demo&&S.profile?.role==='coach';}
 function todayStats(){return C.stats(S.attempts);}
 async function queryAll(table,{userId=null,order=null}={}){

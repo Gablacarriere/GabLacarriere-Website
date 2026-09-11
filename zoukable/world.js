@@ -20,5 +20,19 @@ function tile(symbol,index=0){
  const structure=[arch,tower,stairs,bridge,stairs+`<circle cx="145" cy="31" r="13" fill="#fff4cf"/>`,arch][index%6];
  return `<svg class="island" viewBox="0 0 220 175" aria-hidden="true"><ellipse cx="110" cy="163" rx="66" ry="8" fill="#364365" opacity=".12"/><path d="M22 104 110 146 110 160 22 120Z" fill="var(--left)"/><path d="M110 146 198 104 198 120 110 160Z" fill="var(--right)"/><path d="M22 104 110 60 198 104 110 146Z" fill="var(--top)"/><path d="M38 105 110 69 182 105" fill="none" stroke="#fff9e0" opacity=".5"/>${structure}<path d="M157 113v-14" stroke="#688d93" stroke-width="3"/><circle cx="157" cy="96" r="8" fill="#87b0a5"/><circle cx="163" cy="99" r="6" fill="#679795"/><text x="39" y="99" fill="#385665" font-size="14">${symbol}</text></svg>`;
 }
-const api={state,tile,explorer};root.ZoukableWorld=api;if(typeof module!=='undefined')module.exports=api;
+const CHAPTERS={
+ welcome:['00','A world of small discoveries','Enter your practice world',0],
+ journey:['01','The departure garden','Make this journey yours',1],
+ today:['02','The sunrise terrace','One small step, today',0],
+ practice:['03','The stepping courtyard','Find your own rhythm of practice',2],
+ skills:['04','The floating islands','Follow your foundations',3],
+ rhythm:['05','The echo observatory','Listen. Step. Repeat.',4],
+ social:['06','The twilight garden','Carry your practice into the dance',5],
+ coach:['07','The architect’s atelier','Shape the next discovery',1]
+};
+function scene(chapter,seed,prefs){
+ const [number,title,caption,index]=CHAPTERS[chapter]||CHAPTERS.today;
+ return `<section class="chapter-scene" aria-label="${title}"><div class="chapter-copy"><p class="eyebrow">ZOUKABLE / ${number}</p><p class="chapter-title">${title}</p><p class="chapter-caption">${caption}</p></div><div class="chapter-landscape" aria-hidden="true"><span class="chapter-sun"></span><span class="chapter-orbit"></span><span class="chapter-cloud cloud-one"></span><span class="chapter-cloud cloud-two"></span><div class="chapter-distant">${tile('·',(index+1)%6)}</div><div class="chapter-monument">${tile('✧',index)}<span class="chapter-explorer">${explorer(seed,'',prefs)}</span></div><span class="chapter-water"></span></div></section>`;
+}
+const api={state,tile,explorer,scene,CHAPTERS};root.ZoukableWorld=api;if(typeof module!=='undefined')module.exports=api;
 })(typeof window!=='undefined'?window:globalThis);
