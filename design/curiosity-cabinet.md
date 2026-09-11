@@ -38,3 +38,7 @@ Phone and desktop: exhibit selection, keyboard slider, rhythm changes, play/stop
 ## Exhibit refinement
 
 The first exhibit is now an opt-in animated duet, with together, echo and individual-expression modes plus manual scrubbing. Two distinct spheres retain their own space. The map now narrates a five-stop example of a rushed step, with coaching, independent exploration, Zoukable practice, Atlas review and transfer into other dances. The rhythm interface has playable low/mid/high percussion pads, a 60–130 BPM slider, a transport button and a sequencer display. Existing rhythm offsets are preserved. All motion and sound stop when switching exhibits or leaving the cabinet; nothing autoplays.
+
+## Simplified direction
+
+The duet has been replaced by A Different Lens: three photographic question cards with a single reveal/next button. The rhythm machine keeps its instrument appearance, fixed 90 BPM, three patterns and play/stop; pads are display-only and the tempo control is removed. The five-stage learning map remains unchanged. Prefer this small interaction surface over adding controls for their own sake.
