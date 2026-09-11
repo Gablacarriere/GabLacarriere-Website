@@ -117,7 +117,7 @@ function patchHtml(file) {
       html = html.replace('<main id="main">', '<main id="main" tabindex="-1">');
     }
     if (!/class="skipLink"/.test(html)) html = html.replace(/(<body[^>]*>)/i, '$1\n<a class="skipLink" href="#main">Skip to content</a>');
-    html = html.replace('</head>', '<link rel="stylesheet" href="/public-experience.css?v=voices-1">\n</head>');
+    html = html.replace('</head>', '<link rel="stylesheet" href="/public-experience.css?v=voices-1"><script defer src="/public-clicks.js"></script>\n</head>');
     const footerGroups = [
       ['Train in NYC', [['/classes/', 'Weekly classes'], ['/privates/', 'Private training'], ['/mentorship/', 'Monthly mentorship'], ['/zouk-bnb/', 'Zouk BNB · stay & train']]],
       ['Explore', [['/reviews/', 'Student reviews'], ['/feedback/', 'Give feedback'], ['/journal/', 'The Journal'], ['/learn/', 'Learning library'], ['/for-teachers/', 'Teacher development'], ['/method/', 'Teaching method'], ['/about/', 'About Gab'], ['/work-with-gab/', 'Events & collaborations']]],
