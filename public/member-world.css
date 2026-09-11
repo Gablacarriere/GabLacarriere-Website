@@ -22,3 +22,18 @@ body.dreamMember .mothership-banner .member-world-links{gap:8px;margin-top:22px}
 body.dreamMember .mothership-banner .member-world-links a{padding:5px 11px;min-height:44px;border:1px solid #bec7d3;border-radius:16px;background:#fffaf5;font-size:12px}
 body.dreamMember .mothership-banner .member-world-links a[aria-current=page]{background:#6e7995;color:#fff!important;border-color:#6e7995;text-decoration:none}
 @media(max-width:700px){body.dreamMember .member-world-banner.mothership-banner{grid-template-columns:1fr;padding:24px 20px 10px;gap:0;border-radius:24px}body.dreamMember .mothership-banner p{max-width:none}body.dreamMember .mothership-banner small{max-width:none}body.dreamMember .mothership-banner svg.mothershipSvg{width:100%;height:auto;max-height:none}body.dreamMember .mothership-banner .member-world-links{margin-top:16px}}
+
+/* Functional rooms of the shared mothership; keep task names explicit. */
+body.dreamMember .shipDirectory{margin:26px 0;padding:24px;background:#e6e6ef;border:1px solid #bdc6d7;border-radius:26px 26px 12px 12px}
+body.dreamMember .shipDirectoryIntro h3{font:24px/1.2 Georgia,serif;margin:8px 0 20px;color:#344b60}
+body.dreamMember .shipDecks{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+body.dreamMember .shipDecks a{position:relative;display:flex;flex-direction:column;gap:10px;padding:20px 18px 36px;min-height:165px;border-radius:22px 22px 8px 8px;border:1px solid #c1cabc;background:#edf2e7;text-decoration:none;color:#344b60!important;box-shadow:0 4px 0 #a2afbe20}
+body.dreamMember .shipDecks a:nth-child(2){background:#f4eadd;border-color:#d4c8b7}body.dreamMember .shipDecks a:nth-child(3){background:#e8e1f1;border-color:#c9bdd8}body.dreamMember .shipDecks a:nth-child(4){background:#e2edf0;border-color:#b8cdd2}
+body.dreamMember .shipDecks .deckNumber{font:700 9px/1.5 system-ui,sans-serif;letter-spacing:.07em;color:#52647a}
+body.dreamMember .shipDecks strong{font:650 17px/1.25 system-ui,sans-serif}
+body.dreamMember .shipDecks a>span:not(.deckNumber){font:13px/1.55 system-ui,sans-serif;color:#52647a}
+body.dreamMember .shipDecks b{position:absolute;bottom:10px;right:16px;font-size:20px;font-weight:400}
+body.dreamMember .shipDecks a:hover{text-decoration:underline;text-underline-offset:4px;border-color:#66798d}
+body.dreamMember .shipDecks a:focus-visible{outline:3px solid #78608b;outline-offset:4px}
+@media(max-width:850px){body.dreamMember .shipDecks{grid-template-columns:1fr 1fr}}
+@media(max-width:480px){body.dreamMember .shipDirectory{padding:18px 14px}body.dreamMember .shipDecks{grid-template-columns:1fr}body.dreamMember .shipDecks a{min-height:125px;padding:16px 18px 30px}}
