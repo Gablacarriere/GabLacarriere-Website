@@ -97,6 +97,41 @@ body.studentView .adminOnly{display:none!important}
 .linkBtn{background:none;border:0;padding:0;color:#9edfff;text-decoration:underline;cursor:pointer;font:inherit}
 
 
+
+/* Official Gab Lacarriere brand lockup */
+.brand.brand-logo{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  flex:0 0 auto;
+  line-height:0;
+  letter-spacing:0;
+  font-size:inherit;
+}
+.brand.brand-logo img{
+  display:block;
+  width:auto;
+  height:56px;
+  max-width:min(360px,44vw);
+  object-fit:contain;
+}
+.brand-context{
+  font-size:.68rem;
+  line-height:1;
+  letter-spacing:.12em;
+  font-weight:850;
+  color:#c9ced8;
+  white-space:nowrap;
+}
+@media(max-width:920px){
+  .brand.brand-logo img{height:50px;max-width:245px}
+  .brand-context{font-size:.62rem}
+}
+@media(max-width:520px){
+  .brand.brand-logo img{height:44px;max-width:205px}
+  .brand-context{display:none}
+}
+
 </style>
   <script src="/vendor/supabase-2.116.0.js"></script><script src="/session-boundary.js?v=1"></script>
   <script>
@@ -108,9 +143,19 @@ window.GAB_PORTAL = {
 </script>
 <link rel="stylesheet" href="/mentorship-crew.css?v=crew-duo-1"><script src="/mentorship-crew.js?v=characters-3"></script><link rel="stylesheet" href="/hub-navigation.css?v=unread-1">
 <script src="/echo-unread.js?v=1"></script>
-</head>
-<body>
-<nav class="portalNavigation"><div class="w n"><a class="portalBrand" href="/" aria-label="Gab Lacarriere home"><img src="/gab-logo-header.png" alt="Gab Lacarriere" width="1200" height="190"></a><div class="links"><a href="/mentorship/">Mentorship</a><a class="btn" href="/">Public Site</a></div></div></nav>
+
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/favicon-180.png">
+<meta name="theme-color" content="#0a0d12">
+
+<link rel="stylesheet" href="/bauhaus.css?v=art-2">
+<script defer src="/art-discoveries.js?v=1"></script>
+<script defer src="/bauhaus.js?v=art-2"></script>
+<link rel="stylesheet" href="/art-directions.css?v=2">
+<link rel="stylesheet" href="/member-world.css?v=1"><script defer src="/zoukable/world.js?v=gardens-1"></script><script defer src="/member-world.js?v=1"></script></head>
+<body class="bhSite bhMember dreamMember" data-art="orbit" data-page="mentorship-hub">
+<nav class="portalNavigation"><div class="w n"><a class="portalBrand" href="/" aria-label="Gab Lacarriere home"><img src="/gab-logo-header.png" alt="Gab Lacarriere" width="1200" height="190"></a><div class="links"><a href="/zoukable/" data-zoukable-link="1">Zoukable</a><a href="/mentorship/">Mentorship</a><a class="btn" href="/">Public Site</a></div></div></nav>
 
 <div class="portalShell">
   <aside class="memberHelp"><strong>Need a hand?</strong> <a href="mailto:riseadance@gmail.com?subject=Mentorship%20website%20help">Email Gab for help →</a><span>Tell me which page you’re on and what happened. Never send your password.</span></aside>
@@ -171,7 +216,7 @@ window.GAB_PORTAL = {
     </form>
   </section>
 
-  <section id="dashboardView" class="hidden"><div class="crewLinkRow"><a class="crewQuickLink" href="/zouk-map/#map">Open the Zouk Atlas →</a><a class="crewQuickLink" href="#mentorshipCrew">Meet your flight crew ↓</a></div>
+  <section id="dashboardView" class="hidden"><div class="crewLinkRow"><a class="crewQuickLink" href="/zoukable/" data-zoukable-link="1">Zoukable · Practice studio →</a><a class="crewQuickLink" href="/zouk-map/#map">Open the Zouk Atlas →</a><a class="crewQuickLink" href="#mentorshipCrew">Meet your flight crew ↓</a></div>
     <aside id="echoHubNotice" class="echoHubNotice"><a href="/comms-deck/">ECHO · Comms Deck →</a><p id="echoHubStatus" role="status">Checking crew updates…</p></aside><div class="portalTop">
       <div>
         <span class="badge" id="roleBadge">Mentee</span>
