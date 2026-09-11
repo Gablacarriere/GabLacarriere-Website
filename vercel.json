@@ -4,6 +4,14 @@
   "outputDirectory": "public",
   "rewrites": [
     {
+      "source": "/alex-de-carvalho/",
+      "destination": "/alex-de-carvalho.html"
+    },
+    {
+      "source": "/alex-de-carvalho",
+      "destination": "/alex-de-carvalho.html"
+    },
+    {
       "source": "/reviews/",
       "destination": "/reviews.html"
     },

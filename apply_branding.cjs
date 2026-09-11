@@ -136,7 +136,7 @@ function patchHtml(file) {
   // Deliberate variation by page: stable on every visit, with a shared navigation system.
   const artDirections = {
     'journal':'pop', 'comms-deck':'orbit', 'index':'cutout', 'classes':'rhythm', 'brazilian-zouk-classes-nyc':'cutout',
-    'lambada-classes-nyc':'rhythm', 'about':'atelier', 'method':'planes',
+    'lambada-classes-nyc':'rhythm', 'alex-de-carvalho':'atelier', 'about':'atelier', 'method':'planes',
     'movement-architecture':'planes', 'privates':'intimate', 'wedding':'intimate',
     'mentorship':'garden', 'how-to-practice-zouk':'garden', 'kinesthetic-practice':'garden',
     'zouk-bnb':'terrace', 'zouk-nyc-guide':'terrace', 'experience':'atelier',
