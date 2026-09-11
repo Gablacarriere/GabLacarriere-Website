@@ -137,6 +137,10 @@ function patchHtml(file) {
   const pageKey = fileName.replace(/\.html$/, '');
   html = html.replace(/<body([^>]*)>/i, `<body$1 data-art="${artDirections[pageKey] || 'cutout'}" data-page="${pageKey}">`);
   html = html.replace('</head>', '<link rel="stylesheet" href="/art-directions.css?v=2">\n</head>');
+  if(['mentorship-hub','zouk-map','comms-deck','practice-planner'].includes(pageKey)){
+    html=html.replace('</head>','<link rel="stylesheet" href="/member-world.css?v=1"><script defer src="/zoukable/world.js?v=gardens-1"></script><script defer src="/member-world.js?v=1"></script></head>');
+    html=html.replace(/<body([^>]*)class="([^"]*)"/, '<body$1class="$2 dreamMember"');
+  }
   return html;
 }
 
@@ -165,3 +169,4 @@ for (const file of walk(ROOT)) {
 }
 
 console.log("Built branded static site into public/.");
+
