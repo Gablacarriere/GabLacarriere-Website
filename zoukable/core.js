@@ -34,21 +34,21 @@ function canPractice(d,ctx,clearances=[],uid=''){
  return true;
 }
 function buildSession(drills,states,ctx,clearances,uid,now=Date.now()){
- const eligible=drills.filter(d=>canPractice(d,ctx,clearances,uid)&&(!d.corrective_only||d.assigned_to===uid));
+ const eligible=drills.filter(d=>canPractice(d,ctx,clearances,uid)&&(!d.corrective_only||d.assigned_to===uid||d._corrective));
  const items=eligible.map(d=>{
   const matches=states.filter(s=>s.drill_id===d.id&&s.drill_version===d.version&&s.role===ctx.role&&s.partner_mode===ctx.mode&&(s.side===ctx.side||!d.side_specific));
   const due=matches.filter(s=>new Date(s.due_at).getTime()<=now).sort((a,b)=>new Date(a.due_at)-new Date(b.due_at))[0];
   const fresh=!matches.length;
-  return {drill:d,review:due,priority:(d.assigned_to===uid?40:0)+(due?30:0)+(fresh?10:0),reason:d.assigned_to===uid?'Teacher assigned':due?'Review due':fresh?'First practice':'Foundation maintenance'};
+  return {drill:d,review:due,priority:(d.assigned_to===uid?40:0)+(due?30:0)+(fresh?10:0)+(d._boost||0),reason:d.assigned_to===uid?'Teacher assigned':due?'Review due':fresh?'First practice':'Foundation maintenance'};
  }).sort((a,b)=>b.priority-a.priority||a.drill.title.localeCompare(b.drill.title));
  let remaining=Number(ctx.minutes)*60;const queue=[];
- for(const item of items){const d=item.drill;if(d.min_seconds>remaining)continue;const seconds=Math.min(d.target_seconds,remaining);queue.push({...item,seconds});remaining-=seconds;if(remaining<30)break;}
+ for(const item of items){const d=item.drill;if(d.min_seconds>remaining)continue;const seconds=Math.min(d.target_seconds,remaining);queue.push({...item,seconds,reason:item.reason+(d._reason?' · '+d._reason:'')});remaining-=seconds;if(remaining<30)break;}
  return queue;
 }
-function nextReview(old,result,hint,now=Date.now()){
+function nextReview(old,result,hint,now=Date.now(),confidence=2){
  let step=old?.step||0;
  if(result==='failed')step=Math.max(0,step-1);
- else if(['good','easy'].includes(result)&&!hint&&old&&new Date(old.due_at)<=now&&now-new Date(old.last_reviewed_at)>=43200000)step=Math.min(7,step+1);
+ else if(['good','easy'].includes(result)&&!hint&&confidence>1&&old&&new Date(old.due_at)<=now&&now-new Date(old.last_reviewed_at)>=43200000)step=Math.min(7,step+1);
  const days=(hint||result==='failed')?1:result==='difficult'?Math.min(2,INTERVALS[step]):INTERVALS[step];
  return {step,due_at:new Date(now+days*86400000).toISOString(),last_reviewed_at:new Date(now).toISOString()};
 }
@@ -71,3 +71,4 @@ class RhythmPlayer{
 const API={RHYTHMS,INTERVALS,esc,safeURL,stats,buildSession,canPractice,nextReview,rhythmHits,RhythmPlayer};
 if(typeof module!=='undefined'&&module.exports)module.exports=API;root.ZoukableCore=API;
 })(typeof window!=='undefined'?window:globalThis);
+
