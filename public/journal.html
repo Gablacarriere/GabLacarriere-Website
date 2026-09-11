@@ -20,12 +20,59 @@ footer{padding-bottom:100px}
 @media(max-width:1050px){.primary{display:none!important}.mobileMenu{display:block}}
 @media(max-width:760px){.heroLayout{grid-template-columns:1fr;gap:32px}.hero{padding:48px 0}.heroPortrait{max-width:420px}.sec{padding:48px 0}.heroPortrait img{aspect-ratio:4/3;object-position:center 20%}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.card{transition:none}.card:hover{transform:none}}
-</style><link rel="stylesheet" href="/community.css?v=1"><script defer src="/vendor/supabase-2.116.0.js"></script><script defer src="/supabase-config.js"></script><script defer src="/session-boundary.js?v=1"></script><script defer src="/journal.js?v=figures-1"></script></head><body>
-<nav><div class="w n"><a class="brand" href="/">Gab Lacarriere</a><a class="btn" href="/mentorship-hub/">Member hub</a></div></nav>
-<main id="main"><section class="hero"><div class="w"><p class="kicker">THE JOURNAL · MOVEMENT & IDEAS</p><h1>More than a pattern.</h1><p class="lede">A place for thoughtful writing about Brazilian Zouk, Lambada and the experience of dancing. Technique, practice, culture and different points of view.</p><div class="actions"><a class="btn" href="#articles">Read the journal</a><a class="btn ghost" href="#contribute">Write with us</a></div></div></section>
+
+/* Official Gab Lacarriere brand lockup */
+.brand.brand-logo{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  flex:0 0 auto;
+  line-height:0;
+  letter-spacing:0;
+  font-size:inherit;
+}
+.brand.brand-logo img{
+  display:block;
+  width:auto;
+  height:56px;
+  max-width:min(360px,44vw);
+  object-fit:contain;
+}
+.brand-context{
+  font-size:.68rem;
+  line-height:1;
+  letter-spacing:.12em;
+  font-weight:850;
+  color:#c9ced8;
+  white-space:nowrap;
+}
+@media(max-width:920px){
+  .brand.brand-logo img{height:50px;max-width:245px}
+  .brand-context{font-size:.62rem}
+}
+@media(max-width:520px){
+  .brand.brand-logo img{height:44px;max-width:205px}
+  .brand-context{display:none}
+}
+
+</style><link rel="stylesheet" href="/community.css?v=1"><script defer src="/vendor/supabase-2.116.0.js"></script><script defer src="/supabase-config.js"></script><script defer src="/session-boundary.js?v=1"></script><script defer src="/journal.js?v=figures-1"></script>
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/favicon-180.png">
+<meta name="theme-color" content="#0a0d12">
+
+<link rel="stylesheet" href="/public-experience.css?v=voices-1">
+<link rel="stylesheet" href="/bauhaus.css?v=art-2">
+<script defer src="/art-discoveries.js?v=1"></script>
+<script defer src="/bauhaus.js?v=art-2"></script>
+<link rel="stylesheet" href="/art-directions.css?v=2">
+</head><body class="publicSite bhSite" data-art="pop" data-page="journal">
+<a class="skipLink" href="#main">Skip to content</a>
+<nav aria-label="Main navigation"><div class="w n"><a class="brand publicBrand" href="/" aria-label="Gab Lacarriere home"><img src="/gab-logo-header.png" alt="Gab Lacarriere" width="1200" height="190"></a><div class="primary"><a href="/zoukable/" data-zoukable-link="1">Zoukable</a><a href="/classes/">Classes</a><a href="/zouk-bnb/">Zouk BNB</a><a href="/privates/">Private training</a><a href="/mentorship/">Mentorship</a><a href="/method/">Method</a><a href="/work-with-gab/">Work with Gab</a><a href="/journal/" aria-current="page">Journal</a><a href="/about/">About</a><a class="memberLink" href="/mentorship-hub/">Member login</a></div><details class="mobileMenu"><summary>Menu</summary><div class="mobilePanel"><a href="/zoukable/" data-zoukable-link="1">Zoukable</a><a href="/classes/">Classes</a><a href="/zouk-bnb/">Zouk BNB</a><a href="/privates/">Private training</a><a href="/mentorship/">Mentorship</a><a href="/method/">Method</a><a href="/work-with-gab/">Work with Gab</a><a href="/journal/" aria-current="page">Journal</a><a href="/about/">About</a><a class="memberLink" href="/mentorship-hub/">Member login</a></div></details></div></nav><div class="studentVoiceBar" aria-label="Student feedback and reviews"><div class="w"><a href="/reviews/">Student Reviews &amp; Stories</a><a href="/feedback/">Give Feedback →</a></div></div>
+<main id="main" tabindex="-1"><section class="hero"><div class="w"><p class="kicker">THE JOURNAL · MOVEMENT & IDEAS</p><h1>More than a pattern.</h1><p class="lede">A place for thoughtful writing about Brazilian Zouk, Lambada and the experience of dancing. Technique, practice, culture and different points of view.</p><div class="actions"><a class="btn" href="#articles">Read the journal</a><a class="btn ghost" href="#contribute">Write with us</a></div></div></section>
 <section class="sec"><div class="w"><article id="articleReader" class="readingPaper" hidden tabindex="-1"></article>
 <div id="articles"><p class="kicker">READ & REFLECT</p><h2>From the dance floor.</h2><p id="journalStatus" role="status">Loading articles…</p><div id="articleList" class="grid"></div><button id="moreArticles" class="btn ghost" hidden>Load more articles</button></div>
 <div class="journalShelf"><h3>From Gab’s teaching notes</h3><p>Start with these existing guides while the Journal’s first contributions take shape.</p><div class="grid"><a class="card" href="/how-to-practice-zouk/"><p class="kicker">PRACTICE</p><h3>Give your practice a direction.</h3><p>Explore focused repetition, variation and bringing a skill into your dancing.</p><span>Read the practice guide →</span></a><a class="card" href="/movement-architecture/"><p class="kicker">MOVEMENT</p><h3>Look beneath the pattern.</h3><p>Timing, pathways and the relationships that help organize movement.</p><span>Explore movement architecture →</span></a></div></div></div></section>
 <section class="sec soft" id="contribute"><div class="w"><p class="kicker">GUEST VOICES</p><h2>Bring your perspective.</h2><p class="lede">Dancers, teachers and curious observers: propose an article about Brazilian Zouk, Lambada or dance culture. Gab reviews contributions before publication, with a byline and a short introduction to the writer.</p><p>Send a working title, a few sentences about your idea and a little about yourself. Share original writing and include sources or image credits where needed.</p><a class="btn" href="mailto:riseadance@gmail.com?subject=Journal%20article%20proposal&body=Hi%20Gab%2C%0A%0AMy%20name%3A%0AWorking%20title%3A%0AMy%20idea%3A%0AA%20little%20about%20me%3A%0ASources%20or%20image%20credits%3A%0A">Send an article proposal →</a><p class="small">Opens your email app. Your proposal is sent only when you send the email.</p></div></section>
 <section id="journalStudio" class="sec" hidden><div class="w"><p class="kicker">COACH EDITORIAL DESK</p><h2>Write. Review. Publish.</h2><p>Drafts are visible only to coaches. Publishing makes the article available to everyone. Use blank lines between paragraphs; short uppercase lines become section headings and reference links are clickable.</p><button id="newArticle" class="btn ghost">New article</button><div id="draftList" class="studioList"></div>
-<form id="articleForm" class="communityForm"><label>Title<input name="title" required minlength="3" maxlength="180"></label><label>Author’s name<input name="author_name" required minlength="2" maxlength="100"></label><label>About the author<textarea name="author_bio" maxlength="500"></textarea></label><label>Category<select name="category"><option>Brazilian Zouk</option><option>Lambada</option><option>Practice</option><option>Dance culture</option></select></label><label>Short introduction<textarea name="excerpt" required minlength="10" maxlength="350"></textarea></label><label>Article<textarea name="body" rows="16" required minlength="30" maxlength="40000"></textarea></label><div class="actions"><button class="btn ghost" name="action" value="draft">Save as private draft</button><button class="btn" name="action" value="published">Publish article</button></div><p id="editorStatus" role="status"></p></form></div></section></main><footer><div class="w">Gab Lacarriere · Brazilian Zouk · Lambada</div></footer></body></html>
+<form id="articleForm" class="communityForm"><label>Title<input name="title" required minlength="3" maxlength="180"></label><label>Author’s name<input name="author_name" required minlength="2" maxlength="100"></label><label>About the author<textarea name="author_bio" maxlength="500"></textarea></label><label>Category<select name="category"><option>Brazilian Zouk</option><option>Lambada</option><option>Practice</option><option>Dance culture</option></select></label><label>Short introduction<textarea name="excerpt" required minlength="10" maxlength="350"></textarea></label><label>Article<textarea name="body" rows="16" required minlength="30" maxlength="40000"></textarea></label><div class="actions"><button class="btn ghost" name="action" value="draft">Save as private draft</button><button class="btn" name="action" value="published">Publish article</button></div><p id="editorStatus" role="status"></p></form></div></section></main><footer><div class="w">Gab Lacarriere · Brazilian Zouk · Lambada</div><div class="w footerDirectory" role="navigation" aria-label="Footer navigation"><div class="footerGroup"><h2>Train in NYC</h2><a href="/classes/">Weekly classes</a><a href="/privates/">Private training</a><a href="/mentorship/">Monthly mentorship</a><a href="/zouk-bnb/">Zouk BNB · stay &amp; train</a></div><div class="footerGroup"><h2>Explore</h2><a href="/reviews/">Student reviews</a><a href="/feedback/">Give feedback</a><a href="/journal/" aria-current="page">The Journal</a><a href="/learn/">Learning library</a><a href="/method/">Teaching method</a><a href="/about/">About Gab</a><a href="/work-with-gab/">Events &amp; collaborations</a></div><div class="footerGroup"><h2>Your next step</h2><a href="/mentorship-hub/">Member sign in</a><a href="/classes/#schedule">Class schedule</a><a href="mailto:riseadance@gmail.com">Email Gab</a></div></div></footer></body></html>
