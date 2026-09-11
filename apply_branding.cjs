@@ -121,7 +121,7 @@ function patchHtml(file) {
     const footerGroups = [
       ['Train in NYC', [['/classes/', 'Weekly classes'], ['/privates/', 'Private training'], ['/mentorship/', 'Monthly mentorship'], ['/zouk-bnb/', 'Zouk BNB · stay & train']]],
       ['Explore', [['/reviews/', 'Student reviews'], ['/feedback/', 'Give feedback'], ['/journal/', 'The Journal'], ['/learn/', 'Learning library'], ['/method/', 'Teaching method'], ['/about/', 'About Gab'], ['/work-with-gab/', 'Events & collaborations']]],
-      ['Your next step', [['/mentorship-hub/', 'Member sign in'], ['/classes/#schedule', 'Class schedule'], ['mailto:riseadance@gmail.com', 'Email Gab']]],
+      ['Your next step', [['/mentorship-hub/', 'Member sign in'], ['/classes/#schedule', 'Class schedule'], ['mailto:hello@gablacarriere.com', 'hello@gablacarriere.com']]],
     ];
     const footerDirectory = footerGroups.map(([heading, entries]) => `<div class="footerGroup"><h2>${heading}</h2>${entries.map(([href, label]) => `<a href="${href}"${currentPath === href ? ' aria-current="page"' : ''}>${label.replace(/&/g, '&amp;')}</a>`).join('')}</div>`).join('');
     html = html.replace('</footer>', `<div class="w footerDirectory" role="navigation" aria-label="Footer navigation">${footerDirectory}</div></footer>`);
