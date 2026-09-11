@@ -34,9 +34,16 @@
         const result=await client.from('atlas_imports').select('id,source_title,source_excerpt,student_id,lesson_date,summary,practice,concepts,mapping_notes,status').eq('status','pending').order('lesson_date',{ascending:false});
         if(result.error)importsError=true;else imports=result.data;
       }
+      let craft=null;
+      try{
+        const attempts=[];
+        for(let offset=0;;offset+=500){const result=await client.from('zoukable_attempts').select('status,completed_at,drill_id,practice_seconds').eq('user_id',student.id).eq('status','completed').order('id').range(offset,offset+499);if(result.error)throw result.error;attempts.push(...result.data);if(result.data.length<500)break;}
+        const pref=await client.from('zoukable_learning_profiles').select('avatar_coat').eq('user_id',student.id).maybeSingle();if(pref.error)throw pref.error;
+        craft=window.GAB_CRAFT.model(attempts,pref.data);
+      }catch(_){/* Craft availability must never prevent access to saved lessons. */}
       if(run!==generation)return;
       targetId=student.id;
-      emit({mode:'ready',viewer,student,students,lessons,imports,importsError,fullAccess:viewer.role==='coach'&&student.id===viewer.id});
+      emit({mode:'ready',viewer,student,students,lessons,imports,importsError,craft,fullAccess:viewer.role==='coach'&&student.id===viewer.id});
     }catch(_){if(run===generation)emit({mode:'error',message:'Your saved map could not be loaded. Please retry or sign in again. No progress has been changed.'});}
   }
   window.ATLAS_API={
