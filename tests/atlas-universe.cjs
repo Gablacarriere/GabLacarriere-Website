@@ -45,3 +45,24 @@ element('homeShip').onclick();assert(element('detail').innerHTML.includes('A uni
 console.log('PASS: all 56 study guides, bounded non-overlapping geometry, landmark navigation does not award progress.');
 
 for(const landmark of context.window.ATLAS_UNIVERSE.landmarks)for(const p of context.window.ATLAS_UNIVERSE.positions.values())assert(Math.hypot(p.x-landmark.x,p.y-landmark.y)>230);
+
+const search=q=>{element('conceptSearch').value=q;element('conceptSearch').listeners.input();return element('conceptSearchResults').innerHTML;};
+assert(!search('Breathing').includes('data-node='));
+element('previewToggle').onclick();
+assert(search('piao').includes('patterns-2'));
+assert(search('PIÃO').includes('patterns-2'));
+assert.equal((search('Spirals').match(/data-node=/g)||[]).length,6);
+context.window['atlas-state']({detail:state});
+assert(!search('Piao').includes('data-node='));
+assert(search('Breathing').includes('organization-0'));
+assert.equal((search('Breathing').match(/data-node=/g)||[]).length,1);
+element('fitGalaxy').onclick();
+element('content').listeners.click({target:{closest:s=>s==='[data-node]'?{dataset:{node:'organization-0'}}:null}});
+assert.equal(element('zoomLevel').textContent,'90%');
+assert.equal(element('discoverySelect').value,'organization-0');
+assert(element('content').innerHTML.includes('1 / 56'));
+assert.equal(JSON.stringify(lesson.concepts),'{"organization-0":"Introduced"}');
+element('content').listeners.click({target:{closest:s=>s==='[data-node]'?{dataset:{node:'patterns-2'}}:null}});
+assert.equal(element('discoverySelect').value,'organization-0');
+assert.equal(search(''),'');
+console.log('PASS: accent-insensitive search, constellation search, undiscovered concepts excluded, selected result zooms and syncs navigation, progress unchanged, unavailable selection rejected.');
