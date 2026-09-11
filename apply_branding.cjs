@@ -47,13 +47,22 @@ const HEAD_TAGS = `
 <meta name="theme-color" content="#0a0d12">
 `;
 
+// Explicit publication boundary: development files are never website assets.
+const ASSET_DIRS = new Set(['assets', 'vendor', 'zoukable']);
+const PUBLIC_EXTENSIONS = new Set(['.html','.css','.js','.png','.jpg','.jpeg','.webp','.svg','.ico','.gif','.avif','.woff','.woff2','.ttf','.mp3','.mp4','.webm','.pdf']);
 function walk(dir) {
-  let files = [];
-  for (const item of fs.readdirSync(dir, { withFileTypes: true })) {
-    if ([".git", ".vercel", "node_modules", "public"].includes(item.name)) continue;
-    const full = path.join(dir, item.name);
-    if (item.isDirectory()) files = files.concat(walk(full));
-    else files.push(full);
+  const files=[];
+  for(const item of fs.readdirSync(dir,{withFileTypes:true})){
+    if(item.name.startsWith('.'))continue;
+    const full=path.join(dir,item.name);
+    if(item.isDirectory()){
+      if(dir===ROOT&&!ASSET_DIRS.has(item.name))continue;
+      if(['node_modules','tests','work','design','database','scripts'].includes(item.name))continue;
+      files.push(...walk(full));
+    }else if(item.isFile()&&(PUBLIC_EXTENSIONS.has(path.extname(item.name).toLowerCase())||['robots.txt','sitemap.xml'].includes(item.name))){
+      if(item.name==='NAVBAR_PREVIEW.png')continue;
+      files.push(full);
+    }
   }
   return files;
 }
