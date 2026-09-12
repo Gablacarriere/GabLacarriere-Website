@@ -4,6 +4,22 @@
   "outputDirectory": "public",
   "rewrites": [
     {
+      "source": "/curriculum-planner/",
+      "destination": "/curriculum-planner.html"
+    },
+    {
+      "source": "/curriculum-planner",
+      "destination": "/curriculum-planner.html"
+    },
+    {
+      "source": "/session-planner/",
+      "destination": "/session-planner.html"
+    },
+    {
+      "source": "/session-planner",
+      "destination": "/session-planner.html"
+    },
+    {
       "source": "/for-teachers/",
       "destination": "/for-teachers.html"
     },

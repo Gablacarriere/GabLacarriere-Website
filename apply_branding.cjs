@@ -120,7 +120,7 @@ function patchHtml(file) {
     html = html.replace('</head>', '<link rel="stylesheet" href="/public-experience.css?v=voices-1"><script defer src="/public-clicks.js"></script>\n</head>');
     const footerGroups = [
       ['Train in NYC', [['/classes/', 'Weekly classes'], ['/privates/', 'Private training'], ['/mentorship/', 'Monthly mentorship'], ['/zouk-bnb/', 'Zouk BNB · stay & train']]],
-      ['Explore', [['/reviews/', 'Student reviews'], ['/feedback/', 'Give feedback'], ['/journal/', 'The Journal'], ['/learn/', 'Learning library'], ['/for-teachers/', 'Teacher development'], ['/method/', 'Teaching method'], ['/about/', 'About Gab'], ['/work-with-gab/', 'Events & collaborations']]],
+      ['Explore', [['/reviews/', 'Student reviews'], ['/feedback/', 'Give feedback'], ['/journal/', 'The Journal'], ['/learn/', 'Learning library'], ['/for-teachers/', 'Teacher development'], ['/curriculum-planner/', 'Curriculum planner'], ['/session-planner/', 'Session planner'], ['/method/', 'Teaching method'], ['/about/', 'About Gab'], ['/work-with-gab/', 'Events & collaborations']]],
       ['Your next step', [['/mentorship-hub/', 'Member sign in'], ['/classes/#schedule', 'Class schedule'], ['mailto:hello@gablacarriere.com', 'hello@gablacarriere.com']]],
     ];
     const footerDirectory = footerGroups.map(([heading, entries]) => `<div class="footerGroup"><h2>${heading}</h2>${entries.map(([href, label]) => `<a href="${href}"${currentPath === href ? ' aria-current="page"' : ''}>${label.replace(/&/g, '&amp;')}</a>`).join('')}</div>`).join('');
@@ -137,7 +137,7 @@ function patchHtml(file) {
   const artDirections = {
     'journal':'pop', 'comms-deck':'orbit', 'index':'cutout', 'classes':'rhythm', 'brazilian-zouk-classes-nyc':'cutout',
     'lambada-classes-nyc':'rhythm', 'alex-de-carvalho':'atelier', 'about':'atelier', 'method':'planes',
-    'for-teachers':'planes', 'movement-architecture':'planes', 'privates':'intimate', 'wedding':'intimate',
+    'curriculum-planner':'planes', 'session-planner':'planes', 'for-teachers':'planes', 'movement-architecture':'planes', 'privates':'intimate', 'wedding':'intimate',
     'mentorship':'garden', 'how-to-practice-zouk':'garden', 'kinesthetic-practice':'garden',
     'zouk-bnb':'terrace', 'zouk-nyc-guide':'terrace', 'experience':'atelier',
     'learn':'planes', 'workshops':'rhythm', 'work-with-gab':'pop', 'creative':'pop',
