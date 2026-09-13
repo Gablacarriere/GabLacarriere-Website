@@ -1,0 +1,6 @@
+/* Keep the circular identity intact across the site's existing theme overrides. */
+body .publicBrand,body .portalNavigation .portalBrand,body .atlasLogo{display:block!important;width:96px!important;height:96px!important;flex:0 0 96px!important;overflow:visible!important;border-radius:50%}
+body .publicBrand img,body .portalBrand img,body .atlasLogo img,body .brand.brand-logo img{display:block!important;width:96px!important;height:96px!important;max-width:none!important;object-fit:contain!important;object-position:center!important;border-radius:50%;background:#fff}
+body.publicSite .n,body .portalNavigation .n{height:auto!important;min-height:112px!important}
+body .brand.brand-logo{flex-shrink:0}
+@media(max-width:520px){body .publicBrand,body .portalNavigation .portalBrand,body .atlasLogo{width:76px!important;height:76px!important;flex-basis:76px!important}body .publicBrand img,body .portalBrand img,body .atlasLogo img,body .brand.brand-logo img{width:76px!important;height:76px!important}body.publicSite .n,body .portalNavigation .n{height:auto!important;min-height:92px!important}}
