@@ -78,7 +78,7 @@ function patchHtml(file) {
       const clean = label.replace(/<[^>]+>/g, "").replace(/\s+/g, " ").trim();
       const isMentorship = /MENTORSHIP/i.test(clean);
       const context = isMentorship ? '<span class="brand-context">MENTORSHIP</span>' : "";
-      return `<a class="brand brand-logo" href="${href}" aria-label="Gab Lacarriere${isMentorship ? " Mentorship" : ""}"><img src="/assets/editorial/logo-746.webp" srcset="/assets/editorial/logo-240.webp 240w, /assets/editorial/logo-480.webp 480w, /assets/editorial/logo-746.webp 746w, /gab-logo-header.png 1254w" sizes="(max-width: 520px) 76px, 96px" alt="Gab Lacarriere">${context}</a>`;
+      return `<a class="brand brand-logo" href="${href}" aria-label="Gab Lacarriere${isMentorship ? " Mentorship" : ""}"><img src="/assets/editorial/logo-746.webp" srcset="/assets/editorial/logo-240.webp 240w, /assets/editorial/logo-480.webp 480w, /assets/editorial/logo-746.webp 746w, /gab-logo-header.png 1200w" sizes="(max-width: 520px) 240px, 320px" alt="Gab Lacarriere">${context}</a>`;
     }
   );
 
@@ -103,7 +103,7 @@ function patchHtml(file) {
     ];
     const links = items.map(([href, label]) => `<a href="${href}"${currentPath === href ? ' aria-current="page"' : ''}>${label}</a>`).join("");
     const member = '<a class="memberLink" href="/mentorship-hub/">Member login</a>';
-    const nav = `<nav aria-label="Main navigation"><div class="w n"><a class="brand publicBrand" href="/" aria-label="Gab Lacarriere home"><img src="/assets/editorial/logo-746.webp" srcset="/assets/editorial/logo-240.webp 240w, /assets/editorial/logo-480.webp 480w, /assets/editorial/logo-746.webp 746w, /gab-logo-header.png 1254w" sizes="(max-width: 520px) 76px, 96px" alt="Gab Lacarriere" width="1254" height="1254"></a><div class="primary">${links}${member}</div><details class="mobileMenu"><summary>Menu</summary><div class="mobilePanel">${links}${member}</div></details></div></nav>`;
+    const nav = `<nav aria-label="Main navigation"><div class="w n"><a class="brand publicBrand" href="/" aria-label="Gab Lacarriere home"><img src="/assets/editorial/logo-746.webp" srcset="/assets/editorial/logo-240.webp 240w, /assets/editorial/logo-480.webp 480w, /assets/editorial/logo-746.webp 746w, /gab-logo-header.png 1200w" sizes="(max-width: 520px) 240px, 320px" alt="Gab Lacarriere" width="1200" height="400"></a><div class="primary">${links}${member}</div><details class="mobileMenu"><summary>Menu</summary><div class="mobilePanel">${links}${member}</div></details></div></nav>`;
     html = html.replace(/<nav\b[^>]*>[\s\S]*?<\/nav>/i, nav);
     html = html.replace('</nav>', '</nav><div class="studentVoiceBar" aria-label="Student feedback and reviews"><div class="w"><a href="/reviews/">Student Reviews &amp; Stories</a><a href="/feedback/">Give Feedback →</a></div></div>');
     html = html.replace(/<body([^>]*)>/i, (match, attrs) => {
@@ -151,7 +151,7 @@ function patchHtml(file) {
     html=html.replace(/<body([^>]*)class="([^"]*)"/, '<body$1class="$2 dreamMember"');
   }
   html = html.replace('</head>', '<link rel="stylesheet" href="/brand-badge.css">\n</head>');
-  html = html.replace(/(\/(?:gab-logo-(?:header|icon)\.png|favicon(?:-\d+\.png|\.ico)|assets\/editorial\/logo-\d+\.webp))(?=[" \s])/g, '$1?v=badge-20260913');
+  html = html.replace(/(\/(?:gab-logo-(?:header|icon)\.png|favicon(?:-\d+\.png|\.ico)|assets\/editorial\/logo-\d+\.webp))(?=[" \s])/g, '$1?v=lockup-20260913');
   return html;
 }
 
