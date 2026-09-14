@@ -16,8 +16,12 @@
   const gateStatus=document.getElementById('gateStatus');
   const logoutBtn=document.getElementById('logoutBtn');
   const magicLinkBtn=document.getElementById('magicLinkBtn');
+  const conceptSearch=document.getElementById('conceptSearch');
+  const expandAllBtn=document.getElementById('expandAll');
   let concepts=[];
   let activeCategory='All';
+  let searchTerm='';
+  let expandAll=false;
 
   const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
 
@@ -35,9 +39,7 @@
   async function loadPrivateData(){
     const session=await getSession();
     if(!session){
-      loginForm.hidden=false;
-      magicLinkBtn.hidden=false;
-      logoutBtn.hidden=true;
+      loginForm.hidden=false; magicLinkBtn.hidden=false; logoutBtn.hidden=true;
       showGate('Use the secure email link if you do not know the portal password.');
       return;
     }
@@ -47,14 +49,12 @@
       const data=await response.json().catch(()=>({}));
       if(response.status===403){
         showGate('You are signed in with a different account. Sign out, then use the secure Gab sign-in link.');
-        loginForm.hidden=true;
-        magicLinkBtn.hidden=true;
-        logoutBtn.hidden=false;
+        loginForm.hidden=true; magicLinkBtn.hidden=true; logoutBtn.hidden=false;
         return;
       }
       if(!response.ok) throw new Error(data.error||'Could not load Teaching Lab');
       concepts=data.concepts||[];
-      document.getElementById('sourceWindow').textContent=data.source?.window||'Recent Granola notes';
+      document.getElementById('sourceWindow').textContent=data.source?.window||'Recent';
       document.getElementById('conceptCount').textContent=concepts.length;
       document.getElementById('drillCount').textContent=concepts.filter(x=>x.drill).length;
       document.getElementById('ownerName').textContent=data.owner?.display_name||'Gab';
@@ -67,34 +67,24 @@
   }
 
   magicLinkBtn.addEventListener('click',async()=>{
-    gateStatus.textContent='Sending secure sign-in link…';
-    magicLinkBtn.disabled=true;
+    gateStatus.textContent='Sending secure sign-in link…'; magicLinkBtn.disabled=true;
     try{
-      const {error}=await sb.auth.signInWithOtp({
-        email:AUTHORIZED_EMAIL,
-        options:{emailRedirectTo:`${location.origin}/teaching-lab/`,shouldCreateUser:false}
-      });
+      const {error}=await sb.auth.signInWithOtp({email:AUTHORIZED_EMAIL,options:{emailRedirectTo:`${location.origin}/teaching-lab/`,shouldCreateUser:false}});
       if(error) throw error;
-      gateStatus.textContent='Check riseadance@gmail.com and tap the Teaching Lab sign-in link. You can close this page after opening the email.';
-    }catch(error){
-      gateStatus.textContent=error.message||'Could not send the sign-in link.';
-    }finally{
-      magicLinkBtn.disabled=false;
-    }
+      gateStatus.textContent='Check riseadance@gmail.com and tap the Teaching Lab sign-in link.';
+    }catch(error){ gateStatus.textContent=error.message||'Could not send the sign-in link.'; }
+    finally{ magicLinkBtn.disabled=false; }
   });
 
   loginForm.addEventListener('submit',async e=>{
-    e.preventDefault();
-    gateStatus.textContent='Signing in…';
+    e.preventDefault(); gateStatus.textContent='Signing in…';
     const {error}=await sb.auth.signInWithPassword({email:loginEmail.value.trim(),password:loginPassword.value});
     if(error){ gateStatus.textContent=error.message; return; }
-    loginPassword.value='';
-    await loadPrivateData();
+    loginPassword.value=''; await loadPrivateData();
   });
 
   logoutBtn.addEventListener('click',async()=>{
-    await sb.auth.signOut();
-    loginForm.hidden=false; magicLinkBtn.hidden=false; logoutBtn.hidden=true;
+    await sb.auth.signOut(); loginForm.hidden=false; magicLinkBtn.hidden=false; logoutBtn.hidden=true;
     showGate('Signed out. Use the secure email link to sign in as Gab.');
   });
 
@@ -111,11 +101,43 @@
     document.getElementById('reflectionConcept').innerHTML=options;
   }
 
-  function renderConcepts(){
-    const list=activeCategory==='All'?concepts:concepts.filter(c=>c.category===activeCategory);
-    document.getElementById('conceptGrid').innerHTML=list.map(c=>`<article class="concept"><span class="tag">${esc(c.category)}</span><h3>${esc(c.title)}</h3><div class="label">Recurring problem</div><p>${esc(c.problem)}</p><div class="label">Cue</div><p>${esc(c.cue)}</p><div class="label">Private-derived drill</div><p>${esc(c.drill)}</p><div class="label">Evidence from teaching</div><p>${esc(c.evidence)}</p><div class="label">Group adaptation</div><p>${esc(c.group)}</p><div class="actions"><button type="button" data-add="${esc(c.id)}">Build class from this</button></div></article>`).join('');
-    document.querySelectorAll('[data-add]').forEach(b=>b.addEventListener('click',()=>{document.getElementById('objective').value=b.dataset.add;generatePlan();document.getElementById('builder').scrollIntoView({behavior:'smooth'});}));
+  function filteredConcepts(){
+    return concepts.filter(c=>{
+      const catOk=activeCategory==='All'||c.category===activeCategory;
+      if(!catOk) return false;
+      if(!searchTerm) return true;
+      const hay=[c.title,c.category,c.problem,c.cue,c.drill,c.evidence,c.group].join(' ').toLowerCase();
+      return hay.includes(searchTerm);
+    });
   }
+
+  function renderConcepts(){
+    const list=filteredConcepts();
+    const count=document.getElementById('resultCount');
+    if(count) count.textContent=`${list.length} of ${concepts.length} concepts`;
+    document.getElementById('conceptGrid').innerHTML=list.length?list.map(c=>`<article class="concept ${expandAll?'open':''}" data-concept="${esc(c.id)}">
+      <div class="conceptHead" role="button" tabindex="0" aria-expanded="${expandAll?'true':'false'}">
+        <div class="conceptTop"><div><span class="tag">${esc(c.category)}</span><h3>${esc(c.title)}</h3></div><span class="chev">⌄</span></div>
+        <div class="quick"><div class="quickBox"><div class="label">Cue</div><p>${esc(c.cue)}</p></div><div class="quickBox"><div class="label">Drill</div><p>${esc(c.drill)}</p></div></div>
+      </div>
+      <div class="details">
+        <div class="label">Recurring problem</div><p>${esc(c.problem)}</p>
+        <div class="label">Evidence from teaching</div><p>${esc(c.evidence)}</p>
+        <div class="label">Group adaptation</div><p>${esc(c.group)}</p>
+        <div class="actions"><button type="button" data-add="${esc(c.id)}">Build class from this</button></div>
+      </div>
+    </article>`).join(''):'<div class="empty">No concepts match this search.</div>';
+
+    document.querySelectorAll('.conceptHead').forEach(head=>{
+      const toggle=()=>{const card=head.closest('.concept');card.classList.toggle('open');head.setAttribute('aria-expanded',card.classList.contains('open')?'true':'false');};
+      head.addEventListener('click',toggle);
+      head.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();toggle();}});
+    });
+    document.querySelectorAll('[data-add]').forEach(b=>b.addEventListener('click',e=>{e.stopPropagation();document.getElementById('objective').value=b.dataset.add;generatePlan();document.getElementById('builder').scrollIntoView({behavior:'smooth'});}));
+  }
+
+  if(conceptSearch) conceptSearch.addEventListener('input',()=>{searchTerm=conceptSearch.value.trim().toLowerCase();renderConcepts();});
+  if(expandAllBtn) expandAllBtn.addEventListener('click',()=>{expandAll=!expandAll;expandAllBtn.textContent=expandAll?'Collapse all':'Expand all';renderConcepts();});
 
   function generatePlan(){
     const c=concepts.find(x=>x.id===document.getElementById('objective').value); if(!c) return;
