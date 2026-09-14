@@ -25,9 +25,9 @@ const mappings=[
 {skill:'elasticity',concept:'pathways-3',name:'Elasticity'},
 {skill:'elasticity',concept:'patterns-3',name:'Elasticity'},
 {skill:'counterbalance',concept:'offaxis-2',name:'Counterbalance'},
-{skill:'head-movement-preparation',concept:'offaxis-0',name:'Head-movement preparation'},
-{skill:'head-movement-preparation',concept:'offaxis-1',name:'Head-movement preparation'},
-{skill:'head-movement-preparation',concept:'offaxis-3',name:'Head-movement preparation'}
+{skill:'head-preparation',concept:'offaxis-0',name:'Head-movement preparation'},
+{skill:'head-preparation',concept:'offaxis-1',name:'Head-movement preparation'},
+{skill:'head-preparation',concept:'offaxis-3',name:'Head-movement preparation'}
 ];
 const build=()=>{
  const curriculum=root.GAB_CURRICULUM;
