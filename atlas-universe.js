@@ -12,12 +12,14 @@
     {tier:4,name:'APPLICATION',angle:350},
     {tier:5,name:'EXPLORATION',angle:20}
   ];
+  const mapAngle=f=>f.id==='learning'?205:f.angle;
   const point=(angle,radius)=>({x:Math.round(C+Math.cos(angle*Math.PI/180)*radius),y:Math.round(C+Math.sin(angle*Math.PI/180)*radius)});
   const positions=new Map(),gateways=new Map(),occupied=[{x:C,y:C}];
   const capacities={1:3,2:5,3:6,4:9,5:9},steps={1:25,2:16,3:12,4:9,5:8};
 
-  curr.families.forEach(f=>gateways.set(f.id,point(f.angle,215)));
+  curr.families.forEach(f=>gateways.set(f.id,point(mapAngle(f),215)));
   for(const family of curr.families){
+    const centerAngle=mapAngle(family);
     for(let tier=1;tier<=5;tier++){
       const bucket=curr.nodesByFamily(family.id).filter(n=>curr.meta[n.id].tier===tier);
       if(!bucket.length)continue;
@@ -27,13 +29,14 @@
         const radialBase=radii[tier]+(rowIndex-(rows.length-1)/2)*74;
         const start=-(row.length-1)*steps[tier]/2;
         row.forEach((n,index)=>{
-          const baseAngle=family.angle+start+index*steps[tier];
+          const baseAngle=centerAngle+start+index*steps[tier];
           let placed=null;
-          const radialOffsets=[0,34,-34,62,-62,92,-92];
-          const angleOffsets=[0,2.5,-2.5,5,-5,7.5,-7.5,10,-10];
+          const radialOffsets=[0,34,-34,62,-62,92,-92,120,-120,150,-150,180,-180,210,-210];
+          const angleOffsets=[0];for(let d=2;d<=40;d+=2)angleOffsets.push(d,-d);
           for(const ro of radialOffsets){
             for(const ao of angleOffsets){
-              const p=point(baseAngle+ao,radialBase+ro);
+              const r=radialBase+ro;if(r<250||r>1250)continue;
+              const p=point(baseAngle+ao,r);
               if(p.x<110||p.x>W-110||p.y<110||p.y>W-110)continue;
               if(occupied.every(q=>Math.hypot(q.x-p.x,q.y-p.y)>145)){placed=p;break;}
             }
