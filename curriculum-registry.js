@@ -26,9 +26,37 @@
     const q=normalize(query).trim();if(!q)return [];
     return concepts.filter(c=>normalize([c.name,c.sourceName,c.familyName,...c.aliases,...c.relatedTerms].join(' ')).includes(q));
   };
+  const trackFits=(concept,track)=>!track||concept.track==='shared'||concept.track===track;
+  const validIds=ids=>[...new Set((ids||[]).filter(id=>byId[id]))];
+  const prerequisites=(ids,{recursive=false,track=null}={})=>{
+    const chosen=new Set(validIds(ids)),found=new Set(),walk=id=>{
+      const concept=byId[id];if(!concept)return;
+      for(const support of concept.supports){
+        const dependency=byId[support];
+        if(!dependency||chosen.has(support)||!trackFits(dependency,track))continue;
+        if(!found.has(support)){found.add(support);if(recursive)walk(support);}
+      }
+    };
+    chosen.forEach(walk);
+    return [...found].map(id=>byId[id]).sort((a,b)=>a.tier-b.tier||a.familyName.localeCompare(b.familyName)||a.name.localeCompare(b.name));
+  };
+  const next=(ids,{track=null,limit=12}={})=>{
+    const chosen=new Set(validIds(ids));
+    return concepts.filter(c=>!chosen.has(c.id)&&trackFits(c,track)&&c.supports.some(id=>chosen.has(id)))
+      .sort((a,b)=>a.tier-b.tier||a.familyName.localeCompare(b.familyName)||a.name.localeCompare(b.name)).slice(0,limit);
+  };
+  const sequence=ids=>{
+    const chosen=new Set(validIds(ids)),visiting=new Set(),done=new Set(),ordered=[];
+    const visit=id=>{
+      if(done.has(id)||visiting.has(id)||!chosen.has(id))return;
+      visiting.add(id);for(const dependency of byId[id].supports)visit(dependency);visiting.delete(id);done.add(id);ordered.push(byId[id]);
+    };
+    [...chosen].sort((a,b)=>byId[a].tier-byId[b].tier||byId[a].name.localeCompare(byId[b].name)).forEach(visit);
+    return ordered;
+  };
 
   window.GAB_CURRICULUM={
-    version:'2.1',
+    version:'2.2',
     lastReviewed:'2026-09-14',
     source:'Granola-informed curriculum + dependency logic',
     families:source.families,
@@ -41,6 +69,11 @@
     relations:source.relations,
     related:id=>source.related(id),
     search,
+    trackFits,
+    validIds,
+    prerequisites,
+    next,
+    sequence,
     promotionPolicy:{
       rawTeachingNotesStayPrivate:true,
       preserveStableIds:true,
