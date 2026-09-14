@@ -151,7 +151,7 @@ function patchHtml(file) {
     html=html.replace(/<body([^>]*)class="([^"]*)"/, '<body$1class="$2 dreamMember"');
   }
   html = html.replace('</head>', '<link rel="stylesheet" href="/brand-badge.css">\n</head>');
-  html = html.replace(/(\/(?:gab-logo-(?:header|icon)\.png|favicon(?:-\d+\.png|\.ico)|assets\/editorial\/logo-\d+\.webp))(?=[" \s])/g, '$1?v=lockup-refined-20260913');
+  html = html.replace(/(\/(?:gab-logo-(?:header|icon)\.png|favicon(?:-\d+\.png|\.ico)|assets\/editorial\/logo-\d+\.webp))(?=[" \s])/g, '$1?v=uncircled-20260913');
   return html;
 }
 
