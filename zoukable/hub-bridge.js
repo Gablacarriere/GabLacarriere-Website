@@ -4,7 +4,7 @@
 const URL='https://lftguwmyagkehqmaxjig.supabase.co';
 const KEY='sb_publishable_YzhfBB0z3emKU-rM8f_18A_Z0RUJUYt';
 const esc=(v='')=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-let db=null,user=null,snapshot=null,refreshing=false,lastRefresh=0;
+let db=null,user=null,snapshot=null,refreshing=false,lastRefresh=0,renderQueued=false,lastMarkup='';
 const requestedMinutes=Number(new URLSearchParams(location.search).get('minutes'));
 const validMinutes=[5,10,15,20,30].includes(requestedMinutes)?requestedMinutes:null;
 
@@ -52,28 +52,39 @@ async function loadSnapshot(force=false){
   };
   lastRefresh=Date.now();
  }catch(e){console.warn('Zoukable hub bridge could not load',e);}
- finally{refreshing=false;render();}
+ finally{refreshing=false;scheduleRender();}
 }
 
 function render(){
+ renderQueued=false;
  installStyle();
  const view=document.getElementById('view');
  if(!view||!user||!snapshot)return;
  const chapter=document.body.dataset.chapter;
- const old=document.getElementById('mentorship-hub-connection');
- if(!['today','practice','journey'].includes(chapter)){old?.remove();return;}
+ let section=document.getElementById('mentorship-hub-connection');
+ if(!['today','practice','journey'].includes(chapter)){
+  if(section)section.remove();
+  lastMarkup='';
+  return;
+ }
  const anchor=view.querySelector('.intro');
  if(!anchor)return;
- old?.remove();
  const p=snapshot.progress||{};
  const plan=[];
  if(snapshot.goal)plan.push(`<div><strong>Current focus</strong><p>${esc(snapshot.goal.title)}${snapshot.goal.notes?` · ${esc(snapshot.goal.notes)}`:''}</p></div>`);
  if(snapshot.assignment)plan.push(`<div><strong>Open assignment</strong><p>${esc(snapshot.assignment.title)}${snapshot.assignment.due_date?` · due ${esc(snapshot.assignment.due_date)}`:''}</p></div>`);
- const section=document.createElement('section');
- section.id='mentorship-hub-connection';
- section.className='hub-connection';
- section.innerHTML=`<div class="hub-connection-head"><div><p class="eyebrow">CONNECTED TO YOUR MEMBER HUB</p><h2>Your mentorship plan travels with you.</h2><p class="muted">Coach priorities, Zoukable practice and your permanent Hub activity now share the same account.</p></div><span class="tag">SYNCED</span></div><div class="hub-connection-grid"><div class="hub-connection-stat"><strong>${Number(p.xp||0)}</strong><span>Hub XP</span></div><div class="hub-connection-stat"><strong>${Number(p.current_streak||0)}</strong><span>day momentum</span></div><div class="hub-connection-stat"><strong>${snapshot.due}</strong><span>Zoukable reviews due</span></div><div class="hub-connection-stat"><strong>${snapshot.published}</strong><span>published drills</span></div></div>${plan.length?`<div class="hub-connection-plan">${plan.join('')}</div>`:'<div class="hub-connection-plan"><div><strong>No coach-assigned focus right now</strong><p>Use the published foundation library or choose a skill from your learning world.</p></div></div>'}${snapshot.latest?`<p class="help" style="margin-top:12px">Last Zoukable practice: ${esc(snapshot.latestTitle)}.</p>`:''}<div class="hub-connection-actions"><a class="btn secondary" href="/mentorship-hub/#hub-today">Open Member Hub ↗</a>${chapter!=='practice'?'<a class="btn" href="/zoukable/?page=practice">Build today’s practice →</a>':''}</div>`;
- anchor.insertAdjacentElement('afterend',section);
+ const markup=`<div class="hub-connection-head"><div><p class="eyebrow">CONNECTED TO YOUR MEMBER HUB</p><h2>Your mentorship plan travels with you.</h2><p class="muted">Coach priorities, Zoukable practice and your permanent Hub activity now share the same account.</p></div><span class="tag">SYNCED</span></div><div class="hub-connection-grid"><div class="hub-connection-stat"><strong>${Number(p.xp||0)}</strong><span>Hub XP</span></div><div class="hub-connection-stat"><strong>${Number(p.current_streak||0)}</strong><span>day momentum</span></div><div class="hub-connection-stat"><strong>${snapshot.due}</strong><span>Zoukable reviews due</span></div><div class="hub-connection-stat"><strong>${snapshot.published}</strong><span>published drills</span></div></div>${plan.length?`<div class="hub-connection-plan">${plan.join('')}</div>`:'<div class="hub-connection-plan"><div><strong>No coach-assigned focus right now</strong><p>Use the published foundation library or choose a skill from your learning world.</p></div></div>'}${snapshot.latest?`<p class="help" style="margin-top:12px">Last Zoukable practice: ${esc(snapshot.latestTitle)}.</p>`:''}<div class="hub-connection-actions"><a class="btn secondary" href="/mentorship-hub/#hub-today">Open Member Hub ↗</a>${chapter!=='practice'?'<a class="btn" href="/zoukable/?page=practice">Build today’s practice →</a>':''}</div>`;
+ if(!section){
+  section=document.createElement('section');
+  section.id='mentorship-hub-connection';
+  section.className='hub-connection';
+  section.innerHTML=markup;
+  anchor.insertAdjacentElement('afterend',section);
+  lastMarkup=markup;
+ }else{
+  if(section.previousElementSibling!==anchor)anchor.insertAdjacentElement('afterend',section);
+  if(markup!==lastMarkup){section.innerHTML=markup;lastMarkup=markup;}
+ }
  if(chapter==='practice'&&validMinutes){
   const select=view.querySelector('#session-form select[name="minutes"]');
   if(select&&select.dataset.hubPreset!=='1'){
@@ -84,7 +95,11 @@ function render(){
  }
 }
 
-function scheduleRender(){requestAnimationFrame(render);}
+function scheduleRender(){
+ if(renderQueued)return;
+ renderQueued=true;
+ requestAnimationFrame(render);
+}
 async function start(){
  installStyle();
  await loadSnapshot(true);
