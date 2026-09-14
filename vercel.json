@@ -3,6 +3,8 @@
   "buildCommand": "node apply_branding.cjs && node integrate_zoukable.cjs && node scripts/finalize-site.cjs",
   "outputDirectory": "public",
   "rewrites": [
+    {"source":"/policies/","destination":"/policies.html"},
+    {"source":"/policies","destination":"/policies.html"},
     {"source":"/teaching-lab/","destination":"/teaching-lab.html"},
     {"source":"/teaching-lab","destination":"/teaching-lab.html"},
     {"source":"/curriculum-planner/","destination":"/curriculum-planner.html"},
