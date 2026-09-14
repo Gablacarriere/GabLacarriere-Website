@@ -444,3 +444,21 @@
     500
   );
 })();
+
+(() => {
+  if (!location.pathname.startsWith('/mentorship-hub')) return;
+  if (!document.querySelector('link[data-mentorship-roadmap]')) {
+    const link=document.createElement('link');
+    link.rel='stylesheet';
+    link.href='/mentorship-roadmap.css?v=1';
+    link.dataset.mentorshipRoadmap='1';
+    document.head.appendChild(link);
+  }
+  if (!document.querySelector('script[data-mentorship-roadmap]')) {
+    const script=document.createElement('script');
+    script.src='/mentorship-roadmap.js?v=1';
+    script.defer=true;
+    script.dataset.mentorshipRoadmap='1';
+    document.head.appendChild(script);
+  }
+})();
