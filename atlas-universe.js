@@ -7,15 +7,16 @@
   // Curriculum geometry is intentional:
   // radius = pedagogical depth; angle = conceptual neighborhood; parent = strongest semantic bridge.
   const layout={
-    'organization-0':{tier:1,angle:260,parent:null},
-    'organization-1':{tier:1,angle:290,parent:null},
+    'organization-0':{tier:1,angle:250,parent:null},
+    'organization-1':{tier:1,angle:280,parent:null},
     'organization-2':{tier:2,angle:275,parent:'organization-0'},
-    'connection-0':{tier:1,angle:325,parent:null},
+    'connection-0':{tier:1,angle:340,parent:'connection-6'},
     'connection-1':{tier:2,angle:308,parent:'connection-0'},
     'connection-2':{tier:2,angle:335,parent:'connection-0'},
     'connection-3':{tier:2,angle:355,parent:'steps-0'},
     'connection-4':{tier:3,angle:338,parent:'connection-3'},
     'connection-5':{tier:3,angle:320,parent:'connection-0'},
+    'connection-6':{tier:1,angle:310,parent:'organization-1'},
     'steps-0':{tier:1,angle:20,parent:null},
     'steps-1':{tier:2,angle:32,parent:'steps-0'},
     'steps-2':{tier:2,angle:49,parent:'steps-1'},
@@ -28,7 +29,7 @@
     'spirals-3':{tier:3,angle:182,parent:'spirals-1'},
     'spirals-4':{tier:4,angle:158,parent:'spirals-3'},
     'spirals-5':{tier:3,angle:145,parent:'spirals-0'},
-    'awareness-0':{tier:1,angle:230,parent:null},
+    'awareness-0':{tier:1,angle:220,parent:null},
     'bridge-0':{tier:3,angle:258,parent:'organization-1'},
     'bridge-1':{tier:3,angle:275,parent:'organization-1'},
     'bridge-2':{tier:3,angle:205,parent:'spirals-1'},
@@ -65,11 +66,11 @@
     'patterns-19':{tier:5,angle:182,parent:'spirals-4'}
   };
   const gatewayLayout={
-    organization:{angle:275,radius:205},
+    organization:{angle:270,radius:205},
     connection:{angle:325,radius:215},
     steps:{angle:20,radius:215},
     spirals:{angle:174,radius:220},
-    awareness:{angle:230,radius:195},
+    awareness:{angle:220,radius:195},
     bridge:{angle:248,radius:350},
     architecture:{angle:220,radius:455},
     patterns:{angle:80,radius:455}
@@ -84,7 +85,7 @@
   // These are deliberately sparse cross-family links. Strength 3 is a close functional
   // relationship; strength 2 is a useful bridge. Primary parent links are generated below.
   const semanticRelations=[
-    {a:'organization-1',b:'connection-0',strength:3,reason:'Adaptive posture and tone organize the information channel between partners.'},
+    {a:'connection-6',b:'bridge-3',strength:2,reason:'Frame depends on tone that can adapt while contact remains informative.'},
     {a:'connection-2',b:'steps-1',strength:3,reason:'Clear weight commitment depends directly on how support transfers through the feet.'},
     {a:'organization-1',b:'steps-5',strength:2,reason:'Whole-body availability includes adaptable lower-body joints.'},
     {a:'connection-1',b:'bridge-3',strength:2,reason:'Permeability depends on tone that can modulate instead of staying fixed.'},
