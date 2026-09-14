@@ -1,4 +1,31 @@
 (() => {
+  const contrastFix=document.createElement('style');
+  contrastFix.textContent=`
+    #library{background:#0b1119!important;color:#f7f4ee!important}
+    #library h2,#library h3,#library .concept h3{color:#ffffff!important}
+    #library .lede,#library .resultCount{color:#c8cfda!important}
+    #library .concept{background:#0e141d!important;border-color:#ffffff24!important}
+    #library .conceptHead{background:#0e141d!important}
+    #library .quickBox{background:#111a24!important}
+    #library .quickBox p{color:#f3f5f7!important}
+    #library .details p{color:#d7dde5!important}
+    #library .tag{background:#f2dfc5!important;color:#10141a!important;border-color:#f2dfc5!important}
+    #library .chev{color:#d7dde5!important}
+    #library .ghost,#expandAll{background:#18212c!important;color:#ffffff!important;border:1px solid #ffffff35!important}
+    #library .search{background:#0a0f16!important;color:#ffffff!important;border:1px solid #ffffff35!important}
+    #library .filterBtn{background:#f2dfc5!important;color:#10141a!important}
+    #library .filterBtn.active{background:#7dd8ff!important;color:#071018!important}
+    #library .label{color:#7dd8ff!important}
+    @media(max-width:520px){
+      #library .concept h3{font-size:1.08rem!important;line-height:1.25!important}
+      #library .quickBox p{font-size:1rem!important;line-height:1.5!important}
+      #library .conceptHead{gap:10px!important}
+      #library .tag{font-size:.76rem!important}
+      #expandAll{width:100%!important}
+    }
+  `;
+  document.head.appendChild(contrastFix);
+
   const config=window.GAB_PORTAL;
   if(!config || !window.supabase){
     document.body.innerHTML='<main class="gate"><div class="card"><h1>Teaching Lab unavailable</h1><p>Authentication could not start.</p></div></main>';
@@ -16,12 +43,10 @@
   const gateStatus=document.getElementById('gateStatus');
   const logoutBtn=document.getElementById('logoutBtn');
   const magicLinkBtn=document.getElementById('magicLinkBtn');
-  const conceptSearch=document.getElementById('conceptSearch');
-  const expandAllBtn=document.getElementById('expandAll');
   let concepts=[];
   let activeCategory='All';
   let searchTerm='';
-  let expandAll=false;
+  let allExpanded=false;
 
   const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
 
@@ -39,7 +64,9 @@
   async function loadPrivateData(){
     const session=await getSession();
     if(!session){
-      loginForm.hidden=false; magicLinkBtn.hidden=false; logoutBtn.hidden=true;
+      loginForm.hidden=false;
+      magicLinkBtn.hidden=false;
+      logoutBtn.hidden=true;
       showGate('Use the secure email link if you do not know the portal password.');
       return;
     }
@@ -49,12 +76,14 @@
       const data=await response.json().catch(()=>({}));
       if(response.status===403){
         showGate('You are signed in with a different account. Sign out, then use the secure Gab sign-in link.');
-        loginForm.hidden=true; magicLinkBtn.hidden=true; logoutBtn.hidden=false;
+        loginForm.hidden=true;
+        magicLinkBtn.hidden=true;
+        logoutBtn.hidden=false;
         return;
       }
       if(!response.ok) throw new Error(data.error||'Could not load Teaching Lab');
       concepts=data.concepts||[];
-      document.getElementById('sourceWindow').textContent=data.source?.window||'Recent';
+      document.getElementById('sourceWindow').textContent=data.source?.window||'Recent Granola notes';
       document.getElementById('conceptCount').textContent=concepts.length;
       document.getElementById('drillCount').textContent=concepts.filter(x=>x.drill).length;
       document.getElementById('ownerName').textContent=data.owner?.display_name||'Gab';
@@ -67,24 +96,34 @@
   }
 
   magicLinkBtn.addEventListener('click',async()=>{
-    gateStatus.textContent='Sending secure sign-in link…'; magicLinkBtn.disabled=true;
+    gateStatus.textContent='Sending secure sign-in link…';
+    magicLinkBtn.disabled=true;
     try{
-      const {error}=await sb.auth.signInWithOtp({email:AUTHORIZED_EMAIL,options:{emailRedirectTo:`${location.origin}/teaching-lab/`,shouldCreateUser:false}});
+      const {error}=await sb.auth.signInWithOtp({
+        email:AUTHORIZED_EMAIL,
+        options:{emailRedirectTo:`${location.origin}/teaching-lab/`,shouldCreateUser:false}
+      });
       if(error) throw error;
-      gateStatus.textContent='Check riseadance@gmail.com and tap the Teaching Lab sign-in link.';
-    }catch(error){ gateStatus.textContent=error.message||'Could not send the sign-in link.'; }
-    finally{ magicLinkBtn.disabled=false; }
+      gateStatus.textContent='Check riseadance@gmail.com and tap the Teaching Lab sign-in link. You can close this page after opening the email.';
+    }catch(error){
+      gateStatus.textContent=error.message||'Could not send the sign-in link.';
+    }finally{
+      magicLinkBtn.disabled=false;
+    }
   });
 
   loginForm.addEventListener('submit',async e=>{
-    e.preventDefault(); gateStatus.textContent='Signing in…';
+    e.preventDefault();
+    gateStatus.textContent='Signing in…';
     const {error}=await sb.auth.signInWithPassword({email:loginEmail.value.trim(),password:loginPassword.value});
     if(error){ gateStatus.textContent=error.message; return; }
-    loginPassword.value=''; await loadPrivateData();
+    loginPassword.value='';
+    await loadPrivateData();
   });
 
   logoutBtn.addEventListener('click',async()=>{
-    await sb.auth.signOut(); loginForm.hidden=false; magicLinkBtn.hidden=false; logoutBtn.hidden=true;
+    await sb.auth.signOut();
+    loginForm.hidden=false; magicLinkBtn.hidden=false; logoutBtn.hidden=true;
     showGate('Signed out. Use the secure email link to sign in as Gab.');
   });
 
@@ -101,43 +140,29 @@
     document.getElementById('reflectionConcept').innerHTML=options;
   }
 
-  function filteredConcepts(){
-    return concepts.filter(c=>{
-      const catOk=activeCategory==='All'||c.category===activeCategory;
-      if(!catOk) return false;
-      if(!searchTerm) return true;
-      const hay=[c.title,c.category,c.problem,c.cue,c.drill,c.evidence,c.group].join(' ').toLowerCase();
-      return hay.includes(searchTerm);
-    });
-  }
-
   function renderConcepts(){
-    const list=filteredConcepts();
+    let list=activeCategory==='All'?concepts:concepts.filter(c=>c.category===activeCategory);
+    if(searchTerm){
+      const q=searchTerm.toLowerCase();
+      list=list.filter(c=>[c.title,c.category,c.problem,c.cue,c.drill,c.evidence,c.group].some(v=>String(v||'').toLowerCase().includes(q)));
+    }
     const count=document.getElementById('resultCount');
-    if(count) count.textContent=`${list.length} of ${concepts.length} concepts`;
-    document.getElementById('conceptGrid').innerHTML=list.length?list.map(c=>`<article class="concept ${expandAll?'open':''}" data-concept="${esc(c.id)}">
-      <div class="conceptHead" role="button" tabindex="0" aria-expanded="${expandAll?'true':'false'}">
-        <div class="conceptTop"><div><span class="tag">${esc(c.category)}</span><h3>${esc(c.title)}</h3></div><span class="chev">⌄</span></div>
-        <div class="quick"><div class="quickBox"><div class="label">Cue</div><p>${esc(c.cue)}</p></div><div class="quickBox"><div class="label">Drill</div><p>${esc(c.drill)}</p></div></div>
-      </div>
-      <div class="details">
-        <div class="label">Recurring problem</div><p>${esc(c.problem)}</p>
-        <div class="label">Evidence from teaching</div><p>${esc(c.evidence)}</p>
-        <div class="label">Group adaptation</div><p>${esc(c.group)}</p>
-        <div class="actions"><button type="button" data-add="${esc(c.id)}">Build class from this</button></div>
-      </div>
-    </article>`).join(''):'<div class="empty">No concepts match this search.</div>';
-
-    document.querySelectorAll('.conceptHead').forEach(head=>{
+    if(count) count.textContent=`${list.length} ${list.length===1?'concept':'concepts'}`;
+    const root=document.getElementById('conceptGrid');
+    if(!list.length){root.innerHTML='<div class="empty">No matching concepts.</div>';return;}
+    root.innerHTML=list.map(c=>`<article class="concept ${allExpanded?'open':''}" data-concept="${esc(c.id)}"><div class="conceptHead" role="button" tabindex="0" aria-expanded="${allExpanded?'true':'false'}"><div class="conceptTop"><div><span class="tag">${esc(c.category)}</span><h3>${esc(c.title)}</h3></div><span class="chev">⌄</span></div><div class="quick"><div class="quickBox"><div class="label">Cue</div><p>${esc(c.cue)}</p></div><div class="quickBox"><div class="label">Drill</div><p>${esc(c.drill)}</p></div></div></div><div class="details"><div class="label">Recurring problem</div><p>${esc(c.problem)}</p><div class="label">Evidence from teaching</div><p>${esc(c.evidence)}</p><div class="label">Group adaptation</div><p>${esc(c.group)}</p><div class="actions"><button type="button" data-add="${esc(c.id)}">Build class from this</button></div></div></article>`).join('');
+    root.querySelectorAll('.conceptHead').forEach(head=>{
       const toggle=()=>{const card=head.closest('.concept');card.classList.toggle('open');head.setAttribute('aria-expanded',card.classList.contains('open')?'true':'false');};
       head.addEventListener('click',toggle);
       head.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();toggle();}});
     });
-    document.querySelectorAll('[data-add]').forEach(b=>b.addEventListener('click',e=>{e.stopPropagation();document.getElementById('objective').value=b.dataset.add;generatePlan();document.getElementById('builder').scrollIntoView({behavior:'smooth'});}));
+    root.querySelectorAll('[data-add]').forEach(b=>b.addEventListener('click',e=>{e.stopPropagation();document.getElementById('objective').value=b.dataset.add;generatePlan();document.getElementById('builder').scrollIntoView({behavior:'smooth'});}));
   }
 
-  if(conceptSearch) conceptSearch.addEventListener('input',()=>{searchTerm=conceptSearch.value.trim().toLowerCase();renderConcepts();});
-  if(expandAllBtn) expandAllBtn.addEventListener('click',()=>{expandAll=!expandAll;expandAllBtn.textContent=expandAll?'Collapse all':'Expand all';renderConcepts();});
+  const search=document.getElementById('conceptSearch');
+  if(search) search.addEventListener('input',e=>{searchTerm=e.target.value.trim();renderConcepts();});
+  const expand=document.getElementById('expandAll');
+  if(expand) expand.addEventListener('click',()=>{allExpanded=!allExpanded;expand.textContent=allExpanded?'Collapse all':'Expand all';renderConcepts();});
 
   function generatePlan(){
     const c=concepts.find(x=>x.id===document.getElementById('objective').value); if(!c) return;
