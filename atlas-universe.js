@@ -81,6 +81,20 @@
     {tier:4,name:'APPLICATION',angle:350},
     {tier:5,name:'EXPLORATION',angle:20}
   ];
+  // These are deliberately sparse cross-family links. Strength 3 is a close functional
+  // relationship; strength 2 is a useful bridge. Primary parent links are generated below.
+  const semanticRelations=[
+    {a:'organization-1',b:'connection-0',strength:3,reason:'Adaptive posture and tone organize the information channel between partners.'},
+    {a:'connection-2',b:'steps-1',strength:3,reason:'Clear weight commitment depends directly on how support transfers through the feet.'},
+    {a:'organization-1',b:'steps-5',strength:2,reason:'Whole-body availability includes adaptable lower-body joints.'},
+    {a:'connection-1',b:'bridge-3',strength:2,reason:'Permeability depends on tone that can modulate instead of staying fixed.'},
+    {a:'connection-0',b:'architecture-5',strength:2,reason:'Connection preservation extends basic connection principles across a full pattern.'},
+    {a:'connection-3',b:'patterns-6',strength:2,reason:'The side basic applies timing through a concrete stepping pathway.'},
+    {a:'steps-5',b:'bridge-1',strength:2,reason:'Joint availability supports repositioning without a preparatory reset.'},
+    {a:'bridge-0',b:'patterns-4',strength:2,reason:'Viradinha makes changes of orientation concrete.'},
+    {a:'architecture-0',b:'patterns-7',strength:2,reason:'Soltinho can be read through changing orientation and relative position.'},
+    {a:'spirals-4',b:'patterns-12',strength:2,reason:'The advanced Boneca variation draws on coordinated full-body spiraling.'}
+  ];
   const point=(angle,radius)=>({x:Math.round(C+Math.cos(angle*Math.PI/180)*radius),y:Math.round(C+Math.sin(angle*Math.PI/180)*radius)});
   const positions=new Map(),gateways=new Map(),occupied=[{x:C,y:C}];
   const curriculumIds=groups.flatMap(g=>g.topics.map((_,i)=>g.id+'-'+i));
@@ -96,6 +110,9 @@
     if(!spec)throw Error('Missing atlas gateway layout: '+g.id);
     gateways.set(g.id,point(spec.angle,spec.radius));
   });
+  const primaryRelations=Object.entries(layout).flatMap(([id,spec])=>spec.parent?[{a:spec.parent,b:id,strength:3,kind:'primary'}]:[]);
+  const relations=[...primaryRelations,...semanticRelations.map(r=>({...r,kind:'semantic'}))];
+  const related=id=>relations.filter(r=>r.a===id||r.b===id).map(r=>({id:r.a===id?r.b:r.a,strength:r.strength,kind:r.kind,reason:r.reason||''})).sort((a,b)=>b.strength-a.strength||(a.kind==='primary'?-1:1));
   // Sparse, non-repeating stars are decorative: no student state is encoded here.
   const stars=Array.from({length:440},()=>({x:Math.round(random()*W),y:Math.round(random()*W),r:(.45+random()*1.5).toFixed(2),o:(.15+random()*.65).toFixed(2)}));
   const depthMarkup=()=>'<svg class="curriculumDepthRings" viewBox="0 0 2600 2600" aria-hidden="true" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;opacity:.72">'+depthZones.map((z,i)=>{
@@ -103,7 +120,7 @@
     return '<circle cx="'+C+'" cy="'+C+'" r="'+r+'" fill="none" stroke="#b9cbe1" stroke-opacity="'+(.105+i*.012).toFixed(3)+'" stroke-width="1.4" stroke-dasharray="6 16" vector-effect="non-scaling-stroke"/><g transform="translate('+label.x+' '+label.y+')"><rect x="'+(-w/2)+'" y="-13" width="'+w+'" height="26" rx="13" fill="#080e1c" fill-opacity=".9" stroke="#b9cbe1" stroke-opacity=".15" vector-effect="non-scaling-stroke"/><text x="0" y="4" text-anchor="middle" fill="#c5d2e2" fill-opacity=".58" font-family="system-ui,-apple-system,sans-serif" font-size="11" font-weight="700" letter-spacing="1.5">'+z.name+'</text></g>';
   }).join('')+'</svg>';
   const background=()=>depthMarkup()+'<svg class="universeStars" viewBox="0 0 2600 2600" aria-hidden="true">'+stars.map(s=>'<circle cx="'+s.x+'" cy="'+s.y+'" r="'+s.r+'" fill="#dbeaff" opacity="'+s.o+'"/>').join('')+'</svg><div class="nebula nebulaRose" aria-hidden="true"></div><div class="nebula nebulaBlue" aria-hidden="true"></div><div class="nebula nebulaGold" aria-hidden="true"></div>';
-  const landmarks=[{id:'horizon',x:1850,y:490,name:'The event horizon',kind:'blackhole',title:'Make room for the unknown.',text:'This black hole is a reflection stop. Which part of your dancing feels difficult to describe? Bring that question to your next lesson. Visiting here does not change your discoveries.',link:'#practice',cta:'Return to my practice'}, {id:'observatory',x:620,y:1220,name:'The observatory',kind:'observatory',title:'See your journey from here.',text:'Step back and revisit the lessons behind your discoveries. Distance from the ship describes curriculum depth: Core, Foundations, Integration, Application, then Exploration. Nearby concepts share stronger content relationships. Your location on the map is not a rank of your ability.',link:'#sessions',cta:'Open lesson history'}];
+  const landmarks=[{id:'horizon',x:1850,y:490,name:'The event horizon',kind:'blackhole',title:'Make room for the unknown.',text:'This black hole is a reflection stop. Which part of your dancing feels difficult to describe? Bring that question to your next lesson. Visiting here does not change your discoveries.',link:'#practice',cta:'Return to my practice'}, {id:'observatory',x:620,y:1220,name:'The observatory',kind:'observatory',title:'See your journey from here.',text:'Step back and revisit the lessons behind your discoveries. Distance from the ship describes curriculum depth: Core, Foundations, Integration, Application, then Exploration. Nearby concepts share stronger content relationships. Solid lines show the strongest structural links; lighter dashed links show useful secondary relationships. Your location on the map is not a rank of your ability.',link:'#sessions',cta:'Open lesson history'}];
   landmarks.forEach(l=>{
     const candidates=[];
     for(let x=200;x<=2400;x+=40)for(let y=200;y<=2400;y+=40){
@@ -118,5 +135,5 @@
     const id=g.id+'-'+index,parentId=layout[id]?.parent;
     return parentId?positions.get(parentId):gateways.get(g.id);
   };
-  window.ATLAS_UNIVERSE={positions,gateways,layout,radii,depthZones,background,landmarks,landmarkMarkup,type,parent};
+  window.ATLAS_UNIVERSE={positions,gateways,layout,radii,depthZones,semanticRelations,relations,related,background,landmarks,landmarkMarkup,type,parent};
 })();
