@@ -27,7 +27,14 @@
       .roadmapStop.evidence-started{border-color:#8ad8d033}
       .roadmapStop.evidence-repeated{border-color:#7dd8ff55}
       .roadmapStop.evidence-review{border-color:#d5b6ff77;box-shadow:inset 0 0 0 1px #d5b6ff12}
-      @media(max-width:520px){.roadmapActionLinks a{flex:1 1 auto}.roadmapEvidenceTop{align-items:flex-start;flex-direction:column}.roadmapEvidenceTop span{text-align:left}}
+      .roadmapReviewSignals{margin:0 0 16px;padding:16px;border:1px solid #d5b6ff3d;border-radius:18px;background:linear-gradient(145deg,#161426,#0f121b)}
+      .roadmapReviewSignalsHead{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:10px}
+      .roadmapReviewSignalsHead h3{margin:4px 0 3px}.roadmapReviewSignalsHead p{margin:0;color:#aeb6c2;font-size:.9rem}
+      .roadmapReviewCount{display:grid;place-items:center;min-width:34px;height:34px;padding:0 9px;border-radius:999px;background:#d5b6ff1b;color:#eadcff;font-weight:900}
+      .roadmapReviewQueue{display:grid;gap:8px}
+      .roadmapReviewReady{width:100%;display:flex;align-items:center;justify-content:space-between;gap:12px;text-align:left;padding:11px 12px;border-radius:13px;border:1px solid #ffffff16;background:#0b1018;color:#fff;font:inherit;cursor:pointer}
+      .roadmapReviewReady:hover{border-color:#d5b6ff80;background:#141624}.roadmapReviewReady strong{display:block;font-size:.92rem}.roadmapReviewReady span{display:block;color:#9ea8b7;font-size:.78rem;margin-top:2px}.roadmapReviewReady b{flex:0 0 auto;color:#d9c8f0;font-size:.76rem}
+      @media(max-width:520px){.roadmapActionLinks a{flex:1 1 auto}.roadmapEvidenceTop,.roadmapReviewSignalsHead{align-items:flex-start;flex-direction:column}.roadmapEvidenceTop span{text-align:left}.roadmapReviewReady{align-items:flex-start;flex-direction:column}}
     `;
     document.head.appendChild(s);
   }
@@ -119,6 +126,30 @@
     return `<div class="roadmapEvidence"><div class="roadmapEvidenceTop"><strong>${label}</strong><span>${ev.percent}% practice evidence</span></div><div class="roadmapEvidenceTrack" aria-label="Practice evidence ${ev.percent}%"><span class="roadmapEvidenceFill" style="width:${ev.percent}%"></span></div><p class="roadmapEvidenceMeta">${meta}${ev.state==='review'?' · Gab still decides when this roadmap objective is complete.':''}</p></div>`;
   }
 
+  function studentName(studentId){
+    const button=document.querySelector(`[data-student="${CSS.escape(String(studentId))}"]`);
+    return button?.querySelector('strong')?.textContent?.trim()||button?.textContent?.trim()||'Student';
+  }
+
+  function renderCoachReviewSignals(){
+    if(role!=='coach')return;
+    const ready=[...rows.values()].map(row=>({row,ev:evidenceFor(row)})).filter(x=>x.ev?.state==='review').sort((a,b)=>String(b.ev.last||'').localeCompare(String(a.ev.last||'')));
+    let root=document.getElementById('roadmapReviewSignals');
+    if(!ready.length){root?.remove();return;}
+    const host=document.getElementById('roadmapFleetOverview')||document.querySelector('.adminOnly');
+    if(!host)return;
+    if(!root){root=document.createElement('section');root.id='roadmapReviewSignals';root.className='roadmapReviewSignals';host.prepend(root);}else if(root.parentElement!==host)host.prepend(root);
+    const signature=ready.map(x=>`${x.row.id}:${x.ev.days}:${x.ev.count}`).join('|');
+    if(root.dataset.signature===signature)return;
+    root.dataset.signature=signature;
+    root.innerHTML=`<div class="roadmapReviewSignalsHead"><div><span class="badge">Roadmap review queue</span><h3>Ready for coach review</h3><p>Three or more spaced Zoukable practice days. Practice evidence is sufficient for you to reassess the objective; it is not automatic mastery.</p></div><span class="roadmapReviewCount">${ready.length}</span></div><div class="roadmapReviewQueue">${ready.map(x=>`<button type="button" class="roadmapReviewReady" data-review-student="${String(x.row.student_id)}"><div><strong>${studentName(x.row.student_id)} · ${String(x.row.title)}</strong><span>${x.ev.days} practice days · ${x.ev.count} completed attempts</span></div><b>Review →</b></button>`).join('')}</div>`;
+    root.querySelectorAll('[data-review-student]').forEach(btn=>btn.addEventListener('click',()=>{
+      const student=document.querySelector(`[data-student="${CSS.escape(btn.dataset.reviewStudent)}"]`);
+      student?.click();
+      setTimeout(()=>document.getElementById('coachRoadmapPanel')?.scrollIntoView({behavior:'smooth',block:'start'}),180);
+    }));
+  }
+
   function enhance(){
     document.querySelectorAll('.roadmapStop[data-roadmap-id]').forEach(card=>{
       const id=String(card.dataset.roadmapId||'');
@@ -148,6 +179,7 @@
         card.appendChild(actions);
       }
     });
+    renderCoachReviewSignals();
   }
 
   async function boot(){
@@ -163,4 +195,4 @@
 
   setTimeout(()=>boot().catch(err=>console.warn('Roadmap action boot',err)),850);
 })();
-// roadmap-practice-evidence-v4
+// roadmap-practice-evidence-v5
