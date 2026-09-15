@@ -6,7 +6,8 @@ const digest=s=>crypto.createHash('sha256').update(s).digest('hex').slice(0,12);
 const htmlFiles=walk(out).filter(f=>f.endsWith('.html'));
 const repeated=new Map();
 for(const file of htmlFiles)for(const [,css]of fs.readFileSync(file,'utf8').matchAll(/<style>([\s\S]*?)<\/style>/g)){if(css.trim())repeated.set(css,(repeated.get(css)||0)+1);}
-let sharedBytes=0,versioned=0;const errors=[];
+const unsafeExternalCss=css=>/@import\b|url\s*\(/i.test(css);
+let externalizedBytes=0,versioned=0;const externalCssFiles=new Set(),errors=[];
 for(const file of htmlFiles){let html=fs.readFileSync(file,'utf8');
  if(path.basename(file)==='mentorship.html'){
   html=html.replace('Long-term Brazilian Zouk and Lambada mentorship in New York City with Gab Lacarriere. Structured private training, kinesthetic practice, partner fundamentals, practica, goals, deliberate practice and a private learning portal.','Personalized Brazilian Zouk and Lambada mentorship in New York City with Gab Lacarriere. Identify what is holding you back, get a clear training direction and build practice that transfers into your dancing.');
@@ -32,9 +33,17 @@ for(const file of htmlFiles){let html=fs.readFileSync(file,'utf8');
   const memberReferral=`<section class="sec soft" id="member-referral"><div class="w"><div class="kicker">Member benefit</div><h2>Mentorship Referral Reward</h2><div class="card" style="min-height:auto"><h3>Refer a dancer → earn a Kinesthetic Practice class</h3><p>If someone you refer joins the Mentorship Program and completes three paid months, you receive one Kinesthetic Practice class free.</p><p class="muted"><strong>How to make sure it counts:</strong> ask the new member to mention your name when they join. The reward is earned after their third paid month. Each qualifying referral earns one reward.</p><div class="actions"><a class="btn" href="https://wa.me/19295864994?text=Hi%20Gab%2C%20I%20referred%20someone%20to%20the%20mentorship%20program%3A%20" target="_blank" rel="noopener">Tell Gab about a referral</a></div></div></div></section>`;
   html=html.replace('</main>',memberReferral+'</main>');
  }
- html=html.replace(/<style>([\s\S]*?)<\/style>/g,(tag,css)=>{if((repeated.get(css)||0)<2||css.length<500)return tag;const rel='/generated/shared-'+digest(css)+'.css';fs.mkdirSync(path.join(out,'generated'),{recursive:true});fs.writeFileSync(path.join(out,rel),css);sharedBytes+=Buffer.byteLength(css);return '<link rel="stylesheet" href="'+rel+'">';});
+ html=html.replace(/<style>([\s\S]*?)<\/style>/g,(tag,css)=>{
+  if(css.length<500||unsafeExternalCss(css))return tag;
+  const kind=(repeated.get(css)||0)>=2?'shared':'page';
+  const rel=`/generated/${kind}-${digest(css)}.css`,dest=path.join(out,rel);
+  fs.mkdirSync(path.dirname(dest),{recursive:true});
+  if(!fs.existsSync(dest))fs.writeFileSync(dest,css);
+  externalizedBytes+=Buffer.byteLength(css);externalCssFiles.add(rel);
+  return '<link rel="stylesheet" href="'+rel+'">';
+ });
  html=html.replace(/\b(src|href)="([^"#]+)"/g,(tag,attr,url)=>{if(!/\.(css|js)(\?|$)/i.test(url)||/^(https?:|\/\/|data:)/.test(url))return tag;const [pathname]=url.split('?');const local=pathname.startsWith('/')?path.join(out,pathname):path.resolve(path.dirname(file),pathname);if(!local.startsWith(out+path.sep)||!fs.existsSync(local)){errors.push(path.relative(out,file)+': missing '+url);return tag;}versioned++;return attr+'="'+pathname+'?v='+digest(fs.readFileSync(local))+'"';});
  fs.writeFileSync(file,html);
 }
 for(const file of walk(out)){const rel=path.relative(out,file);if(/(^|\/)(database|design|tests|work|scripts|\.git)(\/|$)|\.(sql|cjs|md|py)$/.test(rel))errors.push('Non-public file: '+rel);}
-if(errors.length){console.error(errors.join('\n'));process.exit(1);}console.log(`Finalized ${htmlFiles.length} pages; ${versioned} asset references versioned from content; ${sharedBytes} inline CSS bytes moved to reusable files.`);
+if(errors.length){console.error(errors.join('\n'));process.exit(1);}console.log(`Finalized ${htmlFiles.length} pages; ${versioned} asset references versioned from content; ${externalizedBytes} inline CSS bytes externalized to ${externalCssFiles.size} generated stylesheets.`);
