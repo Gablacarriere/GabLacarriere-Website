@@ -45,5 +45,38 @@ for(const file of htmlFiles){let html=fs.readFileSync(file,'utf8');
  html=html.replace(/\b(src|href)="([^"#]+)"/g,(tag,attr,url)=>{if(!/\.(css|js)(\?|$)/i.test(url)||/^(https?:|\/\/|data:)/.test(url))return tag;const [pathname]=url.split('?');const local=pathname.startsWith('/')?path.join(out,pathname):path.resolve(path.dirname(file),pathname);if(!local.startsWith(out+path.sep)||!fs.existsSync(local)){errors.push(path.relative(out,file)+': missing '+url);return tag;}versioned++;return attr+'="'+pathname+'?v='+digest(fs.readFileSync(local))+'"';});
  fs.writeFileSync(file,html);
 }
+
+// Sitemap, canonical tags, and browser-visible routes must describe the same public URL.
+let canonicalChecks=0;
+const sitemapFile=path.join(out,'sitemap.xml'),vercelFile=path.join(root,'vercel.json');
+if(fs.existsSync(sitemapFile)&&fs.existsSync(vercelFile)){
+ const sitemap=fs.readFileSync(sitemapFile,'utf8');
+ const urls=[...sitemap.matchAll(/<loc>(https:\/\/gablacarriere\.com\/[^<]*)<\/loc>/g)].map(m=>m[1]);
+ const config=JSON.parse(fs.readFileSync(vercelFile,'utf8'));
+ const redirects=new Map((config.redirects||[]).map(r=>[r.source,r]));
+ const rewrites=new Map((config.rewrites||[]).map(r=>[r.source,r]));
+ const seen=new Set();
+ for(const url of urls){
+  if(seen.has(url)){errors.push(`Duplicate sitemap URL: ${url}`);continue;}seen.add(url);
+  const pathname=new URL(url).pathname;
+  if(pathname!=='/'&&!pathname.endsWith('/'))errors.push(`Sitemap URL must end with /: ${url}`);
+  const slug=pathname==='/'?'index':pathname.replace(/^\/|\/$/g,'');
+  const htmlPath=path.join(out,slug+'.html');
+  if(!fs.existsSync(htmlPath)){errors.push(`Sitemap target missing: ${url} -> ${slug}.html`);continue;}
+  const page=fs.readFileSync(htmlPath,'utf8');
+  const canonicalTag=page.match(/<link\b[^>]*rel=["']canonical["'][^>]*>/i)?.[0]||'';
+  const canonical=canonicalTag.match(/href=["']([^"']+)["']/i)?.[1]||'';
+  if(canonical!==url)errors.push(`${slug}.html canonical mismatch: ${canonical||'(missing)'} != ${url}`);
+  if(pathname!=='/'){
+   const canonicalPath=pathname,base='/'+slug,htmlSource=base+'.html';
+   const rewrite=rewrites.get(canonicalPath),plainRedirect=redirects.get(base),htmlRedirect=redirects.get(htmlSource);
+   if(!rewrite||rewrite.destination!==htmlSource)errors.push(`Missing canonical rewrite: ${canonicalPath} -> ${htmlSource}`);
+   if(!plainRedirect||plainRedirect.destination!==canonicalPath||plainRedirect.permanent!==true)errors.push(`Missing permanent redirect: ${base} -> ${canonicalPath}`);
+   if(!htmlRedirect||htmlRedirect.destination!==canonicalPath||htmlRedirect.permanent!==true)errors.push(`Missing permanent redirect: ${htmlSource} -> ${canonicalPath}`);
+  }
+  canonicalChecks++;
+ }
+}
+
 for(const file of walk(out)){const rel=path.relative(out,file);if(/(^|\/)(database|design|tests|work|scripts|\.git)(\/|$)|\.(sql|cjs|md|py)$/.test(rel))errors.push('Non-public file: '+rel);}
-if(errors.length){console.error(errors.join('\n'));process.exit(1);}console.log(`Finalized ${htmlFiles.length} pages; ${versioned} asset references versioned from content; ${externalizedBytes} inline CSS bytes externalized to ${externalCssFiles.size} generated stylesheets.`);
+if(errors.length){console.error(errors.join('\n'));process.exit(1);}console.log(`Finalized ${htmlFiles.length} pages; ${versioned} asset references versioned from content; ${externalizedBytes} inline CSS bytes externalized to ${externalCssFiles.size} generated stylesheets; ${canonicalChecks} sitemap/canonical routes verified.`);
