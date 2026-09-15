@@ -1,0 +1,17 @@
+.methodologyAudit{border-color:#78d8ff55;background:linear-gradient(180deg,#101a25,#10151d)}
+.methodologyHeading{display:flex;align-items:flex-start;justify-content:space-between;gap:24px}
+.methodologyHeading>strong{white-space:nowrap;font-size:1.05rem;color:#f2dfc5;border:1px solid #ffffff24;border-radius:999px;padding:7px 11px}
+.methodologyChecks{list-style:none;margin:22px 0 0;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.methodologyCheck{display:grid;grid-template-columns:26px 1fr;gap:8px;padding:12px 14px;border:1px solid #ffffff14;border-radius:14px;background:#0c1118}
+.methodologyCheck>span{font-weight:900;font-size:1.05rem;line-height:1.35}
+.methodologyCheck strong{display:block}
+.methodologyCheck small{display:block;margin-top:4px;color:#aeb6c2;line-height:1.45}
+.methodologyOk{border-color:#ffffff12}
+.methodologyOk>span{color:#9fe2bd}
+.methodologyPrompt{border-color:#f2dfc533;background:#171610}
+.methodologyPrompt>span{color:#f2dfc5}
+.methodologyQuestions{margin-top:18px;border-top:1px solid #ffffff16;padding-top:14px}
+.methodologyQuestions summary{cursor:pointer;font-weight:850}
+.methodologyQuestions ol{padding-left:1.3rem}
+.methodologyQuestions li{margin:8px 0;color:#c8ced8}
+@media(max-width:760px){.methodologyChecks{grid-template-columns:1fr}.methodologyHeading{display:block}.methodologyHeading>strong{display:inline-block;margin-top:6px}}
