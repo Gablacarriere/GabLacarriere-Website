@@ -53,7 +53,8 @@ function curriculumTerms(){
 }
 function fitLabel(total){return total>=12?'Strong fit':total>=8?'Good fit':'Related';}
 function scoreCard(card,index){
- const text=normalize(card.innerText),demands=demandProfile(),terms=curriculumTerms();
+ const clone=card.cloneNode(true);clone.querySelector('.selectionFit')?.remove();
+ const text=normalize(clone.innerText),demands=demandProfile(),terms=curriculumTerms();
  let curriculum=0,demand=0;const reasons=[];
  const supportMatches=terms.supportPractice.filter(x=>text.includes(x.n));
  const targetMatches=terms.targetPractice.filter(x=>text.includes(x.n));
@@ -66,7 +67,7 @@ function scoreCard(card,index){
    demand+=d.score;demandMatches.push(d);reasons.push(d.label);
   }
  }
- const short=/~(?:3|4|5|6|7|8) min/.test(card.innerText);const suitability=short?1:0;
+ const short=/~(?:3|4|5|6|7|8) min/.test(clone.innerText);const suitability=short?1:0;
  if(short)reasons.push('Short warm-up dose');
  const total=curriculum+demand+suitability;
  return {card,total,curriculum,demand,suitability,demandMatches,reasons:[...new Set(reasons)]};
@@ -85,6 +86,9 @@ function installStyle(){
 function renderStrategies(box){
  let engine=box.querySelector('#exerciseSelectionEngine');if(!engine){engine=document.createElement('section');engine.id='exerciseSelectionEngine';engine.className='selectionEngine';const grid=box.querySelector(':scope > .liveDrillGrid');if(grid)grid.before(engine);else box.appendChild(engine);}
  const ranked=strategyRanking();
+ const signature=ranked.map(({d,strategy})=>`${d.id}:${d.score}:${strategyAdded(strategy)?1:0}`).join('|')||'empty';
+ if(engine.dataset.selectionSignature===signature)return;
+ engine.dataset.selectionSignature=signature;
  if(!ranked.length){engine.innerHTML='<h4>Exercise Selection Engine</h4><p>Select a lesson target or clarify the goal to rank preparation strategies by movement demand.</p>';return;}
  engine.innerHTML=`<p class="kicker">EXERCISE SELECTION ENGINE</p><h4>Start with the demands, then choose the exercise.</h4><p>These strategies are ranked by the current movement-demand map. The ranking explains the teaching fit; it is not a medical or readiness score.</p><div class="selectionStrategyGrid">${ranked.map(({d,strategy,rank})=>`<article class="selectionStrategy"><div class="selectionRank">#${rank} · ${esc(d.level)} ${esc(d.label)}</div><h4>${esc(strategy.title)}</h4><p>${esc(strategy.body)}</p><p class="selectionWhy"><strong>Why it fits:</strong> prepares ${esc(d.label.toLowerCase())}, currently a ${esc(d.level)} lesson demand.</p><p><small><strong>Regress:</strong> ${esc(strategy.regress)}<br><strong>Progress:</strong> ${esc(strategy.progress)}</small></p><button type="button" data-add-demand-strategy="${esc(d.id)}" ${strategyAdded(strategy)?'disabled':''}>${strategyAdded(strategy)?'Already added':'Add to specific warm-up'}</button></article>`).join('')}</div>`;
 }
@@ -92,10 +96,11 @@ function rankWarmupDrills(box){
  const grid=box.querySelector(':scope > .liveDrillGrid');if(!grid)return;
  const cards=[...grid.querySelectorAll(':scope > .liveDrillCard')];if(!cards.length)return;
  const demandSig=demandProfile().map(d=>d.id+':'+d.score).join('|'),ids=selectedIds().join('|');
- const drillSig=cards.map(c=>c.querySelector('[data-add-warmup-drill]')?.dataset.addWarmupDrill||c.querySelector('h4')?.textContent||'').join('|');
- const signature=ids+'||'+demandSig+'||'+drillSig;
+ const drillIds=cards.map(c=>c.querySelector('[data-add-warmup-drill]')?.dataset.addWarmupDrill||c.querySelector('h4')?.textContent||'');
+ const stableDrillSig=[...drillIds].sort().join('|');
+ const signature=ids+'||'+demandSig+'||'+stableDrillSig;
  if(grid.dataset.selectionSignature===signature)return;
- const ranked=cards.map(scoreCard).sort((a,b)=>b.total-a.total||b.curriculum-a.curriculum||a.card.querySelector('h4')?.textContent.localeCompare(b.card.querySelector('h4')?.textContent));
+ const ranked=cards.map(scoreCard).sort((a,b)=>b.total-a.total||b.curriculum-a.curriculum||String(a.card.querySelector('h4')?.textContent||'').localeCompare(String(b.card.querySelector('h4')?.textContent||'')));
  ranked.forEach((item,index)=>{
   item.card.querySelector('.selectionFit')?.remove();
   const fit=document.createElement('div');fit.className='selectionFit';
