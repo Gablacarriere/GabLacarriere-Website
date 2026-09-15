@@ -63,6 +63,26 @@
     {understand:'A block removes or redirects one available pathway while created space invites another. The leader organizes position and available routes rather than forcing the follower through a memorized trajectory.',notice:'Which pathway became unavailable, which space became available, and did the follower have enough information to choose the new route?'}
   ]);
 
+  addGroup('perception','Perception & Projection','#9bc7ff','Recognize movement in time, simulate possible futures, estimate when they will arrive, and update decisions as the partnership changes.',[
+    'Temporal Pattern Recognition',
+    'Temporal Location & Footprint',
+    'Sensorimotor Visualization',
+    'Candidate Movement Generation',
+    'Temporal Calculation',
+    'Evaluation & Anticipation',
+    'Adaptive Recalculation',
+    'Calculation Depth & Musical Destination'
+  ],[
+    {understand:'Temporal pattern recognition is the ability to recognize a familiar movement organization while it is still unfolding. The dancer identifies not only the movement family but the current phase, rhythm, momentum, connection state, partner orientation, and likely continuations.',notice:'How early can you recognize the structure, and can you say where you are inside it before the pattern is finished?'},
+    {understand:'Every movement has a temporal footprint: entry, preparation, initiation, development, resolution, possible exits, and an approximate duration. Some phases may be compressed or expanded while others need enough time to preserve clarity and organization.',notice:'Which phase are you in now, how much movement remains, and which parts can change duration without losing the structure?'},
+    {understand:'Sensorimotor visualization means internally simulating movement before or during execution. The representation can include your own body, the partner’s likely response, weight transfer, direction, momentum, connection changes, rhythm, pathway, and duration.',notice:'Before moving, can you predict where both bodies, the weight, and the connection are likely to be a few beats from now?'},
+    {understand:'Candidate generation narrows many known movements into a small set of plausible continuations. Current position, connection, momentum, available time, partner organization, space, music, and intention all constrain which options are genuinely useful.',notice:'Can you produce two or three realistic continuations from this situation and explain why other familiar movements are poor candidates here?'},
+    {understand:'Temporal calculation projects a movement or sequence forward and estimates how long it will take. The purpose is to judge whether a chosen route can reach a desired movement, transition, resolution, accent, break, or phrase at the intended moment.',notice:'If you begin this continuation now, when will it resolve, and does that arrival match the time or musical destination you intended?'},
+    {understand:'Evaluation compares projected candidates before commitment when time permits. Safety, partner comfort, connection clarity, mechanics, space, musical relevance, movement quality, available time, and expressive intention can all change which continuation is most appropriate.',notice:'Of the plausible options you can see, which best fits this partner, this moment, this space, and this musical intention—and why?'},
+    {understand:'Adaptive recalculation updates the plan when reality differs from the prediction. Partner response, timing, momentum, connection, space, or music may change while the movement is already happening. Expertise includes abandoning a prediction instead of forcing it.',notice:'What changed from your prediction, and can you modify or replace the continuation early enough to preserve comfort, clarity, and timing?'},
+    {understand:'Calculation depth describes how far ahead a dancer can project usefully: the present state, one transition, a short sequence, a musical destination, and finally adaptive recalculation when the situation changes. Greater depth should increase options without turning social dance into choreography.',notice:'How many future states can you project accurately while still remaining available to new partner information and changes in the music?'}
+  ]);
+
   addGroup('offaxis','Head Movement & Off-Axis','#d9a3d7','Build head movement, counterbalance, and tilted structures only on reliable support, torsion, and partner information.',[
     'Head-Movement Principles',
     'Active & Passive Head Initiation',
@@ -92,6 +112,7 @@
     {id:'partnering',name:'Frame & Connection',color:'#8ad8d0',angle:315,intro:'Contact organization, permeability, embrace, responsiveness, and shared information.'},
     {id:'rhythm',name:'Rhythm & Timing',color:'#87b8ee',angle:355,intro:'Pulse, timing families, phrasing, continuity, and Lambada question–answer structure.'},
     {id:'space',name:'Space & Orientation',color:'#f3c68e',angle:40,intro:'Chest direction, relative position, available pathways, blocks, and redirection.'},
+    {id:'perception',name:'Perception & Projection',color:'#9bc7ff',angle:62,intro:'Temporal recognition, visualization, candidate generation, calculation, anticipation, and recalculation.'},
     {id:'grammar',name:'Movement Grammar',color:'#a6bded',angle:85,intro:'Basic structures, turns, named patterns, components, transformations, and pattern logic.'},
     {id:'offaxis',name:'Head Movement & Off-Axis',color:'#d9a3d7',angle:135,intro:'Head pathways, counterbalance, tilted structures, and shared-axis applications.'},
     {id:'pathways',name:'Torsion & Body Pathways',color:'#e6a2b5',angle:180,intro:'Dissociation, spirals, waves, elasticity, contraction, extension, and flow.'},
@@ -116,6 +137,10 @@
 
   assign(['architecture-0'],'space',2);
   assign(['bridge-0','bridge-1','space-0'],'space',3);
+
+  assign(['perception-0','perception-1','perception-2'],'perception',2,'cognitive');
+  assign(['perception-3','perception-4','perception-5'],'perception',3,'cognitive');
+  assign(['perception-6','perception-7'],'perception',4,'cognitive');
 
   assign(['pathways-0','spirals-0','spirals-1','spirals-2','pathways-1'],'pathways',2);
   assign(['spirals-3','spirals-5','pathways-2','pathways-3'],'pathways',3);
@@ -163,6 +188,15 @@
     'bridge-0':{name:'Availability → Orientation',supports:['architecture-0','organization-1']},
     'bridge-1':{name:'Availability → Positioning',supports:['architecture-0','connection-2']},
     'space-0':{supports:['architecture-0','connection-6']},
+
+    'perception-0':{aliases:['Pattern Recognition','Temporal Pattern Recognition'],relatedTerms:['recognition','chunking'],supports:['awareness-0','rhythm-0']},
+    'perception-1':{aliases:['Temporal Footprint','Temporal Location','Phase Location'],relatedTerms:['duration','phase'],supports:['perception-0','rhythm-0','architecture-0']},
+    'perception-2':{aliases:['Visualization','Motor Simulation','Sensorimotor Simulation'],relatedTerms:['mental rehearsal','motor imagery'],supports:['awareness-0','organization-1','rhythm-0']},
+    'perception-3':{aliases:['Candidate Movements','Candidate Generation'],relatedTerms:['options','continuations'],supports:['perception-0','grammar-1','architecture-0']},
+    'perception-4':{aliases:['Calculation','Temporal Forecasting'],relatedTerms:['duration','arrival','musical destination'],supports:['perception-1','rhythm-1','rhythm-2']},
+    'perception-5':{aliases:['Anticipation','Evaluation'],relatedTerms:['prediction','decision quality'],supports:['perception-3','perception-4','partnering-2']},
+    'perception-6':{aliases:['Recalculation','Adaptive Calculation'],relatedTerms:['update','prediction error'],supports:['perception-5','partnering-2','space-0']},
+    'perception-7':{aliases:['Calculation Depth','Musical Destination Planning'],relatedTerms:['sequence planning','phrase landing'],supports:['perception-4','rhythm-2','grammar-1']},
 
     'pathways-0':{supports:['bridge-2','connection-2']},
     'spirals-0':{supports:['pathways-0']},'spirals-1':{supports:['pathways-0']},'spirals-2':{supports:['organization-1','pathways-0']},
