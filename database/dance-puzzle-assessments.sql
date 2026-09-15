@@ -25,6 +25,8 @@ create index if not exists dance_puzzle_assessments_student_time_idx
   on public.dance_puzzle_assessments(student_id, assessed_at desc);
 create index if not exists dance_puzzle_assessments_puzzle_time_idx
   on public.dance_puzzle_assessments(puzzle_id, assessed_at desc);
+create index if not exists dance_puzzle_assessments_coach_idx
+  on public.dance_puzzle_assessments(coach_id);
 
 alter table public.dance_puzzle_assessments enable row level security;
 
@@ -34,6 +36,6 @@ create policy dance_puzzle_assessments_coach_select
 
 create policy dance_puzzle_assessments_coach_insert
   on public.dance_puzzle_assessments for insert to authenticated
-  with check (public.is_coach() and coach_id = auth.uid());
+  with check (public.is_coach() and coach_id = (select auth.uid()));
 
 grant select, insert on public.dance_puzzle_assessments to authenticated;
