@@ -479,3 +479,21 @@
   script.dataset.mentorshipRoadmapActions='1';
   document.head.appendChild(script);
 })();
+
+(() => {
+  if (!location.pathname.startsWith('/mentorship-hub')) return;
+  if (!document.querySelector('link[data-mentorship-checkins]')) {
+    const link=document.createElement('link');
+    link.rel='stylesheet';
+    link.href='/mentorship-checkins.css?v=1';
+    link.dataset.mentorshipCheckins='1';
+    document.head.appendChild(link);
+  }
+  if (!document.querySelector('script[data-mentorship-checkins]')) {
+    const script=document.createElement('script');
+    script.src='/mentorship-checkins.js?v=1';
+    script.defer=true;
+    script.dataset.mentorshipCheckins='1';
+    document.head.appendChild(script);
+  }
+})();
