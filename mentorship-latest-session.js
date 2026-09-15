@@ -19,7 +19,6 @@
     s.textContent=`
       .latestSessionCard{margin-bottom:18px;background:linear-gradient(145deg,#101923,#10151d);border-color:#7dd8ff3d!important}
       .latestSessionHead{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;flex-wrap:wrap}
-      .latestSessionDate{font-size:.8rem;color:#9edfff;font-weight:850;letter-spacing:.05em;text-transform:uppercase}
       .latestSessionBody{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(260px,.65fr);gap:14px;margin-top:14px}
       .latestSessionPane{padding:15px;border:1px solid #ffffff16;border-radius:16px;background:#ffffff05}
       .latestSessionPane h4{margin:0 0 7px}.latestSessionPane p{margin:0;color:#bcc4cf;white-space:pre-line}
@@ -37,7 +36,7 @@
       state.client.from('atlas_lessons')
         .select('id,lesson_date,summary,practice,concepts')
         .eq('student_id',studentId).eq('voided',false)
-        .order('lesson_date',{ascending:false}).order('created_at',{ascending:false}).limit(1),
+        .order('lesson_date',{ascending:false}).limit(1),
       state.client.from('mentorship_roadmap_items')
         .select('id,title,horizon,status,priority,reason,student_visible,pinned')
         .eq('student_id',studentId)
@@ -67,14 +66,14 @@
           <p>${esc(lesson.summary||'Session summary not available.')}</p>
         </div>
         <div class="latestSessionPane latestNextFocus">
-          <h4>${next?'Next focus':'Practice'}</h4>
-          ${next?`<strong>${esc(next.title)}</strong><p style="margin-top:6px">${esc(next.reason||'This is the next active stop on your roadmap.')}</p>`:`<p>${esc(lesson.practice||'No explicit homework was recorded for this session.')}</p>`}
+          <h4>Next focus</h4>
+          ${next?`<strong>${esc(next.title)}</strong><p style="margin-top:6px">${esc(next.reason||'This is the next active stop on your roadmap.')}</p>`:'<p>No next roadmap focus has been set yet.</p>'}
         </div>
       </div>
       ${lesson.practice?`<div class="latestSessionPane" style="margin-top:14px"><h4>Practice / reminders</h4><p>${esc(lesson.practice)}</p></div>`:''}
       <div class="latestSessionActions">
         <a href="${coach?'#coachZoukableHomework':'/zoukable/?page=practice'}">${coach?'View assigned drills':'Open homework →'}</a>
-        <a href="${coach?'#studentRoadmapModule':'#studentRoadmapModule'}">View roadmap →</a>
+        <a href="${coach?'#coachRoadmapPanel':'#studentRoadmapModule'}">View roadmap →</a>
       </div>`;
   }
 
@@ -87,7 +86,7 @@
     if(!data.lesson){document.getElementById('latestSessionStudent')?.remove();return;}
     let card=document.getElementById('latestSessionStudent');
     if(!card){card=document.createElement('section');card.id='latestSessionStudent';card.className='dashCard latestSessionCard';grid.insertAdjacentElement('beforebegin',card);}
-    const sig=[data.lesson.id,data.lesson.lesson_date,data.next?.id,data.next?.title].join('|');
+    const sig=[data.lesson.id,data.lesson.lesson_date,data.lesson.summary,data.lesson.practice,data.next?.id,data.next?.title,data.next?.reason].join('|');
     if(card.dataset.signature===sig)return;
     card.dataset.signature=sig;
     card.innerHTML=cardHTML(data);
@@ -104,7 +103,7 @@
     const data=await fetchRecap(studentId,force);
     let card=document.getElementById('latestSessionCoach');
     if(!card){card=document.createElement('section');card.id='latestSessionCoach';card.className='editorSection latestSessionCard';const first=editor.querySelector('.dashCard');if(first)first.insertAdjacentElement('afterend',card);else editor.prepend(card);}
-    const sig=[studentId,data.lesson?.id,data.lesson?.lesson_date,data.next?.id,data.next?.title].join('|');
+    const sig=[studentId,data.lesson?.id,data.lesson?.lesson_date,data.lesson?.summary,data.lesson?.practice,data.next?.id,data.next?.title,data.next?.reason].join('|');
     if(card.dataset.signature===sig)return;
     card.dataset.signature=sig;
     card.innerHTML=cardHTML(data,{coach:true});
@@ -118,7 +117,8 @@
       try{
         await renderStudent(false);
         const sid=selectedStudentId();
-        if(sid!==state.lastCoachStudent){state.lastCoachStudent=sid;await renderCoach(false);}else await renderCoach(false);
+        if(sid!==state.lastCoachStudent)state.lastCoachStudent=sid;
+        await renderCoach(false);
       }catch(err){console.warn('Latest session recap',err);}
     });
   }
