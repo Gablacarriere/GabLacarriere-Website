@@ -6,7 +6,7 @@ The branding build starts clean. Only approved static file extensions and the as
 
 The finalizer shares identical large inline CSS blocks while preserving cascade order. It versions local stylesheet and script references from their actual content. Manual version labels in source are no longer required for HTML references. Dynamic imports and URLs constructed by JavaScript are outside this mechanism and need separate cache consideration. Do not add immutable long-term caching to stable asset filenames: filenames remain stable while their query versions change.
 
-After finalization, `scripts/audit-publication.cjs` enforces the public/private boundary. Internal tools are marked `noindex,nofollow`, and every static local link plus its `#fragment` target must resolve. A broken local destination is a build failure, not a production discovery. Keep `robots.txt` aligned with the same internal-tool list.
+After finalization, `scripts/audit-publication.cjs` enforces the public/private boundary. Internal tools are marked `noindex,nofollow`, and every static local link plus its `#fragment` target must resolve. A broken local destination is a build failure, not a production discovery. Do not use `robots.txt` to hide HTML pages that rely on `noindex`; crawlers need to reach the page to read the directive. Private or confidential data still requires real authorization and must never rely on crawler directives for security.
 
 Missing local CSS/JS references and development files in output fail the build. Run `node tests/build-output.cjs` after changing the finalizer. Existing Atlas and Zoukable tests cover simulated behavior; they do not replace real account tests.
 
