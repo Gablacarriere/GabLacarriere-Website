@@ -121,6 +121,76 @@
     if (applicationIntro) applicationIntro.textContent = 'A few details are enough to start a conversation about fit. Applying does not enroll you or take a payment.';
   }
 
+  // Teacher development: three clear support paths, then the two planning tools, then contact.
+  if (source === 'for-teachers') {
+    const heroTitle = document.querySelector('.hero h1');
+    if (heroTitle) heroTitle.innerHTML = 'Teach with clarity.<br><em>Build learning that progresses.</em>';
+    const heroLede = document.querySelector('.hero .lede');
+    if (heroLede) heroLede.textContent = 'Teacher development and curriculum design for dance teachers, aspiring teachers and schools. Work on the decisions that make learning clearer, more coherent and more transferable.';
+    const heroActions = document.querySelectorAll('.hero .actions a');
+    if (heroActions[0]) heroActions[0].textContent = 'Discuss your teaching';
+    if (heroActions[1]) {
+      heroActions[1].textContent = 'Use the planning tools';
+      heroActions[1].setAttribute('href','#teacher-tools');
+    }
+
+    const support = document.querySelector('#teacher-support');
+    const supportTitle = support?.querySelector('h2');
+    if (supportTitle) supportTitle.innerHTML = 'Choose the teaching problem<br>you want to solve.';
+    const supportLede = support?.querySelector('.lede');
+    if (supportLede) supportLede.textContent = 'Bring a class, a curriculum or a shared teaching challenge. Start with the level that best matches what you need now.';
+    const supportCards = support?.querySelectorAll('.card') || [];
+    if (supportCards[0]) {
+      supportCards[0].querySelector('.kicker').textContent = '01 · Teacher development';
+      supportCards[0].querySelector('h3').textContent = 'Teach with more clarity.';
+      supportCards[0].querySelectorAll('p')[1].textContent = 'Improve observation, explanation, exercise choice, feedback and lesson decisions. Useful for aspiring teachers and experienced teachers alike.';
+      const link = supportCards[0].querySelector('.teacherPath');
+      if (link) link.textContent = 'Discuss your teaching →';
+    }
+    if (supportCards[1]) {
+      supportCards[1].querySelector('.kicker').textContent = '02 · Curriculum design';
+      supportCards[1].querySelector('h3').textContent = 'Build a learning progression.';
+      supportCards[1].querySelectorAll('p')[1].textContent = 'Turn topics into a coherent course with goals, prerequisites, sequencing, practice, review and clear transitions between levels.';
+      const link = supportCards[1].querySelector('.teacherPath');
+      if (link) link.textContent = 'Discuss your curriculum →';
+    }
+    if (supportCards[2]) {
+      supportCards[2].querySelector('.kicker').textContent = '03 · Teams & schools';
+      supportCards[2].querySelector('h3').textContent = 'Create consistency across a program.';
+      supportCards[2].querySelectorAll('p')[1].textContent = 'Work on shared goals, class structure, feedback standards, mixed levels and how multiple teachers support one learning progression.';
+      const link = supportCards[2].querySelector('.teacherPath');
+      if (link) {
+        link.textContent = 'Discuss your team or school →';
+        link.setAttribute('href','?support=team#teacher-contact');
+      }
+    }
+
+    // Move the practical planners out of the long example section before removing that section.
+    const tools = document.querySelector('.teacherTools');
+    if (tools && support) {
+      tools.id = 'teacher-tools';
+      const toolsTitle = tools.querySelector('#teacher-tools-title');
+      if (toolsTitle) toolsTitle.textContent = 'Plan the curriculum. Then plan the class.';
+      const toolsIntro = tools.querySelector('#teacher-tools-title + p');
+      if (toolsIntro) toolsIntro.textContent = 'Use the Curriculum Planner for the learning progression and the Session Planner for the detailed lesson. The two tools stay connected.';
+      const shell = document.createElement('section');
+      shell.className = 'sec soft teacherToolsShell';
+      const wrap = document.createElement('div');
+      wrap.className = 'w';
+      wrap.append(tools);
+      shell.append(wrap);
+      support.after(shell);
+    }
+
+    removeSectionContaining('My foundation');
+    removeSectionContaining('Inside the work');
+    removeSectionContaining('Ways to work together');
+
+    document.querySelectorAll('.teacherFaq details[open]').forEach(item => item.removeAttribute('open'));
+    const inquiryTitle = document.querySelector('#teacher-contact h2');
+    if (inquiryTitle) inquiryTitle.textContent = 'Tell Gab what you want to improve or build.';
+  }
+
   const classPages = new Set(['/classes/','/brazilian-zouk-classes-nyc/','/lambada-classes-nyc/']);
   document.addEventListener('click', (event) => {
     const link = event.target.closest?.('a[href]');
