@@ -31,4 +31,8 @@ assert(L.forConcept('offaxis-0').some(x=>x.skill==='head-preparation'),'head mov
 for(const id of ['architecture-0','bridge-0','bridge-1','space-0'])assert(L.forConcept(id).some(x=>x.skill==='space-orientation'),`${id} should map to the Space & orientation practice family`);
 for(const id of ['grammar-1','grammar-2','bridge-4','bridge-5','architecture-1','architecture-3','architecture-4','architecture-6','architecture-7','patterns-15','patterns-16'])assert(L.forConcept(id).some(x=>x.skill==='movement-grammar'),`${id} should map to the Movement grammar practice family`);
 assert(L.forConcept('patterns-17').some(x=>x.skill==='movement-grammar'),'Yo-yo should expose related Movement grammar practice without claiming a dedicated Yo-yo drill');
-console.log('PASS: planners use canonical curriculum, preserve concept IDs, surface dependencies/next branches, filter dance tracks, keep off-axis safety boundaries, recommend only general published Zoukable drills, and connect Space & Orientation plus Movement Grammar concepts to their practice families.');
+for(const id of ['organization-0','organization-2'])assert(L.forConcept(id).some(x=>x.skill==='breath-organization'),`${id} should map to the Breath & organization practice family`);
+const intentionallyUnbridged=['awareness-0','practice-0','practice-1','practice-2','practice-3'].sort().join(',');
+const unbridged=C.concepts.filter(x=>!L.forConcept(x.id).length).map(x=>x.id).sort().join(',');
+assert.equal(unbridged,intentionallyUnbridged,'only Learning & Practice protocols should remain outside ordinary Zoukable drill bridges');
+console.log('PASS: planners use canonical curriculum, preserve concept IDs, surface dependencies/next branches, filter dance tracks, keep off-axis safety boundaries, recommend only general published Zoukable drills, and bridge every non-protocol curriculum concept to relevant practice.');
