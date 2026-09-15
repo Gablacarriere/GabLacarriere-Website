@@ -54,6 +54,18 @@ const mappings=[
 {skill:'rotation',concept:'spirals-4',name:'Rotation'},
 
 // Movement grammar: related foundation practice, not a claim of dedicated pattern coverage
+{skill:'movement-grammar',concept:'grammar-1',name:'Movement grammar'},
+{skill:'movement-grammar',concept:'grammar-2',name:'Movement grammar'},
+{skill:'movement-grammar',concept:'bridge-4',name:'Movement grammar'},
+{skill:'movement-grammar',concept:'bridge-5',name:'Movement grammar'},
+{skill:'movement-grammar',concept:'architecture-1',name:'Movement grammar'},
+{skill:'movement-grammar',concept:'architecture-3',name:'Movement grammar'},
+{skill:'movement-grammar',concept:'architecture-4',name:'Movement grammar'},
+{skill:'movement-grammar',concept:'architecture-6',name:'Movement grammar'},
+{skill:'movement-grammar',concept:'architecture-7',name:'Movement grammar'},
+{skill:'movement-grammar',concept:'patterns-15',name:'Movement grammar'},
+{skill:'movement-grammar',concept:'patterns-16',name:'Movement grammar'},
+{skill:'movement-grammar',concept:'patterns-17',name:'Movement grammar'},
 {skill:'weight-transfer',concept:'grammar-0',name:'Weight transfer'},
 {skill:'timing',concept:'grammar-0',name:'Timing & rhythm'},
 {skill:'dissociation',concept:'grammar-0',name:'Dissociation'},
