@@ -462,3 +462,13 @@
     document.head.appendChild(script);
   }
 })();
+
+(() => {
+  if (!location.pathname.startsWith('/mentorship-hub')) return;
+  if (document.querySelector('script[data-mentorship-roadmap-actions]')) return;
+  const script=document.createElement('script');
+  script.src='/mentorship-roadmap-actions.js?v=1';
+  script.defer=true;
+  script.dataset.mentorshipRoadmapActions='1';
+  document.head.appendChild(script);
+})();
