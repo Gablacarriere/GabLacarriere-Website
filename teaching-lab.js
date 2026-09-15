@@ -167,8 +167,17 @@
   function generatePlan(){
     const c=concepts.find(x=>x.id===document.getElementById('objective').value); if(!c) return;
     const duration=Number(document.getElementById('duration').value||60), type=document.getElementById('classType').value, level=document.getElementById('level').value;
-    const blocks=duration<=60?[[6,'Diagnostic warm-up'],[10,'Isolate the mechanic'],[12,'Private-derived drill'],[12,'Partner constraint'],[12,'Variable practice'],[8,'Social transfer + recap']]:duration<=90?[[8,'Diagnostic warm-up'],[12,'Isolate the mechanic'],[15,'Private-derived drill'],[15,'Partner constraint'],[15,'Variation / error detection'],[15,'Pattern or movement integration'],[10,'Social transfer + recap']]:[[10,'Diagnostic warm-up'],[15,'Isolate the mechanic'],[20,'Private-derived drill'],[20,'Partner constraint'],[20,'Variation / error detection'],[20,'Pattern integration'],[10,'Social transfer'],[5,'Reflection + retrieval cue']];
-    const descriptions=[`Test ${c.title.toLowerCase()} with a simple task before explaining it. Watch for: ${c.problem}`,`Teach one clear model. Main cue: “${c.cue}” Keep explanation short, then immediately test it.`,c.drill,`Convert the private drill to partner work: ${c.group}`,'Change partner, entry, timing or direction. Ask dancers to identify the same principle under a new constraint.',`Integrate the principle into ${type}. Keep the technical objective constant while changing movement vocabulary.`,'Dance with fewer stops. Observe whether the skill survives attention, music and partner variation.',`Students state one cue they will retrieve next time. Teacher records what worked and what needs redesign.`];
+    const blocks=duration<=60?[[4,'General warm-up'],[6,'Specific warm-up'],[8,'Isolate the mechanic'],[10,'Private-derived drill'],[10,'Partner constraint'],[10,'Variable practice'],[8,'Social transfer'],[4,'Cool-down + retrieval']]:duration<=90?[[5,'General warm-up'],[8,'Specific warm-up'],[12,'Isolate the mechanic'],[15,'Private-derived drill'],[15,'Partner constraint'],[15,'Variation / error detection'],[14,'Social transfer'],[6,'Cool-down + retrieval']]:[[6,'General warm-up'],[10,'Specific warm-up'],[15,'Isolate the mechanic'],[20,'Private-derived drill'],[20,'Partner constraint'],[20,'Variation / error detection'],[18,'Pattern integration'],[7,'Social transfer'],[4,'Cool-down + retrieval']];
+    const descriptions=[
+      'Raise body temperature progressively with continuous movement, then move feet/ankles, knees, hips/pelvis, spine, shoulders/scapulae, arms/wrists and neck through comfortable active ranges. Finish ready, not tired.',
+      `Prepare the exact demands of ${c.title.toLowerCase()}. Start with a simpler, smaller and slower version of the relevant movement or coordination. Use the drill idea as preparation where appropriate: ${c.drill} Watch for: ${c.problem}`,
+      `Teach one clear model. Main cue: “${c.cue}” Keep explanation short, then immediately test it.`,
+      c.drill,
+      `Convert the drill to partner work when relevant: ${c.group}`,
+      'Change partner, entry, timing, direction, range or speed. Ask dancers to identify the same principle under a new constraint.',
+      `Integrate the principle into ${type}. Keep the technical objective constant while reducing teacher interruption and increasing dance-like decision-making.`,
+      'Reduce intensity with easy movement and comfortable mobility in the most-used regions. Use relaxed breathing, then ask each dancer to retrieve one cue, sensation or decision they want to reproduce next time.'
+    ];
     document.getElementById('plan').innerHTML=`<div class="planHeader"><strong>${esc(c.title)}</strong><span>${esc(type)} · ${esc(level)} · ${duration} min</span></div>`+blocks.map((b,i)=>`<div class="planItem"><small>${b[0]} min · ${esc(b[1])}</small><b>${esc(b[1])}</b><p>${esc(descriptions[i]||descriptions[descriptions.length-1])}</p></div>`).join('');
   }
 
