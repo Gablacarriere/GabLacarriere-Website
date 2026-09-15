@@ -22,7 +22,8 @@ function demandProfile(){
  const map=document.getElementById('movementDemandMap');if(!map)return [];
  return [...map.querySelectorAll('.demandItem')].map(card=>{const label=card.querySelector('h4')?.textContent?.trim()||'',meta=card.querySelector('.demandMeta')?.textContent?.toLowerCase()||'',id=DEMAND_IDS[label];if(!id)return null;const score=meta.includes('high')?3:meta.includes('moderate')?2:1;return{id,label,score};}).filter(Boolean).sort((a,b)=>b.score-a.score||a.label.localeCompare(b.label));
 }
-function planningNotes(){return norm([fieldValue('learners'),fieldValue('readiness'),fieldValue('adaptations'),fieldValue('goal')].join(' '));}
+function authoredAdaptations(){return fieldValue('adaptations').replace(/\n*— Adaptation branch ·[\s\S]*?— End adaptation branch —\n*/g,'\n').trim();}
+function planningNotes(){return norm([fieldValue('learners'),fieldValue('readiness'),authoredAdaptations(),fieldValue('goal')].join(' '));}
 function roleFocus(){return fieldValue('roleFocus')||'both';}
 function partnerMode(){return fieldValue('partnerMode')||'rotating';}
 function specificRows(){return [...root.querySelectorAll('[data-activity][data-field="title"]')].map(title=>{const id=title.dataset.activity,row=title.closest('.toolRow'),instructions=root.querySelector(`[data-activity="${id}"][data-field="instructions"]`);return{id,title:title.value||'',row,instructions};}).filter(x=>x.row&&x.instructions&&/^specific warm-up/i.test(x.title));}
