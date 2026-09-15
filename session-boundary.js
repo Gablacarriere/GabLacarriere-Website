@@ -25,3 +25,12 @@ window.GAB_SESSION = {
     });
   }
 };
+
+// Teaching Lab gets a live coach-only curriculum ↔ Zoukable coverage audit.
+if(/^\/teaching-lab\/?$/.test(location.pathname)&&!document.querySelector('script[data-teaching-coverage]')){
+  const script=document.createElement('script');
+  script.src='/teaching-lab-coverage.js?v=1';
+  script.defer=true;
+  script.dataset.teachingCoverage='1';
+  document.head.appendChild(script);
+}
