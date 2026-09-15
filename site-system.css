@@ -52,7 +52,14 @@ body.publicSite{
 .publicSite .footerGroup h2{margin-bottom:10px!important}
 .publicSite .footerGroup a{line-height:1.35}
 
+/* The old site needed a 1400px nav breakpoint. The simplified shell fits comfortably from 1100px upward. */
+@media(min-width:1100px){
+  .publicSite .primary{display:flex!important}
+  .publicSite .mobileMenu{display:none!important}
+}
 @media(max-width:1099px){
+  .publicSite .primary{display:none!important}
+  .publicSite .mobileMenu{display:block!important}
   .publicSite .n{min-height:72px!important;gap:12px}
   .publicSite .publicBrand{width:min(214px,calc(100vw - 118px))!important;flex-basis:auto!important}
 }
