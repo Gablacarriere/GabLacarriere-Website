@@ -1,6 +1,9 @@
 .methodologyAudit{border-color:#78d8ff55;background:linear-gradient(180deg,#101a25,#10151d)}
 .methodologyHeading{display:flex;align-items:flex-start;justify-content:space-between;gap:24px}
 .methodologyHeading>strong{white-space:nowrap;font-size:1.05rem;color:#f2dfc5;border:1px solid #ffffff24;border-radius:999px;padding:7px 11px}
+.methodologyActions{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0 4px}
+.methodologyActions button{background:transparent;color:#f7f4ee;border:1px solid #7dd8ff55}
+.methodologyActions button:hover{border-color:#7dd8ff;background:#7dd8ff12}
 .methodologyChecks{list-style:none;margin:22px 0 0;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
 .methodologyCheck{display:grid;grid-template-columns:26px 1fr;gap:8px;padding:12px 14px;border:1px solid #ffffff14;border-radius:14px;background:#0c1118}
 .methodologyCheck>span{font-weight:900;font-size:1.05rem;line-height:1.35}
@@ -14,4 +17,4 @@
 .methodologyQuestions summary{cursor:pointer;font-weight:850}
 .methodologyQuestions ol{padding-left:1.3rem}
 .methodologyQuestions li{margin:8px 0;color:#c8ced8}
-@media(max-width:760px){.methodologyChecks{grid-template-columns:1fr}.methodologyHeading{display:block}.methodologyHeading>strong{display:inline-block;margin-top:6px}}
+@media(max-width:760px){.methodologyChecks{grid-template-columns:1fr}.methodologyHeading{display:block}.methodologyHeading>strong{display:inline-block;margin-top:6px}.methodologyActions{display:grid}.methodologyActions button{width:100%}}
