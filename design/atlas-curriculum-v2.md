@@ -12,7 +12,7 @@ Existing IDs are preserved. The curriculum can therefore evolve without rewritin
 
 ## Evidence used
 
-This redesign combines the existing Atlas draft with a broad review of Gab’s Granola teaching notes from May–September 2026. Granola’s retrieval identified 177 potentially relevant teaching meetings; multiple targeted passes read the most relevant teaching notes in detail. The strongest recurring themes were:
+This redesign combines the existing Atlas draft with a broad review of Gab’s Granola teaching notes from May–September 2026 and explicit methodology decisions made by Gab. Granola’s retrieval identified a large teaching record and multiple targeted passes read the most relevant teaching notes in detail. The strongest recurring themes were:
 
 - complete weight transfer, grounding, soft/available knees, hips and posture;
 - torsion/dissociation as an organizing mechanism across basics, turns, Bônus, tilts and transitions;
@@ -21,9 +21,12 @@ This redesign combines the existing Atlas draft with a broad review of Gab’s G
 - stable pulse/counting before timing variation;
 - full head pathways, breath and preparation before off-axis complexity;
 - chest direction, relative position, blocking and space creation;
-- retrieval, spacing, one practice goal at a time and layering only after the base action is reliable.
+- retrieval, spacing, one practice goal at a time and layering only after the base action is reliable;
+- movement-family recognition, anticipation, and the recurring need to estimate pattern length and landing points inside musical time.
 
 A separate terminology pass found that Saltinho/Sortinho/Soltinho likely belong to one structural family with style-specific variants; Side Basic and Lateral are related but should not yet be fully merged; Bônus/Bonus/Bonas are spelling variants; Patinha is better treated as a torsion/hip quality within Bônus than as a peer pattern. Ambiguous terms remain unmerged until stronger evidence exists.
+
+On 2026-09-15, Gab explicitly adopted **Perception & Projection** as a canonical cognitive-skill layer connecting his dance pedagogy with useful distinctions from chess expertise. That explicit decision promotes the cognitive skills below even where the terminology is newer than the underlying teaching behavior.
 
 ## Curriculum logic
 
@@ -42,7 +45,7 @@ Relationships are support relations rather than hard prerequisites. A learner ca
 4. **Application** — named patterns, off-axis work and context-specific uses.
 5. **Exploration** — advanced transformations and analytical lenses.
 
-## Eight curriculum domains
+## Nine curriculum domains
 
 ### 1. Body Organization & Weight
 
@@ -68,29 +71,52 @@ Chest direction, relative position, orientation, positioning and blocking/space 
 
 **Logic:** the notes repeatedly explain partner movement through where bodies face, where they are located and which route is available.
 
-### 5. Movement Grammar
+### 5. Perception & Projection
+
+Temporal pattern recognition, temporal location/footprint, sensorimotor visualization, candidate-movement generation, temporal calculation, evaluation/anticipation, adaptive recalculation and calculation depth/musical-destination planning.
+
+**Logic:** partner dancing is an unfolding spatiotemporal problem. The dancer must recognize not only what structure is present but where they are inside it, simulate plausible futures, estimate their duration, choose among constrained candidates, and update when the partner or music changes. These skills connect directly to recurring teaching themes around anticipation, movement families, pattern length, landing points, timing and follower responsiveness.
+
+**Important boundary:** prediction is not pre-choreography. Pattern recognition and anticipation should improve preparation while preserving responsiveness to present partner information.
+
+### 6. Movement Grammar
 
 Sortinho/basic-step relationship, simple movement units, laterals, turns, compound patterns, open–close logic, named patterns and advanced transformation lenses.
 
 **Logic:** named figures are treated as combinations of reusable movement units rather than a flat vocabulary list.
 
-### 6. Head Movement & Off-Axis
+### 7. Head Movement & Off-Axis
 
 Head-movement principles, active/passive initiation, counterbalance/shared axis, Chin Orbit and tilt preparation.
 
 **Logic:** these tasks add vestibular, neck, balance and partner demands. They belong outside the foundational rings and explicitly depend on earlier organization.
 
-### 7. Torsion & Body Pathways
+### 8. Torsion & Body Pathways
 
 Torsion/dissociation, pelvic and chest spirals, isolation vs undulation, contraction–extension, elasticity, helix and flow integration.
 
 **Logic:** torsion is a reusable mechanism, not styling. The notes repeatedly use it to explain basics, turns, Bônus, Boneca-family actions and tilted structures.
 
-### 8. Learning & Practice
+### 9. Learning & Practice
 
 Metacognition, retrieval/delayed recall, one-focus practice, distributed/variable practice and progressive layering.
 
 **Logic:** this domain describes how skills become durable. It is cross-cutting rather than a dance-style branch.
+
+## Perception & Projection progression
+
+The cognitive domain is intentionally staged rather than treated as one vague ability:
+
+- **Temporal Pattern Recognition** — identify an unfolding movement structure and current phase.
+- **Temporal Location & Footprint** — understand entry, preparation, development, resolution, exits and approximate duration.
+- **Sensorimotor Visualization** — internally simulate body, partner, pathway, connection, momentum, rhythm and duration.
+- **Candidate Movement Generation** — identify a small set of plausible continuations from the current constraints.
+- **Temporal Calculation** — estimate how long a continuation or sequence will take and when it will arrive.
+- **Evaluation & Anticipation** — compare projected outcomes against safety, partner, mechanics, music, space and intention.
+- **Adaptive Recalculation** — revise the plan when reality differs from the prediction.
+- **Calculation Depth & Musical Destination** — project farther ahead when useful without turning social dance into fixed choreography.
+
+**Dance Puzzles are not an Atlas node.** They are a reusable practice/teaching protocol for training these abilities, analogous to how a drill can train several curriculum concepts without becoming a concept itself.
 
 ## Important canonical-name decisions
 
@@ -102,7 +128,7 @@ Metacognition, retrieval/delayed recall, one-focus practice, distributed/variabl
 - `patterns-7` displays as **Sortinho / Saltinho Family**, retaining Soltinho/Saltinho/Sortinho/Sortino/Sortillo as search aliases rather than deleting the historical ID.
 - `patterns-14` displays as **Bônus**; Bonus and Bonas are spelling aliases, while Patinha/Patina are related terms rather than synonyms.
 
-## New concepts added from teaching notes
+## New concepts added from teaching notes and explicit methodology decisions
 
 - Pulse, Counting & Continuity
 - Timing Families & Intentional Choice
@@ -127,8 +153,16 @@ Metacognition, retrieval/delayed recall, one-focus practice, distributed/variabl
 - One Focus at a Time
 - Distributed & Variable Practice
 - Layering & Automaticity
+- Temporal Pattern Recognition
+- Temporal Location & Footprint
+- Sensorimotor Visualization
+- Candidate Movement Generation
+- Temporal Calculation
+- Evaluation & Anticipation
+- Adaptive Recalculation
+- Calculation Depth & Musical Destination
 
-Together with the existing 57 stable concepts, Curriculum v2 contains **80 student-addressable nodes**.
+Together with the existing 57 stable concepts, Curriculum v2 now contains **88 student-addressable nodes**.
 
 ## What remains deliberately unresolved
 
@@ -136,3 +170,4 @@ Together with the existing 57 stable concepts, Curriculum v2 contains **80 stude
 - Whether Side Basic should eventually become a variant under Lateral rather than remain a separate historical node.
 - Several lower-frequency named movements whose transcription varies across notes (for example Mergulho, Toalha, Chicote and some Lambada vocabulary). They should be normalized only after a terminology audit with Gab.
 - The final distinction between “concept”, “pattern”, and “drill” in Zoukable. Curriculum v2 already keeps drills out of the Atlas when they function primarily as practice methods rather than transferable ideas.
+- How much calculation depth should be trained explicitly at different experience levels, and which Dance Puzzle formats best transfer to live social dancing.
