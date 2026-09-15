@@ -4,10 +4,25 @@ const path=require('node:path');
 const root=process.cwd(),out=path.join(root,'public');
 if(!fs.existsSync(out))throw new Error('Run the existing website build first.');
 
+const memberPages=new Set(['mentorship-hub.html','practice-planner.html','zouk-map.html','comms-deck.html']);
+
 // Restore the isolated app shell so public-site branding never alters app controls.
 fs.mkdirSync(path.join(out,'zoukable'),{recursive:true});
 for(const file of ['index.html','app.js','core.js','learning-core.js','style.css','world.js','world.css','rhythm-visual.css']){
   fs.copyFileSync(path.join(root,'zoukable',file),path.join(out,'zoukable',file));
+}
+
+// Private no-index workspaces keep their purpose-built UI. The member-facing learning tools remain in the shared member world.
+let restoredPrivate=0;
+for(const file of fs.readdirSync(root)){
+  if(!file.endsWith('.html')||memberPages.has(file))continue;
+  const source=path.join(root,file);
+  if(!fs.statSync(source).isFile())continue;
+  const raw=fs.readFileSync(source,'utf8');
+  if(/<meta\s+name=["']robots["'][^>]*content=["'][^"']*noindex/i.test(raw)){
+    fs.copyFileSync(source,path.join(out,file));
+    restoredPrivate++;
+  }
 }
 
 const primaryItems=[
@@ -47,7 +62,6 @@ const footerGroups=[
     ['mailto:hello@gablacarriere.com','hello@gablacarriere.com']
   ]]
 ];
-const memberPages=new Set(['mentorship-hub.html','practice-planner.html','zouk-map.html','comms-deck.html']);
 const currentPathFor=file=>file==='index.html'?'/':'/'+file.replace(/\.html$/,'')+'/';
 const navLink=(href,label,currentPath)=>`<a href="${href}"${currentPath===href?' aria-current="page"':''}>${label}</a>`;
 const genericReview=/\s*<section class="sec"><div class="w"><h2>Hear from students\.<\/h2><p>Explore student experiences, shared in their own words and with their permission\.<\/p><p><a href="\/reviews\/">Read student reviews →<\/a><\/p><\/div><\/section>/g;
@@ -76,10 +90,12 @@ for(const file of fs.readdirSync(out)){
     html=html.replace(genericReview,'').replace(genericFeedback,'');
     if(html!==beforeCleanup)removedGeneric++;
 
-    // One visitor-facing footer on every public page. Internal teaching tools stay on the teacher pages instead of the global footer.
+    // One visitor-facing footer on every public page. Internal teaching tools stay on teacher pages instead of the global footer.
     const footerDirectory=footerGroups.map(([heading,entries])=>`<div class="footerGroup"><h2>${heading}</h2>${entries.map(([href,label])=>navLink(href,label,currentPath)).join('')}</div>`).join('');
     const footer=`<footer><div class="w footerIdentity">Gab Lacarriere · Brazilian Zouk · Lambada · Movement Education · New York City</div><div class="w footerDirectory" role="navigation" aria-label="Footer navigation">${footerDirectory}</div></footer>`;
-    html=html.replace(/<footer\b[^>]*>[\s\S]*?<\/footer>/i,footer);
+    if(/<footer\b/i.test(html))html=html.replace(/<footer\b[^>]*>[\s\S]*?<\/footer>/i,footer);
+    else if(/<\/main>/i.test(html))html=html.replace(/<\/main>/i,`</main>${footer}`);
+    else structuralErrors.push(`${file}: public page has no place to attach footer`);
 
     if(!html.includes('/site-system.css'))html=html.replace('</head>','<link rel="stylesheet" href="/site-system.css?v=coherence-2">\n</head>');
     publicShells++;
@@ -92,9 +108,12 @@ for(const file of fs.readdirSync(out)){
     if(mainOpen!==1||mainClose!==1)structuralErrors.push(`${file}: expected one <main>, found ${mainOpen}/${mainClose}`);
     if(footerOpen!==1||footerClose!==1)structuralErrors.push(`${file}: expected one <footer>, found ${footerOpen}/${footerClose}`);
     const footerEnd=html.lastIndexOf('</footer>');
-    const afterFooter=footerEnd>=0?html.slice(footerEnd+9,html.lastIndexOf('</body>')):'';
-    if(/<section\b|<main\b|<article\b/i.test(afterFooter))structuralErrors.push(`${file}: semantic content appears after </footer>`);
-    if(/<nav\b[\s\S]*?data-zoukable-link/i.test(html))structuralErrors.push(`${file}: public navigation exposes Zoukable`);
+    const bodyEnd=html.lastIndexOf('</body>');
+    const afterFooter=footerEnd>=0?html.slice(footerEnd+9,bodyEnd>=0?bodyEnd:undefined):'';
+    const visibleAfterFooter=afterFooter.replace(/<script\b[\s\S]*?<\/script>/gi,'').replace(/<!--([\s\S]*?)-->/g,'');
+    if(/<section\b|<main\b|<article\b/i.test(visibleAfterFooter))structuralErrors.push(`${file}: semantic content appears after </footer>`);
+    const navHtml=html.match(/<nav\b[^>]*>[\s\S]*?<\/nav>/i)?.[0]||'';
+    if(/data-zoukable-link/i.test(navHtml))structuralErrors.push(`${file}: public navigation exposes Zoukable`);
   }
 
   // Member tools can expose Zoukable directly; public pages do not need it in their global navigation.
@@ -120,4 +139,4 @@ if(structuralErrors.length){
 // Keep build and schema/test source out of the static website output.
 fs.rmSync(path.join(out,'.zoukable'),{recursive:true,force:true});
 fs.rmSync(path.join(out,'integrate_zoukable.cjs'),{force:true});
-console.log(`Zoukable installed at /zoukable/; linked from ${linked} member/tool pages. Public shell normalized on ${publicShells} pages; generic duplicate CTAs cleaned on ${removedGeneric} pages.`);
+console.log(`Zoukable installed at /zoukable/; linked from ${linked} member/tool pages. Public shell normalized on ${publicShells} pages; private workspaces restored: ${restoredPrivate}; generic duplicate CTAs cleaned on ${removedGeneric} pages.`);
