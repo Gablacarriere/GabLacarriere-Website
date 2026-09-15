@@ -504,7 +504,7 @@
   if (!location.pathname.startsWith('/mentorship-hub')) return;
   if (document.querySelector('script[data-mentorship-evidence-inbox]')) return;
   const script=document.createElement('script');
-  script.src='/mentorship-evidence-inbox.js?v=1';
+  script.src='/mentorship-evidence-inbox.js?v=2';
   script.defer=true;
   script.dataset.mentorshipEvidenceInbox='1';
   document.head.appendChild(script);
