@@ -1,4 +1,13 @@
 User-agent: *
 Allow: /
+Disallow: /business-hq/
+Disallow: /business-finance/
+Disallow: /lead-crm/
+Disallow: /teaching-lab/
+Disallow: /mentorship-hub/
+Disallow: /practice-planner/
+Disallow: /comms-deck/
+Disallow: /zouk-map/
+Disallow: /zoukable/
 
 Sitemap: https://gablacarriere.com/sitemap.xml
