@@ -35,6 +35,15 @@ if(/^\/teaching-lab\/?$/.test(location.pathname)&&!document.querySelector('scrip
   document.head.appendChild(script);
 }
 
+// Teaching Lab can hand a generated class directly to the account-backed Session Planner.
+if(/^\/teaching-lab\/?$/.test(location.pathname)&&!document.querySelector('script[data-teaching-session-bridge]')){
+  const script=document.createElement('script');
+  script.src='/teaching-lab-session-bridge.js?v=1';
+  script.defer=true;
+  script.dataset.teachingSessionBridge='1';
+  document.head.appendChild(script);
+}
+
 // Mentorship Hub: wire the student-facing post-class recap and longitudinal history.
 if(/^\/mentorship-hub\/?$/.test(location.pathname)){
   const loadMentorshipScript=(key,src)=>{
