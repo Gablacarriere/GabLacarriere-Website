@@ -1,0 +1,39 @@
+name: Site build validation
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Use Node 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Build the production static site
+        run: node apply_branding.cjs && node integrate_zoukable.cjs && node scripts/finalize-site.cjs
+
+      - name: Verify shared shell and generated CSS
+        shell: bash
+        run: |
+          test -f public/index.html
+          test -f public/classes.html
+          test -f public/mentorship.html
+          test -f public/for-teachers.html
+          test -f public/site-system.css
+          grep -q 'footerIdentity' public/index.html
+          grep -q 'navExplore' public/classes.html
+          grep -q '/generated/page-' public/classes.html
+          grep -q 'theme-color" content="#f4f0e6' public/index.html
+          ! grep -q 'class="waFloat"' public/index.html
