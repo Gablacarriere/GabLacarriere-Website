@@ -2,6 +2,13 @@
 
 The curriculum is a curated model of Gab's teaching, not a verbatim transcript of class notes.
 
+## Methodology layer
+
+- `design/gab-lacarriere-methodology.md` is the top-level living methodology document.
+- The Atlas is a structured curriculum projection of that broader methodology, not the complete method.
+- Methodology changes may affect the Atlas, Zoukable, the Mentorship Hub, teacher tools, safety/preparation systems, or public Method pages without necessarily creating a new Atlas node.
+- When a curriculum change expresses a broader teaching or learning principle, update the methodology master first or in the same reviewed change.
+
 ## Canonical public layer
 
 - `atlas-curriculum-v2.js` contains the active curriculum structure and stable concept IDs.
@@ -58,11 +65,13 @@ Keep as evidence only. Do not publish automatically.
 
 An approved curriculum change should be checked against all consumers:
 
-1. Atlas map geometry, labels, search, and relationships.
-2. Coach lesson-recording form.
-3. Zoukable Atlas links and relevant practice-skill relationships.
-4. Curriculum/class-planning tools when they use the shared registry.
-5. Regression tests and documentation.
+1. Living methodology master when the change expresses or modifies a broader methodological principle.
+2. Atlas map geometry, labels, search, and relationships.
+3. Coach lesson-recording form.
+4. Zoukable Atlas links and relevant practice-skill relationships.
+5. Curriculum/class-planning tools when they use the shared registry.
+6. Public Method pages when the change affects student-facing explanation.
+7. Regression tests and documentation.
 
 ## Privacy and quality gates
 
