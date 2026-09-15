@@ -1,4 +1,4 @@
-/* Runs after the existing website build; preserves the source pages while installing Zoukable and the shared public shell. */
+/* Runs after the existing website build; preserves source pages while installing Zoukable and the shared public shell. */
 const fs=require('node:fs');
 const path=require('node:path');
 const root=process.cwd(),out=path.join(root,'public');
@@ -25,11 +25,36 @@ const exploreItems=[
   ['/work-with-gab/','Work with Gab'],
   ['/reviews/','Student reviews']
 ];
+const footerGroups=[
+  ['Train',[
+    ['/classes/','Weekly classes'],
+    ['/privates/','Private training'],
+    ['/mentorship/','Monthly mentorship'],
+    ['/zouk-bnb/','Zouk BNB · stay & train']
+  ]],
+  ['Explore',[
+    ['/method/','Teaching method'],
+    ['/learn/','Learning library'],
+    ['/journal/','Journal'],
+    ['/for-teachers/','For teachers'],
+    ['/work-with-gab/','Events & collaborations'],
+    ['/about/','About Gab']
+  ]],
+  ['Connect',[
+    ['/reviews/','Student reviews'],
+    ['/feedback/','Give feedback'],
+    ['/mentorship-hub/','Member login'],
+    ['mailto:hello@gablacarriere.com','hello@gablacarriere.com']
+  ]]
+];
 const memberPages=new Set(['mentorship-hub.html','practice-planner.html','zouk-map.html','comms-deck.html']);
 const currentPathFor=file=>file==='index.html'?'/':'/'+file.replace(/\.html$/,'')+'/';
 const navLink=(href,label,currentPath)=>`<a href="${href}"${currentPath===href?' aria-current="page"':''}>${label}</a>`;
+const genericReview=/\s*<section class="sec"><div class="w"><h2>Hear from students\.<\/h2><p>Explore student experiences, shared in their own words and with their permission\.<\/p><p><a href="\/reviews\/">Read student reviews →<\/a><\/p><\/div><\/section>/g;
+const genericFeedback=/\s*<section class="sec"><div class="w"><h2>Help shape what comes next\.<\/h2><p>Share private feedback on your experience, suggest improvements, or choose to contribute a testimonial\.<\/p><p><a href="\/feedback\/">Share feedback &amp; your story →<\/a><\/p><\/div><\/section>/g;
 
-let linked=0,publicShells=0;
+let linked=0,publicShells=0,removedGeneric=0;
+const structuralErrors=[];
 for(const file of fs.readdirSync(out)){
   if(!file.endsWith('.html'))continue;
   const target=path.join(out,file);
@@ -45,8 +70,31 @@ for(const file of fs.readdirSync(out)){
     const nav=`<nav aria-label="Main navigation"><div class="w n"><a class="brand publicBrand" href="/" aria-label="Gab Lacarriere home"><img src="/assets/editorial/logo-746.webp" srcset="/assets/editorial/logo-240.webp 240w, /assets/editorial/logo-480.webp 480w, /assets/editorial/logo-746.webp 746w, /gab-logo-header.png 1200w" sizes="(max-width: 520px) 210px, 240px" alt="Gab Lacarriere" width="1200" height="400"></a><div class="primary">${primary}<details class="navExplore"><summary${exploreCurrent?' aria-current="page"':''}>Explore</summary><div class="navExplorePanel">${explore}</div></details>${member}</div><details class="mobileMenu"><summary>Menu</summary><div class="mobilePanel">${primary}${explore}${member}</div></details></div></nav>`;
     html=html.replace(/<nav\b[^>]*>[\s\S]*?<\/nav>/i,nav);
     html=html.replace(/<div class="studentVoiceBar"[\s\S]*?<\/div><\/div>/i,'');
-    if(!html.includes('/site-system.css'))html=html.replace('</head>','<link rel="stylesheet" href="/site-system.css?v=coherence-1">\n</head>');
+
+    // Repeated generic review/feedback promos made pages feel templated and could land after the footer on older source pages.
+    const beforeCleanup=html;
+    html=html.replace(genericReview,'').replace(genericFeedback,'');
+    if(html!==beforeCleanup)removedGeneric++;
+
+    // One visitor-facing footer on every public page. Internal teaching tools stay on the teacher pages instead of the global footer.
+    const footerDirectory=footerGroups.map(([heading,entries])=>`<div class="footerGroup"><h2>${heading}</h2>${entries.map(([href,label])=>navLink(href,label,currentPath)).join('')}</div>`).join('');
+    const footer=`<footer><div class="w footerIdentity">Gab Lacarriere · Brazilian Zouk · Lambada · Movement Education · New York City</div><div class="w footerDirectory" role="navigation" aria-label="Footer navigation">${footerDirectory}</div></footer>`;
+    html=html.replace(/<footer\b[^>]*>[\s\S]*?<\/footer>/i,footer);
+
+    if(!html.includes('/site-system.css'))html=html.replace('</head>','<link rel="stylesheet" href="/site-system.css?v=coherence-2">\n</head>');
     publicShells++;
+
+    // Build-time structure checks: visitor content should be inside main, and footer should be the last semantic landmark.
+    const mainOpen=(html.match(/<main\b/gi)||[]).length;
+    const mainClose=(html.match(/<\/main>/gi)||[]).length;
+    const footerOpen=(html.match(/<footer\b/gi)||[]).length;
+    const footerClose=(html.match(/<\/footer>/gi)||[]).length;
+    if(mainOpen!==1||mainClose!==1)structuralErrors.push(`${file}: expected one <main>, found ${mainOpen}/${mainClose}`);
+    if(footerOpen!==1||footerClose!==1)structuralErrors.push(`${file}: expected one <footer>, found ${footerOpen}/${footerClose}`);
+    const footerEnd=html.lastIndexOf('</footer>');
+    const afterFooter=footerEnd>=0?html.slice(footerEnd+9,html.lastIndexOf('</body>')):'';
+    if(/<section\b|<main\b|<article\b/i.test(afterFooter))structuralErrors.push(`${file}: semantic content appears after </footer>`);
+    if(/<nav\b[\s\S]*?data-zoukable-link/i.test(html))structuralErrors.push(`${file}: public navigation exposes Zoukable`);
   }
 
   // Member tools can expose Zoukable directly; public pages do not need it in their global navigation.
@@ -64,7 +112,12 @@ for(const file of fs.readdirSync(out)){
   fs.writeFileSync(target,html);
 }
 
+if(structuralErrors.length){
+  console.error('Public shell structure audit failed:\n'+structuralErrors.join('\n'));
+  process.exit(1);
+}
+
 // Keep build and schema/test source out of the static website output.
 fs.rmSync(path.join(out,'.zoukable'),{recursive:true,force:true});
 fs.rmSync(path.join(out,'integrate_zoukable.cjs'),{force:true});
-console.log(`Zoukable installed at /zoukable/; linked from ${linked} member/tool pages. Public shell normalized on ${publicShells} pages.`);
+console.log(`Zoukable installed at /zoukable/; linked from ${linked} member/tool pages. Public shell normalized on ${publicShells} pages; generic duplicate CTAs cleaned on ${removedGeneric} pages.`);
