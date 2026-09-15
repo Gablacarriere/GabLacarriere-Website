@@ -1,5 +1,7 @@
 -- Server-side enforcement for the teacher Studio free tier.
 -- Beta mode resolves to full_access=true, so current beta testers remain unrestricted.
+-- When live mode begins, existing beta work remains editable even above the free allowance;
+-- a free account simply cannot increase its plan count beyond its current ceiling.
 
 create or replace function public.save_teacher_workspace(p_document jsonb, p_expected_revision bigint)
 returns jsonb
@@ -8,14 +10,19 @@ set search_path=''
 as $$
 declare
   saved public.teacher_workspaces;
+  existing_document jsonb;
   owner_id uuid := auth.uid();
   access jsonb;
   full_access boolean := true;
   free_limits jsonb := '{}'::jsonb;
   curriculum_count integer := 0;
   session_count integer := 0;
+  existing_curriculum_count integer := 0;
+  existing_session_count integer := 0;
   curriculum_limit integer := 1;
   session_limit integer := 3;
+  curriculum_ceiling integer := 1;
+  session_ceiling integer := 3;
 begin
   if owner_id is null then
     raise exception 'Sign in required' using errcode='42501';
@@ -37,7 +44,19 @@ begin
     curriculum_limit := greatest(0,coalesce((free_limits->>'curricula')::integer,1));
     session_limit := greatest(0,coalesce((free_limits->>'sessions')::integer,3));
 
-    if curriculum_count > curriculum_limit or session_count > session_limit then
+    select w.document into existing_document
+    from public.teacher_workspaces w
+    where w.user_id=owner_id;
+
+    if existing_document is not null then
+      existing_curriculum_count := coalesce(jsonb_array_length(existing_document->'courses'),0);
+      existing_session_count := coalesce(jsonb_array_length(existing_document->'sessions'),0);
+    end if;
+
+    curriculum_ceiling := greatest(curriculum_limit,existing_curriculum_count);
+    session_ceiling := greatest(session_limit,existing_session_count);
+
+    if curriculum_count > curriculum_ceiling or session_count > session_ceiling then
       raise sqlstate 'PGRST' using
         message = jsonb_build_object(
           'code','TEACHER_STUDIO_LIMIT',
@@ -45,10 +64,12 @@ begin
           'details',jsonb_build_object(
             'curricula',curriculum_count,
             'curricula_limit',curriculum_limit,
+            'curricula_current_ceiling',curriculum_ceiling,
             'sessions',session_count,
-            'sessions_limit',session_limit
+            'sessions_limit',session_limit,
+            'sessions_current_ceiling',session_ceiling
           ),
-          'hint','Upgrade to Full Studio or reduce saved plans.'
+          'hint','Your existing beta work is preserved. Upgrade to Full Studio to add beyond your current plan count.'
         )::text,
         detail = jsonb_build_object('status',402,'status_text','Payment Required')::text;
     end if;
