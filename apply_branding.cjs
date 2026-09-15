@@ -114,7 +114,12 @@ function patchHtml(file) {
       html = html.replace('</nav>', '</nav>\n<main id="main" tabindex="-1">');
       html = html.replace(/<footer\b/i, '</main>\n<footer');
     } else {
-      html = html.replace('<main id="main">', '<main id="main" tabindex="-1">');
+      html = html.replace(/<main\b([^>]*)>/i, (match, attrs) => {
+        let next = attrs;
+        if (!/\bid\s*=/.test(next)) next += ' id="main"';
+        if (/\bid\s*=\s*["']main["']/i.test(next) && !/\btabindex\s*=/.test(next)) next += ' tabindex="-1"';
+        return `<main${next}>`;
+      });
     }
     if (!/class="skipLink"/.test(html)) html = html.replace(/(<body[^>]*>)/i, '$1\n<a class="skipLink" href="#main">Skip to content</a>');
     html = html.replace('</head>', '<link rel="stylesheet" href="/public-experience.css?v=voices-1"><script defer src="/public-clicks.js"></script>\n</head>');
