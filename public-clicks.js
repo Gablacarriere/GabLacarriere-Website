@@ -1,4 +1,4 @@
-// Public-site interaction helpers + privacy-safe click counts.
+// Public offer-page simplification + privacy-safe click counts.
 (() => {
   const publicPages = new Set(['index','about','learn','method','movement-architecture','kinesthetic-practice','how-to-practice-zouk','classes','brazilian-zouk-classes-nyc','lambada-classes-nyc','zouk-nyc-guide','privates','mentorship','work-with-gab','workshops','experience','wedding','creative','zouk-bnb','journal','feedback','reviews','alex-de-carvalho','for-teachers']);
   const source = document.body.dataset.page;
@@ -25,10 +25,8 @@
     const classIntro = document.querySelector('#schedule .classIntro');
     if (classIntro) classIntro.textContent = 'Choose a class night below. Message Gab to confirm the current studio room and how to join.';
 
-    // The membership section is directly below the class cards, so a separate jump button duplicates the reading flow.
     document.querySelector('#schedule a[href="#tuesday-memberships"]')?.remove();
 
-    // Show prices first, then one enrollment action instead of four competing buttons.
     const membershipSection = document.querySelector('#tuesday-memberships');
     if (membershipSection) {
       membershipSection.querySelectorAll('.membershipOption .btn').forEach(link => link.remove());
@@ -83,7 +81,6 @@
     if (heroActions[0]) heroActions[0].textContent = 'Apply for mentorship';
     if (heroActions[1]) heroActions[1].textContent = 'See what is included';
 
-    // The public decision should not branch into the internal product universe.
     document.querySelector('#referral-reward')?.remove();
     document.querySelector('#your-learning-worlds')?.remove();
     removeSectionContaining('The learning loop');
@@ -92,19 +89,16 @@
     removeSectionContaining('Current members');
     removeSectionContaining('You do not need to know exactly what is wrong with your dancing.');
 
-    // Put audience fit before the offer details, where it helps the decision.
     const who = findSectionContaining('Who it is for');
     const why = document.querySelector('#why-mentorship');
     if (who && why) why.after(who);
 
-    // One concise member-space mention is enough; prospects do not need the full dashboard preview here.
     const membership = document.querySelector('#membership');
     membership?.querySelector('.portalPreview')?.remove();
     const membershipGrid = membership?.querySelector('.w.g2');
     if (membershipGrid) membershipGrid.style.gridTemplateColumns = '1fr';
     membership?.querySelectorAll('a[href="#your-learning-worlds"]').forEach(link => link.remove());
 
-    // Keep the practical monthly rules, but make them secondary to the actual offer.
     const rulesHeading = [...(membership?.querySelectorAll('h3') || [])].find(h => h.textContent.includes('How the monthly membership works'));
     const rulesCard = rulesHeading?.closest('.card');
     if (rulesCard) {
@@ -116,7 +110,6 @@
       rulesCard.replaceWith(details);
     }
 
-    // The FAQ can explain tools without sending prospects into the member interface.
     const toolQuestion = [...document.querySelectorAll('#student-questions details')].find(item => (item.querySelector('summary')?.textContent || '').includes('Zoukable and Atlas'));
     const toolAnswer = toolQuestion?.querySelector('p');
     if (toolAnswer) toolAnswer.textContent = 'Zoukable supports rhythm and practice between sessions. Atlas keeps coach-reviewed discoveries, session notes and practice priorities connected to your longer-term learning.';
