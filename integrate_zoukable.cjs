@@ -68,8 +68,19 @@ const navLink=(href,label,currentPath)=>`<a href="${href}"${currentPath===href?'
 const genericReview=/\s*<section class="sec"><div class="w"><h2>Hear from students\.<\/h2><p>Explore student experiences, shared in their own words and with their permission\.<\/p><p><a href="\/reviews\/">Read student reviews →<\/a><\/p><\/div><\/section>/g;
 const genericFeedback=/\s*<section class="sec"><div class="w"><h2>Help shape what comes next\.<\/h2><p>Share private feedback on your experience, suggest improvements, or choose to contribute a testimonial\.<\/p><p><a href="\/feedback\/">Share feedback &amp; your story →<\/a><\/p><\/div><\/section>/g;
 const floatingWhatsapp=/\s*<a\b[^>]*class="[^"]*\bwaFloat\b[^"]*"[^>]*>[\s\S]*?<\/a>/gi;
+const twoActionHeroes=new Set(['classes.html','privates.html','mentorship.html','zouk-bnb.html']);
+function limitHeroActions(html,file){
+  if(!twoActionHeroes.has(file))return html;
+  const heroClass=file==='zouk-bnb.html'?'bnbHero':'hero';
+  const heroRe=new RegExp(`(<section\\b[^>]*class="[^"]*\\b${heroClass}\\b[^"]*"[^>]*>[\\s\\S]*?<div class="actions">)([\\s\\S]*?)(<\\/div>)`,'i');
+  return html.replace(heroRe,(all,start,actions,end)=>{
+    const links=[...actions.matchAll(/<a\b[\s\S]*?<\/a>/gi)].map(m=>m[0]);
+    if(links.length<=2)return all;
+    return start+links.slice(0,2).join('')+end;
+  });
+}
 
-let linked=0,publicShells=0,removedGeneric=0;
+let linked=0,publicShells=0,removedGeneric=0,trimmedHeroes=0;
 const structuralErrors=[];
 for(const file of fs.readdirSync(out)){
   if(!file.endsWith('.html'))continue;
@@ -91,6 +102,11 @@ for(const file of fs.readdirSync(out)){
     const beforeCleanup=html;
     html=html.replace(genericReview,'').replace(genericFeedback,'').replace(floatingWhatsapp,'');
     if(html!==beforeCleanup)removedGeneric++;
+
+    // High-intent offer pages share one decision rule: one primary action and one secondary action in the hero.
+    const beforeHero=html;
+    html=limitHeroActions(html,file);
+    if(html!==beforeHero)trimmedHeroes++;
 
     // Homepage: put the choice architecture immediately after the promise, then remove the duplicate Zouk BNB promotion.
     if(file==='index.html'){
@@ -155,4 +171,4 @@ if(structuralErrors.length){
 // Keep build and schema/test source out of the static website output.
 fs.rmSync(path.join(out,'.zoukable'),{recursive:true,force:true});
 fs.rmSync(path.join(out,'integrate_zoukable.cjs'),{force:true});
-console.log(`Zoukable installed at /zoukable/; linked from ${linked} member/tool pages. Public shell normalized on ${publicShells} pages; private workspaces restored: ${restoredPrivate}; duplicate CTAs cleaned on ${removedGeneric} pages.`);
+console.log(`Zoukable installed at /zoukable/; linked from ${linked} member/tool pages. Public shell normalized on ${publicShells} pages; private workspaces restored: ${restoredPrivate}; duplicate CTAs cleaned on ${removedGeneric} pages; hero choices simplified on ${trimmedHeroes} pages.`);
