@@ -27,7 +27,6 @@
       .roadmapStop.evidence-started{border-color:#8ad8d033}
       .roadmapStop.evidence-repeated{border-color:#7dd8ff55}
       .roadmapStop.evidence-review{border-color:#d5b6ff77;box-shadow:inset 0 0 0 1px #d5b6ff12}
-      .roadmapStop.evidence-review .roadmapSource{background:#d5b6ff18;color:#eadcff}
       @media(max-width:520px){.roadmapActionLinks a{flex:1 1 auto}.roadmapEvidenceTop{align-items:flex-start;flex-direction:column}.roadmapEvidenceTop span{text-align:left}}
     `;
     document.head.appendChild(s);
@@ -131,10 +130,6 @@
         if(ev){
           card.insertAdjacentHTML('beforeend',evidenceMarkup(ev));
           if(ev.state!=='not_started')card.classList.add('evidence-'+ev.state);
-          if(ev.state==='review'){
-            const source=card.querySelector('.roadmapSource');
-            if(source&&role!=='coach')source.textContent='Review ready';
-          }
         }
       }
 
