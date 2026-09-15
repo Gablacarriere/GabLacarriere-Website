@@ -119,7 +119,7 @@ for(const file of fs.readdirSync(out)){
     html=limitHeroActions(html,file);
     if(html!==beforeHero)trimmedHeroes++;
 
-    // Homepage: put the choice architecture immediately after the promise, then remove the duplicate Zouk BNB promotion.
+    // Homepage: promise -> three training choices -> interactive teaching idea -> concise method split.
     if(file==='index.html'){
       const training=html.match(/<section class="sec soft" id="find-your-training"[\s\S]*?<\/section>/i)?.[0];
       const hero=html.match(/<section class="hero"[\s\S]*?<\/section>/i)?.[0];
@@ -127,7 +127,22 @@ for(const file of fs.readdirSync(out)){
         html=html.replace(training,'');
         html=html.replace(hero,hero+'\n'+training);
       }
+
+      // Stay & train remains available in the Train menu/footer, but is not a primary homepage decision.
+      html=html.replace(/\s*<a class="card trainingChoice" href="\/zouk-bnb\/">[\s\S]*?<\/a>/i,'');
       html=html.replace(/\s*<section class="bnbPromo">[\s\S]*?<\/section>/i,'');
+
+      // Remove homepage sections whose main purpose is duplicated navigation or background context.
+      html=html.replace(/\s*<section class="sec soft" id="teaching-teachers"[\s\S]*?<\/section>/i,'');
+      html=html.replace(/\s*<section class="photoBand">[\s\S]*?<\/section>/i,'');
+      html=html.replace(/\s*<section class="sec"><div class="w"><div class="kicker">The teaching approach<\/div>[\s\S]*?<\/section>/i,'');
+      html=html.replace(/\s*<section class="sec soft" aria-labelledby="roots-title">[\s\S]*?<\/section>/i,'');
+      html=html.replace(/\s*<section class="sec soft"><div class="w"><div class="grid two">[\s\S]*?<\/section>/i,'');
+
+      const approach=`<section class="sec homeApproach" aria-labelledby="home-approach-title"><div class="w"><p class="kicker">The approach</p><h2 id="home-approach-title">Learn the movement.<br>Learn how learning works.</h2><p class="lede">The same idea runs through Gab’s work with dancers and teachers: understand what matters, practice it deliberately, and build enough awareness to adapt rather than simply repeat.</p><div class="grid two"><a class="card" href="/method/"><p class="kicker">For dancers</p><h3>Understand. Feel. Practice. Adapt.</h3><p>Explore how timing, direction, connection and decision-making become usable skills on the dance floor.</p><span class="cardLink">Explore the teaching method →</span></a><a class="card" href="/for-teachers/"><p class="kicker">For teachers</p><h3>Design learning, not just classes.</h3><p>Work on observation, explanation, feedback, lesson design and curriculum structure.</p><span class="cardLink">Explore teacher development →</span></a></div><div class="actions"><a class="btn" href="#find-your-training">Compare ways to train</a></div></div></section>`;
+      const curiosity=html.match(/<section id="curiosity"[\s\S]*?<\/section>/i)?.[0];
+      if(curiosity)html=html.replace(curiosity,curiosity+'\n'+approach);
+      else html=html.replace('</main>',approach+'\n</main>');
     }
 
     // One visitor-facing footer on every public page. Internal teaching tools stay on teacher pages instead of the global footer.
