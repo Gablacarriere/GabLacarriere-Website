@@ -56,9 +56,9 @@
   };
 
   window.GAB_CURRICULUM={
-    version:'2.2',
-    lastReviewed:'2026-09-14',
-    source:'Granola-informed curriculum + dependency logic',
+    version:'2.3',
+    lastReviewed:'2026-09-15',
+    source:'Granola-informed curriculum + explicit Perception & Projection methodology',
     families:source.families,
     concepts,
     byId,
@@ -79,7 +79,7 @@
       preserveStableIds:true,
       oneOffObservation:'candidate_only',
       reusableRelationship:'promote_after_repeated_evidence',
-      newConcept:'promote_after_repeated_cross_class_evidence',
+      newConcept:'promote_after_repeated_cross_class_evidence_or_explicit_gab_decision',
       drill:'route_to_practice_library_not_curriculum_by_default'
     }
   };
