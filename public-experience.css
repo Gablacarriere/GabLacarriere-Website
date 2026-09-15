@@ -1,152 +1,52 @@
-/* Shared public-site refinements. Member tools keep their existing layout. */
-.publicSite .publicBrand{display:flex;align-items:center;gap:10px;min-width:0;font-size:1rem;letter-spacing:.01em;font-weight:850;line-height:1.2;color:#f7f4ee}
-.publicSite .publicBrand img{display:block;width:40px;height:40px;object-fit:contain;flex:none}
-.publicSite .publicBrand span{white-space:nowrap}
-.publicSite .n{height:auto;min-height:76px;gap:20px}
-.publicSite .primary{display:flex;gap:15px;align-items:center;font-size:.875rem}
-.publicSite .primary a{padding:10px 0;white-space:nowrap}
-.publicSite .memberLink{color:#b4bbc7;font-weight:500}
-.publicSite a[aria-current="page"]{color:#7dd8ff;text-decoration:underline;text-underline-offset:7px}
-.publicSite a:focus-visible,.publicSite button:focus-visible,.publicSite summary:focus-visible,.publicSite input:focus-visible,.publicSite select:focus-visible,.publicSite textarea:focus-visible{outline:3px solid #7dd8ff;outline-offset:4px}
-.publicSite .warm :focus-visible{outline-color:#145778}
-.publicSite .skipLink{position:absolute;left:18px;top:-120px;z-index:100;padding:12px 18px;background:#f2dfc5;color:#10141a;border-radius:8px}
+/* Public component layer.
+   Global visual language lives in bauhaus.css; the shared navigation/content shell lives in site-system.css.
+   Keep this file limited to components that actually need cross-page behavior. */
+
+/* Accessibility + document behavior */
+.publicSite .skipLink{position:absolute;left:18px;top:-120px;z-index:100;padding:12px 18px;background:var(--bh-yellow,#f1c52c);color:var(--bh-ink,#181918);border:2px solid var(--bh-ink,#181918)}
 .publicSite .skipLink:focus{top:12px}
 .publicSite main{min-width:0}
 .publicSite main:focus{outline:none}
-.publicSite .tag{display:inline-block;font-size:.875rem}
-.publicSite .kicker{font-size:.875rem}
-.publicSite .warm .kicker{color:#245d78}
-.publicSite h2,.publicSite h3{line-height:1.15;overflow-wrap:break-word}
-.publicSite .grid>*,.publicSite .g2>*{min-width:0}
-.publicSite .btn{min-height:44px;text-align:center;line-height:1.4}
-.publicSite .footerLinks{display:flex;gap:20px;flex-wrap:wrap;margin-top:18px}
-.publicSite .footerLinks a,.publicSite #application-help a,.publicSite .applicationDraft p a{color:#7dd8ff;text-decoration:underline;text-underline-offset:3px}
-.publicSite .waFloat{font-size:.875rem}
-.publicSite footer{padding-bottom:100px}
-.publicSite #apply{scroll-margin-top:90px}
-.publicSite .fieldHint{font-size:.875rem;color:#bdc5d1;line-height:1.5}
-.publicSite .applicationExtra{padding:16px 0;border-block:1px solid #ffffff24}
-.publicSite .applicationExtra summary{cursor:pointer;min-height:44px;padding:10px 0;font-weight:700}
-.publicSite .applicationExtra .field{margin-top:18px}
-.publicSite .applicationDraft{margin-top:16px;padding:24px;border:1px solid #7dd8ff66;border-radius:20px;background:#101927}
-.publicSite .applicationDraft textarea{min-height:260px}
-.publicSite #draft-heading{scroll-margin-top:100px}
 .publicSite [hidden]{display:none!important}
+.publicSite #apply,.publicSite #draft-heading,.publicSite :is(#find-your-training,#learning-library,#training-formats,#nyc-dancing,#lambada-flow,#tuesday-zouk){scroll-margin-top:110px}
+
+/* Mobile navigation mechanics. Visual treatment is defined by Bauhaus/site-system. */
 .publicSite .mobileMenu{display:none;position:relative}
-.publicSite .mobileMenu summary{list-style:none;cursor:pointer;border:1px solid #ffffff2a;border-radius:999px;padding:10px 14px;min-height:44px;font-weight:750}
+.publicSite .mobileMenu summary{list-style:none;cursor:pointer;min-height:44px;padding:10px 14px;font-weight:750}
 .publicSite .mobileMenu summary::-webkit-details-marker{display:none}
-.publicSite .mobilePanel{position:absolute;right:0;top:52px;width:min(260px,calc(100vw - 36px));min-width:0;max-height:calc(100dvh - 100px);overflow:auto;display:grid;padding:10px;background:#111721;border:1px solid #ffffff30;border-radius:16px;box-shadow:0 18px 44px #0008}
-.publicSite .mobilePanel a{padding:12px;min-height:44px}
-@media(max-width:1100px){.publicSite .primary{display:none!important}.publicSite .mobileMenu{display:block}}
-@media(max-width:600px){
-  .publicSite .n{min-height:68px}
-  .publicSite .publicBrand{font-size:1rem}
-  .publicSite .publicBrand img{width:32px;height:32px}
-  .publicSite .hero{padding-top:36px;padding-bottom:36px}
-  .publicSite .hero h1{font-size:clamp(2.25rem,9vw,3.15rem);line-height:1.12}
-  .publicSite .sec{padding:40px 0}
-  .publicSite .waFloat{position:static;display:flex;justify-content:center;width:calc(100% - 36px);margin:0 auto 24px;box-shadow:none;text-align:center}
-  .publicSite footer{padding-bottom:24px}
-  .publicSite .applicationDraft{padding:18px}
-  .publicSite .heroPortrait img{aspect-ratio:4/5;object-position:center top}
-}
-@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto!important}.publicSite *{scroll-behavior:auto!important;animation:none!important;transition:none!important}.publicSite .card:hover{transform:none}}
-
-.publicSite .classFlyer{width:100%;max-width:340px;margin:28px auto 0}
-.publicSite .classFlyer img{display:block;width:100%;height:auto;border:1px solid #ffffff26;border-radius:12px}
-.publicSite .classFlyer figcaption{margin-top:10px;font-size:.875rem;text-align:center}
-.publicSite .classFlyer figcaption a{color:#7dd8ff;text-decoration:underline;text-underline-offset:3px}
-.publicSite .lambadaFeature{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,380px);align-items:start;gap:56px}
-.publicSite .lambadaFeature .classFlyer{margin-top:0}
-.publicSite #lambada-flow,.publicSite #tuesday-zouk{scroll-margin-top:90px}
-@media(max-width:760px){.publicSite .lambadaFeature{grid-template-columns:minmax(0,1fr);gap:28px}}
-
-.publicSite .classGuidance{display:flex;align-items:center;justify-content:space-between;gap:24px;padding:24px;margin-bottom:24px;border:1px solid #7dd8ff40;border-radius:20px;background:#132033}
-.publicSite .classGuidance h2{font-size:1.5rem;margin-bottom:8px}
-.publicSite .classGuidance p{max-width:650px;margin:0;color:#c4cad4}
-.publicSite .classGuidance>.btn{flex-shrink:0}
-.publicSite .contactHint{font-size:.875rem;color:#c4cad4;margin:12px 0 0}
-@media(max-width:760px){.publicSite .classGuidance{align-items:flex-start;flex-direction:column;padding:20px}}
-
-.publicSite .bnbPromo{background:#f3f0e7;color:#203a2c;padding:56px 0}.publicSite .bnbPromoGrid{display:grid;grid-template-columns:minmax(0,1fr) 240px;gap:48px;align-items:center}.publicSite .bnbPromo h2{font-family:Georgia,serif;font-weight:400}.publicSite .bnbPromo .kicker{color:#355343}.publicSite .bnbPromo .lede{color:#354c3f}.publicSite .bnbPromo .btn{background:#294a38;color:#fff}.publicSite .bnbPromo img{width:100%;height:auto;display:block;border-radius:16px}.publicSite .bnbPromo a:focus-visible{outline-color:#294a38}@media(max-width:1250px){.publicSite .primary{display:none!important}.publicSite .mobileMenu{display:block}}@media(max-width:650px){.publicSite .bnbPromoGrid{grid-template-columns:1fr;gap:28px}.publicSite .bnbPromo img{max-width:260px}}
-
-/* Shared visual system: the original wordmark, readable type and consistent rhythm. */
-.publicSite{font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:1.7;-webkit-font-smoothing:antialiased}
-.publicSite nav{background:#faf9f5;color:#242a2c;backdrop-filter:none;border-bottom:1px solid #1e2a2820;box-shadow:0 3px 18px #0000000a}
-.publicSite nav .w{width:min(1240px,calc(100% - 48px))}
-.publicSite .n{min-height:92px;gap:24px}
-.publicSite .publicBrand{display:block;width:266px;height:68px;flex:0 0 266px;overflow:hidden;border-radius:0}
-.publicSite .publicBrand img{width:100%;height:100%;max-width:none;object-fit:cover;object-position:left center}
-.publicSite .primary{gap:17px;font-size:.82rem;color:#3e4744;font-weight:600}
-.publicSite .primary a{padding:12px 0}
-.publicSite .primary a:hover{color:#0050a4}
-.publicSite nav a[aria-current="page"]{color:#174f85;text-decoration-thickness:2px;text-underline-offset:8px}
-.publicSite .memberLink{color:#59635e;font-size:.78rem}
-.publicSite .mobileMenu summary{color:#253a30;border:1px solid #869489;border-radius:10px;font-size:.875rem;background:transparent}
-.publicSite .mobilePanel{background:#faf9f5;color:#26332c;border-color:#c9d0c7;box-shadow:0 18px 44px #0002;top:54px}
-.publicSite .mobilePanel a{border-radius:6px;font-size:.95rem}
-.publicSite .mobilePanel a:hover{background:#e9ede5}
-.publicSite nav a:focus-visible,.publicSite nav summary:focus-visible{outline-color:#175ca0}
-.publicSite:not(.bnbPage) .hero{padding:64px 0 56px;background:radial-gradient(ellipse at 85% 0,#182b37 0,transparent 60%),#0a0d12}
-.publicSite:not(.bnbPage) .hero h1{font-size:clamp(2.6rem,4.7vw,4.5rem);line-height:1.1;letter-spacing:-.045em;font-weight:720;margin-top:20px;max-width:940px;text-wrap:balance}
-.publicSite:not(.bnbPage) h2{font-size:clamp(2rem,3.5vw,3.1rem);line-height:1.15;letter-spacing:-.035em;font-weight:680;text-wrap:balance}
-.publicSite:not(.bnbPage) h3{line-height:1.25;font-weight:650;letter-spacing:-.015em}
-.publicSite .lede{line-height:1.65;font-size:clamp(1.05rem,1.5vw,1.2rem)}
-.publicSite .tag{font-size:.75rem;font-weight:700;letter-spacing:.08em;padding:7px 12px;background:#dce9ec;color:#19333e;border-radius:6px}
-.publicSite .kicker{font-size:.75rem;font-weight:750;letter-spacing:.12em;margin-bottom:16px}
-.publicSite .sec{padding:64px 0}
-.publicSite .actions{gap:12px;margin-top:26px}
-.publicSite .btn{padding:13px 19px;border-radius:10px;font-size:.93rem;font-weight:700;letter-spacing:0;box-shadow:none}
-.publicSite .btn:hover{filter:brightness(1.06)}
-.publicSite .card{border-radius:16px;padding:28px;min-height:0;border-color:#ffffff20;box-shadow:none}
-.publicSite .card:hover{transform:none}
-.publicSite a.card:hover{border-color:#7dd8ff80;background:#151e29}
-.publicSite .card p{line-height:1.7;color:#bdc5d0}
-.publicSite .grid{gap:24px}
-.publicSite .g2{gap:32px}
-.publicSite .list li{padding:14px 0;line-height:1.65}
-.publicSite .breadcrumb{font-size:.82rem}
-.publicSite .heroPortrait img,.publicSite .aboutPortrait img{border-radius:16px}
-.publicSite .classGuidance h2{font-size:1.5rem}
-.publicSite #schedule .g2 h2{font-size:clamp(1.75rem,2.5vw,2.2rem)}
-.publicSite #schedule .g2>div{display:flex;flex-direction:column;border-radius:16px}
-.publicSite #schedule .classFlyer{padding-top:24px;margin-top:auto}
-.publicSite .classesPhoto{box-shadow:none;border-radius:16px}
-.publicSite .classFlyer img{border-radius:8px}
-.publicSite .smallHeading{font-size:2rem}
-.publicSite .bnbPromo h2{font-family:Georgia,serif;font-weight:400}
-.publicSite .waFloat{position:static;display:flex;align-items:center;justify-content:center;width:fit-content;max-width:calc(100% - 36px);margin:0 auto 28px;padding:12px 20px;border-radius:10px;box-shadow:none}
-.publicSite footer{padding:40px 0 28px;background:#0a0d12;color:#b4bdc6;font-size:.875rem}
-.publicSite .footerLinks{gap:12px 24px}
-.publicSite .footerLinks a{font-size:.875rem}
-.publicSite .form{max-width:860px}
-.publicSite input,.publicSite select,.publicSite textarea{font:inherit;font-size:1rem;border-radius:8px}
-.publicSite .bnbSection .package{border-radius:16px}
-.publicSite.bnbPage nav{background:#faf9f5;color:#242a2c}
+.publicSite .mobilePanel{position:absolute;right:0;top:52px;z-index:80;width:min(320px,calc(100vw - 32px));max-height:calc(100dvh - 100px);overflow:auto;display:grid;padding:8px}
+.publicSite .mobilePanel a{display:flex;align-items:center;min-height:44px;padding:10px 12px}
 @media(min-width:1100px){.publicSite .primary{display:flex!important}.publicSite .mobileMenu{display:none!important}}
 @media(max-width:1099px){.publicSite .primary{display:none!important}.publicSite .mobileMenu{display:block!important}}
-@media(max-width:760px){
-.publicSite nav .w{width:calc(100% - 32px)}
-.publicSite .n{min-height:78px;gap:12px}
-.publicSite .publicBrand{width:220px;height:56px;flex-basis:220px}
-.publicSite:not(.bnbPage) .hero{padding:36px 0 40px}
-.publicSite:not(.bnbPage) .hero h1{font-size:clamp(2.25rem,8.5vw,3.25rem);line-height:1.12}
-.publicSite:not(.bnbPage) h2{font-size:clamp(1.8rem,7vw,2.5rem)}
-.publicSite .sec{padding:44px 0}
-.publicSite .card{padding:22px}
-.publicSite .grid,.publicSite .grid.two,.publicSite .g2{grid-template-columns:1fr;gap:20px}
-.publicSite .classGuidance h2{font-size:1.5rem}
-.publicSite .heroPortrait,.publicSite .aboutPortrait{width:100%;max-width:420px}
-.publicSite .heroPortrait img{aspect-ratio:4/5}
-.publicSite .bnbPromo{padding:44px 0}
-.publicSite .formatCard .actions{padding-top:16px}
-}
-@media(max-width:360px){.publicSite .publicBrand{width:188px;height:48px;flex-basis:188px}.publicSite .mobileMenu summary{padding:10px 12px}}
 
-/* Original photography: preserve complete compositions and embedded credits. */
+/* Application / inquiry components */
+.publicSite .fieldHint{font-size:.875rem;line-height:1.5}
+.publicSite .applicationExtra{padding:16px 0;border-block:1px solid #88887e}
+.publicSite .applicationExtra summary{cursor:pointer;min-height:44px;padding:10px 0;font-weight:800}
+.publicSite .applicationExtra .field{margin-top:18px}
+.publicSite .applicationDraft{margin-top:16px;padding:24px}
+.publicSite .applicationDraft textarea{min-height:260px}
+.publicSite .form{max-width:860px}
+
+/* Class-specific components */
+.publicSite .classFlyer{width:100%;max-width:340px;margin:28px auto 0}
+.publicSite .classFlyer img{display:block;width:100%;height:auto;border:1px solid #77786f}
+.publicSite .classFlyer figcaption{margin-top:10px;font-size:.875rem;text-align:center}
+.publicSite .lambadaFeature{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,380px);align-items:start;gap:56px}
+.publicSite .lambadaFeature .classFlyer{margin-top:0}
+.publicSite .classGuidance{display:flex;align-items:center;justify-content:space-between;gap:24px;padding:24px;margin-bottom:24px}
+.publicSite .classGuidance h2{font-size:1.5rem;margin-bottom:8px}
+.publicSite .classGuidance p{max-width:650px;margin:0}
+.publicSite .classGuidance>.btn{flex-shrink:0}
+.publicSite .contactHint{font-size:.875rem;margin:12px 0 0}
+.publicSite #schedule .g2>div{display:flex;flex-direction:column}
+.publicSite #schedule .classFlyer{padding-top:24px;margin-top:auto}
+@media(max-width:760px){.publicSite .lambadaFeature{grid-template-columns:1fr;gap:28px}.publicSite .classGuidance{align-items:flex-start;flex-direction:column;padding:20px}}
+
+/* Editorial photography */
 .publicSite .editorialPhoto{margin:0;min-width:0}
-.publicSite .editorialPhoto img{display:block;width:100%;height:auto;border-radius:16px}
-.publicSite .editorialPhoto figcaption{font-size:.85rem;line-height:1.6;color:#b9c2ce;padding-top:12px;max-width:780px}
+.publicSite .editorialPhoto img{display:block;width:100%;height:auto}
+.publicSite .editorialPhoto figcaption{font-size:.85rem;line-height:1.6;padding-top:12px;max-width:780px}
 .publicSite .photoBand{padding:32px 0}
 .publicSite .editorialSplit{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:48px;align-items:center}
 .publicSite .editorialTall{width:100%;max-width:420px;justify-self:center}
@@ -154,23 +54,27 @@
 .publicSite .heroPortrait img[src^="/assets/editorial/"],.publicSite .aboutPortrait img[src^="/assets/editorial/"]{aspect-ratio:auto;height:auto;object-fit:contain}
 @media(max-width:760px){.publicSite .editorialSplit{grid-template-columns:1fr;gap:28px}.publicSite .photoBand{padding:20px 0}}
 
-/* Clear paths through the public site. */
+/* Public choice architecture */
 .publicSite .trainingChoices{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px;margin-top:32px}
 .publicSite .trainingChoice{display:flex;flex-direction:column;position:relative}
 .publicSite .trainingChoice h3{font-size:1.7rem;margin:12px 0}
-.publicSite .choiceNumber{font-size:.875rem;font-weight:800;letter-spacing:.1em;color:var(--bh-blue)}
+.publicSite .choiceNumber{font-size:.875rem;font-weight:800;letter-spacing:.1em;color:var(--bh-blue,#1748b6)}
 .publicSite .trainingChoice dl{margin:24px 0;line-height:1.55}
 .publicSite .trainingChoice dt{font-size:.875rem;font-weight:800;margin-top:14px}
 .publicSite .trainingChoice dd{margin:4px 0 0;font-size:1rem}
 .publicSite .trainingChoice .cardLink{margin-top:auto;padding-top:16px}
-.publicSite .startingHelp{display:flex;align-items:center;justify-content:space-between;gap:32px;padding:32px 0;margin-top:28px;border-block:2px solid var(--bh-ink)}
-.publicSite .startingHelp h3{font-size:1.4rem}.publicSite .startingHelp p{max-width:640px;margin-bottom:0}.publicSite .startingHelp .btn{flex-shrink:0}
+.publicSite .startingHelp{display:flex;align-items:center;justify-content:space-between;gap:32px;padding:32px 0;margin-top:28px;border-block:2px solid var(--bh-ink,#181918)}
+.publicSite .startingHelp h3{font-size:1.4rem}
+.publicSite .startingHelp p{max-width:640px;margin-bottom:0}
+.publicSite .startingHelp .btn{flex-shrink:0}
 .publicSite .choiceNote{font-size:.875rem;margin-top:20px}
-.publicSite :is(#find-your-training,#learning-library,#training-formats,#nyc-dancing){scroll-margin-top:110px}
+@media(max-width:760px){.publicSite .trainingChoices{grid-template-columns:1fr;gap:20px}.publicSite .startingHelp{flex-direction:column;align-items:flex-start;gap:20px}}
+
+/* Shared public footer structure */
 .publicSite .footerDirectory{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px;padding-top:28px;margin-top:28px;border-top:1px solid #77786f}
 .publicSite .footerGroup{display:flex;flex-direction:column;align-items:flex-start;gap:2px}
 .publicSite.bhSite .footerGroup h2{font-size:1rem;letter-spacing:0;margin:0 0 12px;line-height:1.3}
-.publicSite .footerGroup a{display:inline-flex;align-items:center;min-height:44px;padding:7px 0;text-decoration:underline;text-underline-offset:4px;color:var(--bh-blue);font-size:1rem}
-@media(max-width:760px){.publicSite .trainingChoices{grid-template-columns:1fr;gap:20px}.publicSite .startingHelp{flex-direction:column;align-items:flex-start;gap:20px}.publicSite .footerDirectory{grid-template-columns:1fr;gap:28px}}
+.publicSite .footerGroup a{display:inline-flex;align-items:center;min-height:44px;padding:7px 0;text-decoration:underline;text-underline-offset:4px;font-size:1rem}
+@media(max-width:760px){.publicSite .footerDirectory{grid-template-columns:1fr;gap:28px}.publicSite .applicationDraft{padding:18px}}
 
-.publicSite .studentVoiceBar{background:#e3eeea;border-bottom:1px solid #829c97;color:#183b3a}.publicSite .studentVoiceBar .w{display:flex;justify-content:flex-end;gap:24px;flex-wrap:wrap;padding:4px 0}.publicSite .studentVoiceBar a{display:inline-flex;align-items:center;min-height:44px;font-size:14px;font-weight:750;text-decoration:underline;text-underline-offset:4px}@media(max-width:550px){.publicSite .studentVoiceBar .w{justify-content:center;gap:16px}.publicSite .studentVoiceBar a{font-size:12px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto!important}.publicSite *{scroll-behavior:auto!important;animation:none!important;transition:none!important}}

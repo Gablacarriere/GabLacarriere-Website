@@ -1,11 +1,12 @@
 /* Final public-site coherence layer.
-   This file intentionally loads after the page-specific and Bauhaus layers so the shared shell stays stable. */
+   Loads last. Bauhaus owns the visual language; this file owns shell dimensions, hierarchy, and cross-page rhythm. */
 body.publicSite{
   --site-max:1120px;
   --site-copy:72ch;
   --site-touch:44px;
   --site-line:#77786f;
   --site-subtle:#454841;
+  --site-section:clamp(48px,6vw,72px);
 }
 .publicSite .w{width:min(var(--site-max),calc(100% - 36px));margin-inline:auto}
 .publicSite nav{z-index:60}
@@ -30,14 +31,27 @@ body.publicSite{
 .publicSite .mobilePanel{width:min(320px,calc(100vw - 32px));padding:8px}
 .publicSite .mobilePanel a{display:flex;align-items:center;min-height:44px;padding:10px 12px;border-bottom:1px solid #77786f55}
 .publicSite .mobilePanel a:last-child{border-bottom:0}
-.publicSite .lede{max-width:var(--site-copy)}
+
+/* Shared information hierarchy */
+.publicSite :is(.sec,.bnbSection){padding-block:var(--site-section)!important}
+.publicSite .hero .lede,.publicSite .lede{max-width:var(--site-copy)}
+.publicSite .hero .actions{max-width:760px}
+.publicSite :is(.sec,.bnbSection)>.w>p:not(.kicker):not(.eyebrow):not(.choiceNote):not(.pricingNote){max-width:var(--site-copy)}
+.publicSite :is(.sec,.bnbSection)>.w>h2{max-width:22ch}
 .publicSite .actions{align-items:center}
 .publicSite .actions .btn{max-width:100%}
+.publicSite .grid{align-items:stretch}
+.publicSite .card{height:100%}
 .publicSite :is(.card p,.classGuidance p,.startingHelp p,.editorialPhoto figcaption){max-width:68ch}
+.publicSite .breadcrumb{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.publicSite .smallHeading{font-size:clamp(1.7rem,3vw,2rem)!important}
+
+/* Shared footer */
 .publicSite footer>.w:first-child{font-weight:800;letter-spacing:.015em;line-height:1.5}
 .publicSite .footerDirectory{grid-template-columns:1fr 1.15fr .85fr;gap:40px}
 .publicSite .footerGroup h2{margin-bottom:10px!important}
 .publicSite .footerGroup a{line-height:1.35}
+
 @media(max-width:1099px){
   .publicSite .n{min-height:72px!important;gap:12px}
   .publicSite .publicBrand{width:min(214px,calc(100vw - 118px))!important;flex-basis:auto!important}
@@ -46,6 +60,7 @@ body.publicSite{
   .publicSite .w{width:calc(100% - 32px)}
   .publicSite .footerDirectory{grid-template-columns:1fr;gap:26px}
   .publicSite .actions .btn{width:auto}
+  .publicSite :is(.sec,.bnbSection)>.w>h2{max-width:none}
 }
 @media(max-width:380px){
   .publicSite .publicBrand{width:min(188px,calc(100vw - 112px))!important}
