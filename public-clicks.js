@@ -4,17 +4,17 @@
   const source = document.body.dataset.page;
   if (!publicPages.has(source)) return;
 
+  const removeSectionContaining = text => {
+    for (const section of document.querySelectorAll('main section')) {
+      if ((section.textContent || '').includes(text)) {
+        section.remove();
+        return;
+      }
+    }
+  };
+
   // Keep the main Classes page decision-focused. Detailed teaching content still lives on its own pages.
   if (source === 'classes') {
-    const removeSectionContaining = text => {
-      for (const section of document.querySelectorAll('main section')) {
-        if ((section.textContent || '').includes(text)) {
-          section.remove();
-          return;
-        }
-      }
-    };
-
     document.querySelector('.hero .breadcrumb')?.remove();
     document.querySelector('.classGuidance')?.remove();
     document.querySelectorAll('.classFlyer,.workshopWide').forEach(node => node.remove());
@@ -49,6 +49,37 @@
 
     // FAQs should be available without visually dominating the page.
     document.querySelectorAll('#student-questions details[open]').forEach(item => item.removeAttribute('open'));
+  }
+
+  // Private Training should be a two-choice page: diagnose/refine or repeat/integrate.
+  if (source === 'privates') {
+    const heroTitle = document.querySelector('.hero h1');
+    if (heroTitle) heroTitle.textContent = 'Private training for Zouk & Lambada.';
+    const heroLede = document.querySelector('.hero .lede');
+    if (heroLede) heroLede.textContent = 'Choose a 1-hour private when you want to understand and refine a specific problem. Choose a 30-minute Kinesthetic Practice session when you know what to work on and need focused repetition.';
+
+    const heroActions = document.querySelectorAll('.hero .actions a');
+    if (heroActions[0]) heroActions[0].textContent = 'Compare the two formats';
+    if (heroActions[1]) heroActions[1].textContent = 'Not sure? Ask Gab';
+
+    const formatCards = document.querySelectorAll('#formats .formatCard');
+    if (formatCards[1]) {
+      const title = formatCards[1].querySelector('h3');
+      if (title) title.textContent = 'Kinesthetic Practice';
+      const body = formatCards[1].querySelectorAll('p');
+      if (body[2]) body[2].textContent = 'Spend 30 minutes moving, repeating and adjusting with immediate partner feedback so the skill becomes easier to reproduce in real dancing.';
+    }
+
+    // The two offer cards already explain the booking decision; these sections repeat it or branch away from it.
+    removeSectionContaining('Arrange your session');
+    removeSectionContaining('Keep developing');
+    removeSectionContaining('Explore the learning system');
+
+    // Keep FAQs for reassurance, but do not open one by default.
+    document.querySelectorAll('#student-questions details[open]').forEach(item => item.removeAttribute('open'));
+
+    const inquiryTitle = document.querySelector('#training-inquiry h2');
+    if (inquiryTitle) inquiryTitle.textContent = 'Ready to train?';
   }
 
   const classPages = new Set(['/classes/','/brazilian-zouk-classes-nyc/','/lambada-classes-nyc/']);
