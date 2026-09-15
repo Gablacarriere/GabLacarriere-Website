@@ -13,3 +13,14 @@ async function load(){if(!cfg||!window.supabase){root.textContent='The account s
  const workspace=await read();initializing=false;return {workspace,userId:user.id};}
 window.TeacherCloud={load,read,async save(document,revision){const {data,error}=await client.rpc('save_teacher_workspace',{p_document:document,p_expected_revision:revision});if(error)throw error;return data;}};
 })();
+
+(() => {
+  if (!location.pathname.startsWith('/session-planner')) return;
+  if (!new URLSearchParams(location.search).get('roadmap')) return;
+  if (document.querySelector('script[data-postclass-sync]')) return;
+  const script=document.createElement('script');
+  script.src='/planner-postclass-sync.js?v=1';
+  script.defer=true;
+  script.dataset.postclassSync='1';
+  document.head.appendChild(script);
+})();
