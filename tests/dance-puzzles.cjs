@@ -18,4 +18,12 @@ for(const id of cognitive)assert(P.puzzles.some(x=>x.primarySkill===id),`${id} n
 assert(P.puzzles.some(x=>x.roles.includes('follower')),'library should include follower-specific puzzles');
 assert(P.puzzles.some(x=>x.roles.includes('leader')),'library should include leader-specific puzzles');
 assert(P.puzzles.some(x=>x.roles.includes('both')),'library should include role-neutral/both-role puzzles');
-console.log('PASS: 30 Dance Puzzles map cleanly onto all eight Perception & Projection skills and valid Atlas concepts.');
+
+const page=fs.readFileSync('dance-puzzles.html','utf8');
+const planner=fs.readFileSync('session-planner.html','utf8');
+const bridge=fs.readFileSync('planner-dance-puzzles.js','utf8');
+assert(page.includes('/session-planner/?puzzle=${encodeURIComponent(p.id)}'),'each rendered puzzle should link into the Session Planner');
+assert(planner.includes('/dance-puzzles.js')&&planner.includes('/planner-dance-puzzles.js'),'Session Planner should load puzzle data and bridge');
+for(const marker of ['dancePuzzlePlannerPanel','Add puzzle to this session','puzzleConcepts','data-action="addActivity"','data-concept-set="conceptIds"'])assert(bridge.includes(marker),`planner bridge missing ${marker}`);
+assert(bridge.includes('Expected reasoning:')&&bridge.includes('Physical test:')&&bridge.includes('Reflection:'),'planner activity should preserve teaching logic');
+console.log('PASS: 30 Dance Puzzles map onto all eight cognitive skills and are bridged into the Session Planner with curriculum links.');
