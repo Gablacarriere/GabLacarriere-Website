@@ -55,7 +55,7 @@
 @media(max-width:760px){.publicSite .editorialSplit{grid-template-columns:1fr;gap:28px}.publicSite .photoBand{padding:20px 0}}
 
 /* Public choice architecture */
-.publicSite .trainingChoices{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px;margin-top:32px}
+.publicSite .trainingChoices{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px;margin-top:32px}
 .publicSite .trainingChoice{display:flex;flex-direction:column;position:relative}
 .publicSite .trainingChoice h3{font-size:1.7rem;margin:12px 0}
 .publicSite .choiceNumber{font-size:.875rem;font-weight:800;letter-spacing:.1em;color:var(--bh-blue,#1748b6)}
@@ -68,6 +68,7 @@
 .publicSite .startingHelp p{max-width:640px;margin-bottom:0}
 .publicSite .startingHelp .btn{flex-shrink:0}
 .publicSite .choiceNote{font-size:.875rem;margin-top:20px}
+@media(max-width:900px){.publicSite .trainingChoices{grid-template-columns:1fr 1fr}}
 @media(max-width:760px){.publicSite .trainingChoices{grid-template-columns:1fr;gap:20px}.publicSite .startingHelp{flex-direction:column;align-items:flex-start;gap:20px}}
 
 /* Shared public footer structure */
