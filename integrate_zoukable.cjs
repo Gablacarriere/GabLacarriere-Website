@@ -25,20 +25,26 @@ for(const file of fs.readdirSync(root)){
   }
 }
 
-const primaryItems=[
-  ['/classes/','Classes'],
-  ['/privates/','Private training'],
-  ['/mentorship/','Mentorship'],
-  ['/for-teachers/','For teachers'],
-  ['/about/','About']
-];
-const exploreItems=[
-  ['/zouk-bnb/','Zouk BNB'],
-  ['/learn/','Learning library'],
-  ['/method/','Method'],
-  ['/journal/','Journal'],
-  ['/work-with-gab/','Work with Gab'],
-  ['/reviews/','Student reviews']
+// Three top-level visitor decisions. Detailed destinations stay one level deeper.
+const navGroups=[
+  ['Train',[
+    ['/classes/','Classes'],
+    ['/privates/','Private training'],
+    ['/mentorship/','Mentorship'],
+    ['/zouk-bnb/','Zouk BNB']
+  ]],
+  ['Teaching',[
+    ['/for-teachers/','For teachers'],
+    ['/method/','Teaching method'],
+    ['/curriculum-planner/','Curriculum planner'],
+    ['/session-planner/','Session planner']
+  ]],
+  ['Explore',[
+    ['/learn/','Learning library'],
+    ['/journal/','Journal'],
+    ['/work-with-gab/','Work with Gab'],
+    ['/about/','About Gab']
+  ]]
 ];
 const footerGroups=[
   ['Train',[
@@ -65,6 +71,12 @@ const footerGroups=[
 ];
 const currentPathFor=file=>file==='index.html'?'/':'/'+file.replace(/\.html$/,'')+'/';
 const navLink=(href,label,currentPath)=>`<a href="${href}"${currentPath===href?' aria-current="page"':''}>${label}</a>`;
+const navGroup=(label,items,currentPath,scope)=>{
+  const current=items.some(([href])=>href===currentPath);
+  const links=items.map(([href,itemLabel])=>navLink(href,itemLabel,currentPath)).join('');
+  if(scope==='mobile')return `<details class="mobileTree" name="mobile-navigation"><summary${current?' aria-current="page"':''}>${label}</summary><div class="mobileTreePanel">${links}</div></details>`;
+  return `<details class="navExplore" name="public-navigation"><summary${current?' aria-current="page"':''}>${label}</summary><div class="navExplorePanel">${links}</div></details>`;
+};
 const genericReview=/\s*<section class="sec"><div class="w"><h2>Hear from students\.<\/h2><p>Explore student experiences, shared in their own words and with their permission\.<\/p><p><a href="\/reviews\/">Read student reviews →<\/a><\/p><\/div><\/section>/g;
 const genericFeedback=/\s*<section class="sec"><div class="w"><h2>Help shape what comes next\.<\/h2><p>Share private feedback on your experience, suggest improvements, or choose to contribute a testimonial\.<\/p><p><a href="\/feedback\/">Share feedback &amp; your story →<\/a><\/p><\/div><\/section>/g;
 const floatingWhatsapp=/\s*<a\b[^>]*class="[^"]*\bwaFloat\b[^"]*"[^>]*>[\s\S]*?<\/a>/gi;
@@ -87,14 +99,13 @@ for(const file of fs.readdirSync(out)){
   const target=path.join(out,file);
   let html=fs.readFileSync(target,'utf8');
 
-  // Public navigation stays focused on choosing how to work with Gab. Zoukable remains a member/practice destination.
+  // Public navigation presents three branches instead of a long row of unrelated destinations.
   if(/<body[^>]*class="[^"]*publicSite/.test(html)){
     const currentPath=currentPathFor(file);
-    const primary=primaryItems.map(([href,label])=>navLink(href,label,currentPath)).join('');
-    const explore=exploreItems.map(([href,label])=>navLink(href,label,currentPath)).join('');
-    const exploreCurrent=exploreItems.some(([href])=>href===currentPath);
+    const desktopTree=navGroups.map(([label,items])=>navGroup(label,items,currentPath,'desktop')).join('');
+    const mobileTree=navGroups.map(([label,items])=>navGroup(label,items,currentPath,'mobile')).join('');
     const member='<a class="memberLink" href="/mentorship-hub/">Member login</a>';
-    const nav=`<nav aria-label="Main navigation"><div class="w n"><a class="brand publicBrand" href="/" aria-label="Gab Lacarriere home"><img src="/assets/editorial/logo-746.webp" srcset="/assets/editorial/logo-240.webp 240w, /assets/editorial/logo-480.webp 480w, /assets/editorial/logo-746.webp 746w, /gab-logo-header.png 1200w" sizes="(max-width: 520px) 210px, 240px" alt="Gab Lacarriere" width="1200" height="400"></a><div class="primary">${primary}<details class="navExplore"><summary${exploreCurrent?' aria-current="page"':''}>Explore</summary><div class="navExplorePanel">${explore}</div></details>${member}</div><details class="mobileMenu"><summary>Menu</summary><div class="mobilePanel">${primary}${explore}${member}</div></details></div></nav>`;
+    const nav=`<nav aria-label="Main navigation"><div class="w n"><a class="brand publicBrand" href="/" aria-label="Gab Lacarriere home"><img src="/assets/editorial/logo-746.webp" srcset="/assets/editorial/logo-240.webp 240w, /assets/editorial/logo-480.webp 480w, /assets/editorial/logo-746.webp 746w, /gab-logo-header.png 1200w" sizes="(max-width: 520px) 210px, 240px" alt="Gab Lacarriere" width="1200" height="400"></a><div class="primary">${desktopTree}${member}</div><details class="mobileMenu"><summary>Menu</summary><div class="mobilePanel">${mobileTree}${member}</div></details></div></nav>`;
     html=html.replace(/<nav\b[^>]*>[\s\S]*?<\/nav>/i,nav);
     html=html.replace(/<div class="studentVoiceBar"[\s\S]*?<\/div><\/div>/i,'');
 
