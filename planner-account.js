@@ -26,6 +26,16 @@ window.TeacherCloud={load,read,async save(document,revision){const {data,error}=
 
 (() => {
   if (!location.pathname.startsWith('/session-planner')) return;
+  if (document.querySelector('script[data-teaching-evidence]')) return;
+  const script=document.createElement('script');
+  script.src='/planner-teaching-evidence.js?v=1';
+  script.defer=true;
+  script.dataset.teachingEvidence='1';
+  document.head.appendChild(script);
+})();
+
+(() => {
+  if (!location.pathname.startsWith('/session-planner')) return;
   if (!new URLSearchParams(location.search).get('roadmap')) return;
   if (document.querySelector('script[data-postclass-sync]')) return;
   const script=document.createElement('script');
