@@ -13,10 +13,12 @@ body.publicSite{
 .publicSite .n{min-height:82px!important;gap:24px}
 .publicSite .publicBrand{display:block!important;width:238px!important;height:auto!important;flex:0 0 238px!important;overflow:visible!important}
 .publicSite .publicBrand img{display:block!important;width:100%!important;height:auto!important;aspect-ratio:3/1;object-fit:contain!important;object-position:left center!important}
-.publicSite .primary{gap:8px!important;align-items:center}
-.publicSite .primary>a,.publicSite .navExplore>summary{display:flex;align-items:center;min-height:var(--site-touch);padding:10px 8px!important;white-space:nowrap}
+.publicSite .primary{gap:6px!important;align-items:center}
+.publicSite .primary>a,.publicSite .navExplore>summary{display:flex;align-items:center;min-height:var(--site-touch);padding:10px 10px!important;white-space:nowrap}
 .publicSite .primary>a{font-weight:650}
-.publicSite .memberLink{margin-left:4px;padding:10px 12px!important;font-weight:750!important}
+.publicSite .memberLink{margin-left:6px;padding:10px 13px!important;font-weight:750!important}
+
+/* The public header is a three-branch navigation tree: Train, Teaching, Explore. */
 .publicSite .navExplore{position:relative}
 .publicSite .navExplore>summary{list-style:none;cursor:pointer;font:inherit;font-size:inherit;font-weight:650;color:inherit}
 .publicSite .navExplore>summary::-webkit-details-marker{display:none}
@@ -24,13 +26,24 @@ body.publicSite{
 .publicSite .navExplore[open]>summary::after{transform:rotate(180deg)}
 .publicSite .navExplore>summary[aria-current="page"]{color:var(--bh-blue,#1748b6);text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:8px}
 .publicSite .navExplorePanel{position:absolute;right:0;top:calc(100% + 8px);z-index:80;display:grid;width:250px;padding:8px;background:var(--bh-paper,#f4f0e6);color:var(--bh-ink,#181918);border:2px solid var(--bh-ink,#181918);box-shadow:6px 6px 0 var(--bh-blue,#1748b6)}
+.publicSite .primary .navExplore:first-of-type .navExplorePanel{left:0;right:auto}
 .publicSite .navExplorePanel a{display:flex;align-items:center;min-height:42px;padding:9px 11px;font-size:.92rem;font-weight:650;text-decoration:none}
 .publicSite .navExplorePanel a:hover,.publicSite .navExplorePanel a:focus-visible{background:#e7dfcb;color:var(--bh-ink,#181918)}
 .publicSite .navExplorePanel a[aria-current="page"]{background:var(--bh-yellow,#f1c52c);color:var(--bh-ink,#181918);text-decoration:none}
 .publicSite .studentVoiceBar{display:none!important}
-.publicSite .mobilePanel{width:min(320px,calc(100vw - 32px));padding:8px}
-.publicSite .mobilePanel a{display:flex;align-items:center;min-height:44px;padding:10px 12px;border-bottom:1px solid #77786f55}
-.publicSite .mobilePanel a:last-child{border-bottom:0}
+
+/* Mobile keeps the same tree instead of flattening every destination into one long list. */
+.publicSite .mobilePanel{width:min(340px,calc(100vw - 32px));padding:8px;display:grid;gap:2px}
+.publicSite .mobilePanel>.memberLink{display:flex;align-items:center;min-height:46px;margin:5px 0 0;padding:11px 12px!important;border:2px solid currentColor!important;font-weight:800!important}
+.publicSite .mobileTree{border-bottom:1px solid #77786f55}
+.publicSite .mobileTree>summary{list-style:none;cursor:pointer;border:0!important;border-radius:0!important;padding:12px!important;min-height:46px;display:flex;align-items:center;justify-content:space-between;font-weight:800!important}
+.publicSite .mobileTree>summary::-webkit-details-marker{display:none}
+.publicSite .mobileTree>summary::after{content:'+';font-size:1.15rem;font-weight:500}
+.publicSite .mobileTree[open]>summary::after{content:'−'}
+.publicSite .mobileTree>summary[aria-current="page"]{color:var(--bh-blue,#1748b6)}
+.publicSite .mobileTreePanel{display:grid;padding:0 0 8px 12px}
+.publicSite .mobileTreePanel a{display:flex;align-items:center;min-height:42px;padding:8px 12px!important;border:0!important;font-weight:600}
+.publicSite .mobileTreePanel a[aria-current="page"]{background:var(--bh-yellow,#f1c52c);color:var(--bh-ink,#181918)}
 
 /* Shared information hierarchy */
 .publicSite :is(.sec,.bnbSection){padding-block:var(--site-section)!important}
@@ -52,12 +65,12 @@ body.publicSite{
 .publicSite .footerGroup h2{margin-bottom:10px!important}
 .publicSite .footerGroup a{line-height:1.35}
 
-/* The old site needed a 1400px nav breakpoint. The simplified shell fits comfortably from 1100px upward. */
-@media(min-width:1100px){
+/* Three grouped choices fit comfortably on tablets, so the desktop tree can appear sooner. */
+@media(min-width:960px){
   .publicSite .primary{display:flex!important}
   .publicSite .mobileMenu{display:none!important}
 }
-@media(max-width:1099px){
+@media(max-width:959px){
   .publicSite .primary{display:none!important}
   .publicSite .mobileMenu{display:block!important}
   .publicSite .n{min-height:72px!important;gap:12px}
