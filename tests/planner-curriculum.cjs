@@ -28,4 +28,5 @@ assert(planner.includes('Do not use this planner as a substitute for in-person t
 const drillBridge=fs.readFileSync('planner-zoukable.js','utf8');
 for(const marker of [".eq('status','published')",".is('assigned_to',null)",'data-add-live-drill','The source drill and student records were not changed'])assert(drillBridge.includes(marker),`live drill bridge missing safety marker: ${marker}`);
 assert(L.forConcept('offaxis-0').some(x=>x.skill==='head-preparation'),'head movement curriculum should use the actual Zoukable head-preparation skill slug');
-console.log('PASS: planners use canonical curriculum, preserve concept IDs, surface dependencies/next branches, filter dance tracks, keep off-axis safety boundaries, and recommend only general published Zoukable drills.');
+for(const id of ['architecture-0','bridge-0','bridge-1','space-0'])assert(L.forConcept(id).some(x=>x.skill==='space-orientation'),`${id} should map to the Space & orientation practice family`);
+console.log('PASS: planners use canonical curriculum, preserve concept IDs, surface dependencies/next branches, filter dance tracks, keep off-axis safety boundaries, recommend only general published Zoukable drills, and connect all Space & Orientation concepts to their practice family.');
