@@ -68,14 +68,16 @@ function hasFragment(file,fragment){
   const decoded=decodeURIComponent(fragment);
   const html=fs.readFileSync(file,'utf8');
   const escaped=decoded.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
-  return new RegExp('(?:id|name)=["\']'+escaped+'["\']','i').test(html);
+  // Standard document anchors plus SPA-style view routes such as the Atlas rail.
+  return new RegExp('(?:id|name|data-view)=["\']'+escaped+'["\']','i').test(html);
 }
 
 for(const file of htmlFiles){
   const html=fs.readFileSync(file,'utf8');
   for(const match of html.matchAll(/\bhref=["']([^"']+)["']/gi)){
     const href=match[1].trim();
-    if(!href||/^(?:https?:|mailto:|tel:|sms:|data:|javascript:)/i.test(href))continue;
+    // Ignore external protocols and URLs assembled dynamically inside script templates.
+    if(!href||href.includes('${')||/^(?:https?:|mailto:|tel:|sms:|data:|javascript:)/i.test(href))continue;
     const target=resolveLocalPage(href,file);
     if(!target.startsWith(out+path.sep)&&target!==path.join(out,'index.html'))continue;
     if(!fs.existsSync(target)){
