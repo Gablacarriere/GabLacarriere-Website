@@ -99,3 +99,13 @@
   }
   setTimeout(()=>boot().catch(err=>console.error('Mentorship homework bridge',err)),650);
 })();
+
+(() => {
+  if (!location.pathname.startsWith('/mentorship-hub')) return;
+  if (document.querySelector('script[data-latest-session]')) return;
+  const script=document.createElement('script');
+  script.src='/mentorship-latest-session.js?v=1';
+  script.defer=true;
+  script.dataset.latestSession='1';
+  document.head.appendChild(script);
+})();
