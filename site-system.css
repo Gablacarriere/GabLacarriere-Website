@@ -1,0 +1,55 @@
+/* Final public-site coherence layer.
+   This file intentionally loads after the page-specific and Bauhaus layers so the shared shell stays stable. */
+body.publicSite{
+  --site-max:1120px;
+  --site-copy:72ch;
+  --site-touch:44px;
+  --site-line:#77786f;
+  --site-subtle:#454841;
+}
+.publicSite .w{width:min(var(--site-max),calc(100% - 36px));margin-inline:auto}
+.publicSite nav{z-index:60}
+.publicSite .n{min-height:82px!important;gap:24px}
+.publicSite .publicBrand{display:block!important;width:238px!important;height:auto!important;flex:0 0 238px!important;overflow:visible!important}
+.publicSite .publicBrand img{display:block!important;width:100%!important;height:auto!important;aspect-ratio:3/1;object-fit:contain!important;object-position:left center!important}
+.publicSite .primary{gap:8px!important;align-items:center}
+.publicSite .primary>a,.publicSite .navExplore>summary{display:flex;align-items:center;min-height:var(--site-touch);padding:10px 8px!important;white-space:nowrap}
+.publicSite .primary>a{font-weight:650}
+.publicSite .memberLink{margin-left:4px;padding:10px 12px!important;font-weight:750!important}
+.publicSite .navExplore{position:relative}
+.publicSite .navExplore>summary{list-style:none;cursor:pointer;font:inherit;font-size:inherit;font-weight:650;color:inherit}
+.publicSite .navExplore>summary::-webkit-details-marker{display:none}
+.publicSite .navExplore>summary::after{content:'▾';margin-left:6px;font-size:.78em;transition:transform .16s ease}
+.publicSite .navExplore[open]>summary::after{transform:rotate(180deg)}
+.publicSite .navExplore>summary[aria-current="page"]{color:var(--bh-blue,#1748b6);text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:8px}
+.publicSite .navExplorePanel{position:absolute;right:0;top:calc(100% + 8px);z-index:80;display:grid;width:250px;padding:8px;background:var(--bh-paper,#f4f0e6);color:var(--bh-ink,#181918);border:2px solid var(--bh-ink,#181918);box-shadow:6px 6px 0 var(--bh-blue,#1748b6)}
+.publicSite .navExplorePanel a{display:flex;align-items:center;min-height:42px;padding:9px 11px;font-size:.92rem;font-weight:650;text-decoration:none}
+.publicSite .navExplorePanel a:hover,.publicSite .navExplorePanel a:focus-visible{background:#e7dfcb;color:var(--bh-ink,#181918)}
+.publicSite .navExplorePanel a[aria-current="page"]{background:var(--bh-yellow,#f1c52c);color:var(--bh-ink,#181918);text-decoration:none}
+.publicSite .studentVoiceBar{display:none!important}
+.publicSite .mobilePanel{width:min(320px,calc(100vw - 32px));padding:8px}
+.publicSite .mobilePanel a{display:flex;align-items:center;min-height:44px;padding:10px 12px;border-bottom:1px solid #77786f55}
+.publicSite .mobilePanel a:last-child{border-bottom:0}
+.publicSite .lede{max-width:var(--site-copy)}
+.publicSite .actions{align-items:center}
+.publicSite .actions .btn{max-width:100%}
+.publicSite :is(.card p,.classGuidance p,.startingHelp p,.editorialPhoto figcaption){max-width:68ch}
+.publicSite footer>.w:first-child{font-weight:800;letter-spacing:.015em;line-height:1.5}
+.publicSite .footerDirectory{grid-template-columns:1fr 1.15fr .85fr;gap:40px}
+.publicSite .footerGroup h2{margin-bottom:10px!important}
+.publicSite .footerGroup a{line-height:1.35}
+@media(max-width:1099px){
+  .publicSite .n{min-height:72px!important;gap:12px}
+  .publicSite .publicBrand{width:min(214px,calc(100vw - 118px))!important;flex-basis:auto!important}
+}
+@media(max-width:760px){
+  .publicSite .w{width:calc(100% - 32px)}
+  .publicSite .footerDirectory{grid-template-columns:1fr;gap:26px}
+  .publicSite .actions .btn{width:auto}
+}
+@media(max-width:380px){
+  .publicSite .publicBrand{width:min(188px,calc(100vw - 112px))!important}
+}
+@media(prefers-reduced-motion:reduce){
+  .publicSite .navExplore>summary::after{transition:none}
+}
