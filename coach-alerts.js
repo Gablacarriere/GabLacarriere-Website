@@ -492,6 +492,26 @@
 
 (() => {
   if (!location.pathname.startsWith('/mentorship-hub')) return;
+  if (document.querySelector('script[data-mentorship-roadmap-review-history]')) return;
+  const script=document.createElement('script');
+  script.src='/mentorship-roadmap-review-history.js?v=2';
+  script.defer=true;
+  script.dataset.mentorshipRoadmapReviewHistory='1';
+  document.head.appendChild(script);
+})();
+
+(() => {
+  if (!location.pathname.startsWith('/mentorship-hub')) return;
+  if (document.querySelector('script[data-mentorship-evidence-inbox]')) return;
+  const script=document.createElement('script');
+  script.src='/mentorship-evidence-inbox.js?v=1';
+  script.defer=true;
+  script.dataset.mentorshipEvidenceInbox='1';
+  document.head.appendChild(script);
+})();
+
+(() => {
+  if (!location.pathname.startsWith('/mentorship-hub')) return;
   if (!document.querySelector('link[data-mentorship-checkins]')) {
     const link=document.createElement('link');
     link.rel='stylesheet';
