@@ -53,7 +53,7 @@
     framework.setAttribute('aria-labelledby', 'teacher-framework-title');
     framework.innerHTML = `
       <div class="w">
-        <p class="kicker">Teacher framework · From the 100-hour training</p>
+        <p class="kicker">Teacher framework · Applied pedagogy</p>
         <h2 id="teacher-framework-title">Teaching is a sequence of decisions.</h2>
         <p class="lede frameworkLead">A good class is not a list of movements to cover. It connects clear outcomes, prerequisites, attention, practice, feedback and reflection—then changes when the students show you something different.</p>
 
@@ -101,7 +101,7 @@
 
         <div class="frameworkNotes">
           <div class="frameworkNote"><strong>Evidence note.</strong><p>I use multimodal instruction rather than assigning students fixed “visual”, “auditory” or “kinesthetic” learning styles. The useful question is which representation helps this learner understand this task—not which permanent category they belong to.</p></div>
-          <div class="frameworkNote"><strong>Built through practice.</strong><p>Part of this framework grew out of the 100-hour teacher training I co-developed with Caroline Haugsted: theory, observation, assisted teaching, live practice, peer feedback, self-evaluation, ethics and community leadership.</p></div>
+          <div class="frameworkNote"><strong>Built through practice.</strong><p>This framework is designed to be tested in real classes through observation, practice teaching, student response, self-evaluation and continuous refinement.</p></div>
         </div>
       </div>`;
     teacherSupport.insertAdjacentElement('afterend', framework);
