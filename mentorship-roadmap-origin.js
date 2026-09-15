@@ -1,0 +1,15 @@
+(() => {
+  'use strict';
+  if (!location.pathname.startsWith('/mentorship-hub')) return;
+  const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+  const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const LABELS={gab_planned:'Gab planned',class_stated:'Stated in class',system_suggested:'System suggested',student_requested:'Student requested',interview_goal:'Interview goal'};
+  let db=null,user=null,role=null,map=new Map();
+
+  async function client(){while(!window.supabase||!window.GAB_PORTAL?.supabaseUrl)await sleep(100);if(!db)db=window.__ROADMAP_ORIGIN_DB||(window.__ROADMAP_ORIGIN_DB=window.supabase.createClient(window.GAB_PORTAL.supabaseUrl,window.GAB_PORTAL.supabaseAnonKey));return db;}
+  function styles(){if(document.getElementById('roadmapOriginStyles'))return;const s=document.createElement('style');s.id='roadmapOriginStyles';s.textContent=`.roadmapOrigin{display:inline-flex;align-items:center;gap:5px;margin-top:7px;padding:5px 8px;border-radius:999px;border:1px solid #ffffff17;background:#ffffff08;color:#a9b5c3;font-size:.69rem;font-weight:850}.roadmapOrigin.class_stated{color:#bdeaff;border-color:#7dd8ff3d}.roadmapOrigin.gab_planned{color:#f0dec7;border-color:#f2dfc53d}.roadmapOrigin.student_requested{color:#e3c8ff;border-color:#c69cff3d}.roadmapOrigin.interview_goal{color:#c9eec8;border-color:#9fe29f3d}.roadmapOrigin.system_suggested{color:#aab6c5;border-style:dashed}`;document.head.appendChild(s);}
+  function decorate(){document.querySelectorAll('.roadmapStop[data-roadmap-id]').forEach(card=>{const id=card.dataset.roadmapId;if(!id)return;const row=map.get(String(id));if(!row)return;let badge=card.querySelector('.roadmapOrigin');if(!badge){badge=document.createElement('span');badge.className='roadmapOrigin';const top=card.querySelector('.roadmapStopTop');if(top)top.insertAdjacentElement('afterend',badge);else card.prepend(badge);}badge.className=`roadmapOrigin ${row.origin||'gab_planned'}`;badge.textContent=LABELS[row.origin]||'Gab planned';badge.title=`Why this checkpoint exists: ${LABELS[row.origin]||'Gab planned'}`;});}
+  async function load(){const c=await client();const auth=await c.auth.getUser();user=auth.data?.user||null;if(!user)return;const me=await c.from('profiles').select('role').eq('id',user.id).maybeSingle();role=me.data?.role||'student';const q=c.from('mentorship_roadmap_items').select('id,origin,student_id').in('status',['planned','in_progress','paused']);const res=role==='coach'?await q:await q.eq('student_id',user.id);if(res.error)throw res.error;map=new Map((res.data||[]).map(x=>[String(x.id),x]));decorate();}
+  async function boot(){styles();await load();const root=document.getElementById('dashboardView')||document.body;let timer=null;new MutationObserver(()=>{clearTimeout(timer);timer=setTimeout(decorate,100);}).observe(root,{childList:true,subtree:true});window.addEventListener('focus',()=>load().catch(console.warn));}
+  setTimeout(()=>boot().catch(err=>console.warn('Roadmap origin',err)),1450);
+})();
