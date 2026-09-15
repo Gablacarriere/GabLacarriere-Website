@@ -482,6 +482,16 @@
 
 (() => {
   if (!location.pathname.startsWith('/mentorship-hub')) return;
+  if (document.querySelector('script[data-mentorship-roadmap-session-planner]')) return;
+  const script=document.createElement('script');
+  script.src='/mentorship-roadmap-session-planner.js?v=1';
+  script.defer=true;
+  script.dataset.mentorshipRoadmapSessionPlanner='1';
+  document.head.appendChild(script);
+})();
+
+(() => {
+  if (!location.pathname.startsWith('/mentorship-hub')) return;
   if (!document.querySelector('link[data-mentorship-checkins]')) {
     const link=document.createElement('link');
     link.rel='stylesheet';
