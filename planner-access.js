@@ -37,8 +37,7 @@
 
   function lockGuidance(id, title, teaser) {
     const node = document.getElementById(id);
-    if (!node || node.dataset.accessLocked === '1') return;
-    node.dataset.accessLocked = '1';
+    if (!node || node.querySelector('.premiumPreview')) return;
     node.innerHTML = `<div class="premiumPreview"><p class="kicker">FULL STUDIO</p><h3>${title}</h3><p>${teaser}</p><a href="/for-teachers/#teaching-studio-access">See what Full Studio unlocks →</a></div>`;
   }
 
