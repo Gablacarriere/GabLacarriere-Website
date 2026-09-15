@@ -461,6 +461,13 @@
     script.dataset.mentorshipRoadmap='1';
     document.head.appendChild(script);
   }
+  if (!document.querySelector('script[data-mentorship-homework]')) {
+    const script=document.createElement('script');
+    script.src='/mentorship-homework.js?v=1';
+    script.defer=true;
+    script.dataset.mentorshipHomework='1';
+    document.head.appendChild(script);
+  }
 })();
 
 (() => {
