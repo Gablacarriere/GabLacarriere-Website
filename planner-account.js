@@ -7,10 +7,16 @@ function gate(message='') {root.innerHTML=`<section class="toolPanel accountGate
 async function read(){const {data,error}=await client.from('teacher_workspaces').select('document,revision,updated_at').eq('user_id',user.id).maybeSingle();if(error)throw error;return data||{document:{version:2,courses:[],sessions:[]},revision:0};}
 async function load(){if(!cfg||!window.supabase){root.textContent='The account service could not load. Refresh to try again.';throw Error('Account service unavailable');}client=window.supabase.createClient(cfg.supabaseUrl,cfg.supabaseAnonKey);const result=await client.auth.getUser();user=result.data?.user||null;
  if(!user){gate();await new Promise(resolve=>{root.addEventListener('submit',async event=>{if(event.target.id!=='plannerLogin')return;event.preventDefault();const form=event.target,button=form.querySelector('button'),message=document.getElementById('plannerLoginMessage');button.disabled=true;message.textContent='Signing in…';try{const values=new FormData(form);const {data,error}=await client.auth.signInWithPassword({email:String(values.get('email')).trim(),password:String(values.get('password'))});if(error)throw error;user=data.user;form.reset();resolve();}catch{message.textContent='Sign-in did not complete. Check your details or use the account-help link.';}finally{button.disabled=false;}});});}
- bar.innerHTML=`<span>Signed in as ${esc(user.email||'member')}</span><a href="/mentorship-hub/">My member space ↗</a><button id="plannerSignout" type="button">Sign out</button>`;
+ const access=window.GAB_ACCESS?await window.GAB_ACCESS.resolve(client,'teacher_studio'):{product_key:'teacher_studio',mode:'beta',tier:'free',full_access:true,free_limits:{curricula:1,sessions:3},reason:'beta_preview'};
+ window.GAB_USER_ACCESS=access;
+ const accessLabel=window.GAB_ACCESS?.label?window.GAB_ACCESS.label(access):'Studio access';
+ const accessDetail=window.GAB_ACCESS?.detail?window.GAB_ACCESS.detail(access):'';
+ bar.innerHTML=`<span>Signed in as ${esc(user.email||'member')}</span><span class="accessTier">${esc(accessLabel)}</span><a href="/mentorship-hub/">My member space ↗</a><button id="plannerSignout" type="button">Sign out</button>`;
+ if(accessDetail){const note=document.createElement('p');note.id='plannerAccessNote';note.className='toolHint accessNote';note.textContent=accessDetail;bar.insertAdjacentElement('afterend',note);}
+ window.dispatchEvent(new CustomEvent('gab-access-ready',{detail:access}));
  document.getElementById('plannerSignout').onclick=async()=>{if(window.TeacherPlannerFlush&&!await window.TeacherPlannerFlush())return;await client.auth.signOut();location.reload();};
  client.auth.onAuthStateChange((event,session)=>{if(initializing)return;if(!session||session.user.id!==user.id){root.replaceChildren();bar.textContent='Your account changed. Reloading…';location.reload();}});
- const workspace=await read();initializing=false;return {workspace,userId:user.id};}
+ const workspace=await read();initializing=false;return {workspace,userId:user.id,access};}
 window.TeacherCloud={load,read,async save(document,revision){const {data,error}=await client.rpc('save_teacher_workspace',{p_document:document,p_expected_revision:revision});if(error)throw error;return data;}};
 })();
 
