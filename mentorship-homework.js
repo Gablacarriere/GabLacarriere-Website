@@ -3,7 +3,7 @@
   if (!location.pathname.startsWith('/mentorship-hub')) return;
 
   const state={client:null,user:null,profile:null,assignments:[],drills:[],ready:false,queued:false};
-  const safe=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot',"'":'&#39;'}[c]));
+  const safe=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const due=v=>{if(!v)return '';const d=new Date(v+'T00:00:00');return Number.isNaN(d.getTime())?'':d.toLocaleDateString(undefined,{month:'short',day:'numeric'});};
   const source=v=>v==='granola'?'Private-class notes':v==='class'?'Class':'Teacher assignment';
   const drill=id=>state.drills.find(d=>d.id===id);
@@ -45,10 +45,10 @@
     if(!state.ready||state.profile?.role==='coach'&&document.body.classList.contains('coachView'))return;
     const orders=document.getElementById('assignmentsList');if(!orders)return;
     let wrap=document.getElementById('zoukableHubHomework');
-    const rows=activeFor(state.user.id).map(homeworkHTML).filter(Boolean);
+    const active=activeFor(state.user.id);const rows=active.map(homeworkHTML).filter(Boolean);
     if(!rows.length){wrap?.remove();return;}
     if(!wrap){wrap=document.createElement('div');wrap.id='zoukableHubHomework';orders.insertAdjacentElement('beforebegin',wrap);}
-    const signature=activeFor(state.user.id).map(a=>a.id+':'+a.updated_at).join('|');if(wrap.dataset.signature===signature)return;
+    const signature=active.map(a=>a.id+':'+a.updated_at).join('|');if(wrap.dataset.signature===signature)return;
     wrap.dataset.signature=signature;
     wrap.innerHTML=`<div style="margin-bottom:12px"><strong>Drill homework</strong><p class="muted" style="margin:3px 0 0">Assigned practice from class or private lessons.</p></div>${rows.join('')}`;
     wrap.querySelectorAll('[data-hub-homework-complete]').forEach(btn=>btn.onclick=async()=>{
@@ -79,7 +79,8 @@
       const id=card.dataset.overviewStudent;const count=activeFor(id).length;const counts=card.querySelector('.counts');if(!counts)return;
       let badge=counts.querySelector('[data-zoukable-homework-count]');
       if(!badge){badge=document.createElement('span');badge.dataset.zoukableHomeworkCount='1';counts.appendChild(badge);}
-      badge.textContent=`📚 ${count} drill homework`;
+      const text=`📚 ${count} drill homework`;
+      if(badge.textContent!==text)badge.textContent=text;
     });
   }
 
