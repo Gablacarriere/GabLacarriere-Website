@@ -1,5 +1,6 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
+  "ignoreCommand": "node scripts/vercel-ignore-build.cjs",
   "buildCommand": "node apply_branding.cjs && node integrate_zoukable.cjs && node scripts/finalize-site.cjs",
   "outputDirectory": "public",
   "rewrites": [
