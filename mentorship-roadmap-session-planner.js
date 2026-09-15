@@ -57,3 +57,13 @@
   }
   setTimeout(()=>boot(),1150);
 })();
+
+(() => {
+  if (!location.pathname.startsWith('/mentorship-hub')) return;
+  if (document.querySelector('script[data-mentorship-roadmap-origin]')) return;
+  const script=document.createElement('script');
+  script.src='/mentorship-roadmap-origin.js?v=1';
+  script.defer=true;
+  script.dataset.mentorshipRoadmapOrigin='1';
+  document.head.appendChild(script);
+})();
