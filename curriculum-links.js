@@ -33,6 +33,12 @@ const mappings=[
 {skill:'timing',concept:'connection-5',name:'Timing & rhythm'},
 {skill:'timing',concept:'rhythm-3',name:'Timing & rhythm'},
 
+// Space & orientation
+{skill:'space-orientation',concept:'architecture-0',name:'Space & orientation'},
+{skill:'space-orientation',concept:'bridge-0',name:'Space & orientation'},
+{skill:'space-orientation',concept:'bridge-1',name:'Space & orientation'},
+{skill:'space-orientation',concept:'space-0',name:'Space & orientation'},
+
 // Torsion & body pathways
 {skill:'dissociation',concept:'pathways-0',name:'Dissociation'},
 {skill:'dissociation',concept:'spirals-0',name:'Dissociation'},
