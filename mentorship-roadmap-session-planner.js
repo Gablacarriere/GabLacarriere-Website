@@ -67,3 +67,13 @@
   script.dataset.mentorshipRoadmapOrigin='1';
   document.head.appendChild(script);
 })();
+
+(() => {
+  if (!location.pathname.startsWith('/mentorship-hub')) return;
+  if (document.querySelector('script[data-mentorship-learning-timeline]')) return;
+  const script=document.createElement('script');
+  script.src='/mentorship-learning-timeline.js?v=1';
+  script.defer=true;
+  script.dataset.mentorshipLearningTimeline='1';
+  document.head.appendChild(script);
+})();
