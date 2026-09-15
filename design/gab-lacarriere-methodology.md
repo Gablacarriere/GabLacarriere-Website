@@ -160,7 +160,7 @@ This cycle describes **how a skill is learned and generalized over time**.
 
 ## 6. Cognitive-skill loop: RECOGNIZE → VISUALIZE → CALCULATE → CHOOSE → EXECUTE → UPDATE
 
-This is a second, more moment-to-moment layer connecting dance expertise with concepts also useful in chess expertise.
+This is a second, more moment-to-moment layer connecting dance expertise with distinctions that are also useful in chess expertise.
 
 It describes **how a dancer perceives, predicts, decides, acts, and learns while movement is unfolding**.
 
@@ -182,15 +182,69 @@ A dance pattern is not only spatial. It is spatiotemporal: structure, trajectory
 
 ### 6.3 CALCULATE — Temporal Calculation
 
-**Definition:** the ability to project one or more plausible continuations through time and anticipate the consequences of timing, direction, momentum, partner response, and available movement options.
+**Definition:** the ability to project one or more movements or sequences forward in time, estimate how long they will take, and determine whether a desired movement, transition, resolution, accent, break, or phrase can be reached at the intended moment.
 
-Calculation in dance is not numerical arithmetic. It is temporal projection under movement constraints.
+Calculation in dance is not numerical arithmetic. It is temporal forecasting under movement and partner constraints.
 
-**Key idea:** Calculation estimates **what is likely to happen next**.
+**Key idea:** Calculation tells the dancer **when they would get there**.
+
+### 6.3.1 Temporal Footprint and phase location
+
+Every movement can be represented through a **Temporal Footprint**: entry state, preparation, initiation, development/travel, resolution, possible exit points, typical duration, and which portions can be compressed or expanded.
+
+The learner should progressively recognize not only the pattern but the current location inside that footprint.
+
+A useful shorthand is:
+
+**Movement = structure × trajectory × time.**
+
+### 6.3.2 Candidate Movement Generation
+
+At any moment, dancers do not need to search every movement they know. They generate a small set of plausible **candidate movements** constrained by:
+
+- current position and orientation;
+- connection state;
+- momentum;
+- available time;
+- partner organization and response;
+- available space;
+- musical structure;
+- intention;
+- skill availability and safety.
+
+Expertise includes quickly suppressing options that are familiar but inappropriate to the present situation.
+
+### 6.3.3 Evaluation and Anticipation
+
+Candidates can be evaluated through safety, partner comfort, connection clarity, mechanics, space, musical relevance, movement quality, available time, and expressive intention.
+
+**Anticipation** emerges from pattern recognition + sensorimotor visualization + temporal calculation. It allows preparation for probable future states without requiring fixed choreography.
+
+**Core principle:** prediction without rigidity.
+
+For followers in particular, pattern recognition should support orientation without replacing present partner information. Anticipation is not permission to auto-complete the pattern that was expected.
+
+### 6.3.4 Adaptive Recalculation
+
+Social dance is interactive. A partner may change timing, direction, range, momentum, connection, or interpretation while a plan is already unfolding. The music or available space may also change.
+
+**Adaptive recalculation** is the ability to notice that the original forecast is no longer appropriate and modify or abandon it early enough to preserve clarity, comfort, timing, and choice.
+
+### 6.3.5 Calculation Depth
+
+Calculation can be trained progressively:
+
+1. **Present state** — What is happening now?
+2. **One transition** — What can this movement become?
+3. **Short sequence** — If I choose A and then B, where will we arrive?
+4. **Musical destination** — Which sequence can reach the desired accent, break, or phrase at the intended moment?
+5. **Adaptive calculation** — The situation changed; what needs to be recalculated rather than forced?
+
+Greater calculation depth should increase useful predictive capacity without turning social dance into pre-choreography.
 
 ### 6.4 CHOOSE — Contextual Decision
 
-**Definition:** the ability to select an action from plausible options based on intention, safety, partner information, music, space, skill availability, and likely consequences.
+**Definition:** the ability to select an action from plausible candidates based on intention, safety, partner information, music, space, skill availability, and likely consequences.
 
 Expertise is not only having more options. It includes selecting useful options quickly and suppressing inappropriate ones.
 
@@ -283,16 +337,32 @@ Relationships represent support, explanation, or stabilization rather than rigid
 4. **Application** — named patterns, off-axis work, and context-specific use.
 5. **Exploration** — advanced transformations and analytical lenses.
 
-### Current eight domains
+### Current nine domains
 
 1. **Body Organization & Weight**
 2. **Frame & Connection**
 3. **Rhythm & Timing**
 4. **Space & Orientation**
-5. **Movement Grammar**
-6. **Head Movement & Off-Axis**
-7. **Torsion & Body Pathways**
-8. **Learning & Practice**
+5. **Perception & Projection**
+6. **Movement Grammar**
+7. **Head Movement & Off-Axis**
+8. **Torsion & Body Pathways**
+9. **Learning & Practice**
+
+### Perception & Projection in the Atlas
+
+The cognitive domain contains student-addressable abilities rather than the practice format used to train them:
+
+- Temporal Pattern Recognition;
+- Temporal Location & Footprint;
+- Sensorimotor Visualization;
+- Candidate Movement Generation;
+- Temporal Calculation;
+- Evaluation & Anticipation;
+- Adaptive Recalculation;
+- Calculation Depth & Musical Destination.
+
+These concepts sit close to Rhythm & Timing, Space & Orientation, and Movement Grammar because they depend on understanding temporal structure, current state, possible continuations, and pattern relationships.
 
 ### Foundational placement principle
 
@@ -354,6 +424,50 @@ Errors should be used diagnostically. The aim is not merely to avoid errors but 
 ### 9.7 Practice should produce transfer
 
 The end point of a drill is not a good drill performance. The end point is improved performance in the target environment: social dance, improvisation, class recall, competition, choreography, or another intended context.
+
+### 9.8 Dance Puzzles
+
+**Dance Puzzles** are a reusable training protocol for the Perception & Projection domain. They are deliberately treated as a practice method rather than an Atlas concept.
+
+A traditional exercise often gives the learner both the problem and the answer. A Dance Puzzle presents a movement situation and requires the learner to generate, test, and update an answer.
+
+Possible puzzle types include:
+
+- Pattern Recognition;
+- Temporal Location;
+- Sensorimotor Visualization;
+- Temporal Calculation;
+- Candidate Movement Generation;
+- Best-Move / Contextual Choice;
+- Calculation Depth;
+- Adaptive Recalculation;
+- Error Detection;
+- Pattern Transformation;
+- Musical Calculation;
+- Follower Prediction;
+- Partner-System puzzles.
+
+A standard puzzle can use the sequence:
+
+1. **I recognize…** — What is happening?
+2. **I predict…** — What is likely to happen?
+3. **My candidates are…** — What plausible continuations exist?
+4. **I choose…** — Which continuation is most appropriate?
+5. **Because…** — What constraints support that choice?
+6. **I expect to arrive…** — Where and when?
+7. **What actually happened?** — Compare prediction with execution and update the model.
+
+The difficulty of a puzzle can be changed through information available, decision time, calculation depth, partner variability, constraints, and required precision rather than merely by teaching harder movements.
+
+Puzzle assessment can distinguish:
+
+- Recognition;
+- Projection / Visualization;
+- Timing / Calculation;
+- Decision Quality;
+- Adaptation.
+
+A learner can therefore execute unsuccessfully while demonstrating good perception and reasoning, or accidentally succeed despite weak decision-making. The methodology should distinguish those cases.
 
 ---
 
@@ -485,13 +599,14 @@ A useful class-design process asks:
 2. What prerequisite knowledge or physical availability does it require?
 3. What is likely to be the main bottleneck for this group?
 4. What general and specific warm-up prepares the task?
-5. Which explanation or demonstration is necessary?
-6. Which drills isolate the important mechanism?
-7. How will difficulty progress?
-8. How will students retrieve or reconstruct rather than merely copy?
-9. How will the skill be reintegrated into partner work, music, or social use?
-10. What evidence would show that learning transferred?
-11. What cool-down or closing reflection is appropriate?
+5. Is the lesson training execution, perception/projection, or both?
+6. Which explanation or demonstration is necessary?
+7. Which drills or Dance Puzzles isolate the important mechanism or cognitive skill?
+8. How will difficulty progress?
+9. How will students retrieve or reconstruct rather than merely copy?
+10. How will the skill be reintegrated into partner work, music, or social use?
+11. What evidence would show that learning transferred?
+12. What cool-down or closing reflection is appropriate?
 
 ### 14.1 Practice density
 
@@ -499,7 +614,7 @@ Teaching time should contain enough actionable practice. Long blocks should not 
 
 ### 14.2 Scaffolding and progression
 
-Complexity can be manipulated through range, speed, number of variables, partner responsibility, predictability, timing, support, and contextual demands.
+Complexity can be manipulated through range, speed, number of variables, partner responsibility, predictability, timing, support, available information, calculation depth, and contextual demands.
 
 ### 14.3 Differentiation
 
@@ -526,6 +641,9 @@ Useful diagnosis can ask:
 - What did they perceive?
 - Which variable changed unexpectedly?
 - Was the problem conceptual, perceptual, temporal, physical, relational, or decisional?
+- Did the learner recognize the current state accurately?
+- Was the prediction reasonable even if execution failed?
+- Was the temporal estimate accurate?
 - What is the smallest useful intervention?
 
 ### 15.2 Feedback quantity
@@ -587,6 +705,7 @@ Useful drill metadata can include:
 
 - primary and secondary objectives;
 - linked skills/concepts;
+- cognitive target when relevant (recognition, visualization, calculation, decision, adaptation);
 - solo / partner / either;
 - leader / follower relevance;
 - tempo and rhythm;
@@ -597,6 +716,8 @@ Useful drill metadata can include:
 - confidence or mastery evidence;
 - prerequisites;
 - physical constraints or adaptations.
+
+Dance Puzzles can live in or connect to the practice system as a specialized task type linked to Perception & Projection concepts. They should not be promoted to Atlas nodes merely because they are reusable exercises.
 
 ## 19. Spaced practice without punishment
 
@@ -635,7 +756,7 @@ The methodology should support at least two distinct planning levels:
 
 **Curriculum Creator** — long-horizon planning: domains, dependencies, sequence, coverage, progression, and coherence.
 
-**Class Creator** — lesson-level planning: goals, prerequisites, warm-up, specific preparation, explanations, drills, progressions, integration, assessment, and cool-down.
+**Class Creator** — lesson-level planning: goals, prerequisites, warm-up, specific preparation, cognitive target, explanations, drills/Dance Puzzles, progressions, integration, assessment, and cool-down.
 
 Warm-up and cool-down should be explicit components rather than optional afterthoughts.
 
@@ -661,6 +782,8 @@ Claims should be updated when stronger evidence becomes available.
 
 A teaching principle may be useful and canonical as part of the method even when direct experimental evidence in Brazilian Zouk or Lambada is limited. In that case, describe it accurately as a methodological principle rather than presenting it as experimentally proven.
 
+The analogy between chess calculation and dance temporal calculation is therefore used as a pedagogical/cognitive model. Similarity of terminology does not imply that the tasks are neurologically identical.
+
 ---
 
 # PART XVI — CURRENT OPEN QUESTIONS
@@ -672,7 +795,8 @@ Current unresolved items inherited from the Atlas work include:
 - exact equivalence or distinction among Saltinho / Sortinho / Soltinho across contexts;
 - whether Side Basic should eventually become a Lateral variant;
 - normalization of lower-frequency named movements with inconsistent transcription;
-- final system-level distinction among concept, skill, movement, pattern, drill, variation, cue, and exercise across Atlas and Zoukable.
+- final system-level distinction among concept, skill, movement, pattern, drill, variation, cue, and exercise across Atlas and Zoukable;
+- which Dance Puzzle formats transfer most strongly to live social dance and how calculation depth should scale by experience level.
 
 Additional open questions should be added here rather than silently resolved.
 
@@ -740,7 +864,7 @@ Depending on the change, check:
 1. Master methodology document.
 2. Atlas curriculum and relationships.
 3. Curriculum registry.
-4. Public Method / Movement Architecture / practice pages.
+4. Public Method / Movement Architecture / Perception & Projection / practice pages.
 5. Mentorship Hub roadmap and teaching logic.
 6. Zoukable skills/drills/practice relationships.
 7. Teacher curriculum/class builders.
@@ -764,13 +888,34 @@ Key elements formalized in this version:
 - **UNDERSTAND → FEEL → PRACTICE → ADAPT**;
 - **RECOGNIZE → VISUALIZE → CALCULATE → CHOOSE → EXECUTE → UPDATE**;
 - movement-architecture six-variable model;
-- eight Atlas curriculum domains and five depth bands;
+- Atlas curriculum domains and five depth bands;
 - warm-up split into general and specific preparation;
 - cool-down as a dedicated designed phase;
 - mentorship roadmap/check-in role;
 - Zoukable as practice implementation rather than curriculum replacement;
 - teacher development and class/curriculum builder principles;
 - provenance, promotion, privacy, and propagation rules.
+
+## 2026-09-15 — Perception & Projection promoted and operationalized
+
+Gab explicitly adopted the full cognitive framework developed from the chess/dance analogy and its fit with recurring Granola teaching themes.
+
+Promoted elements:
+
+- Temporal Pattern Recognition;
+- Temporal Footprint / phase location;
+- Sensorimotor Visualization;
+- Candidate Movement Generation;
+- Temporal Calculation defined specifically as duration-and-arrival forecasting;
+- Evaluation & Anticipation;
+- Adaptive Recalculation;
+- Calculation Depth;
+- Dance Puzzles as a training protocol rather than a curriculum concept;
+- Perception & Projection as the ninth Atlas domain and fourth public pillar of the Method.
+
+Central formulation:
+
+**Pattern recognition tells the dancer where they are. Visualization allows them to imagine where they could go. Calculation tells them when they would get there.**
 
 ---
 
@@ -781,6 +926,8 @@ The next useful expansions are:
 - formal glossary of methodology terms;
 - explicit prerequisite/dependency model for physical and cognitive skills;
 - taxonomy of movement / pattern / variation / drill / skill / concept;
+- first validated Dance Puzzle library, beginning with approximately 30 puzzles across recognition, visualization, temporal calculation, candidate generation, musical destination and recalculation;
+- Dance Puzzle assessment rubric for Recognition, Projection, Timing, Decision Quality and Adaptation;
 - class-design template generated directly from this methodology;
 - mapping between each methodology principle and the website/tool that implements it;
 - evidence register linking scientific references to specific claims without cluttering the student-facing pages;
