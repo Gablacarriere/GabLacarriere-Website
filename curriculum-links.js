@@ -116,3 +116,13 @@ const api={
 };
 root.GAB_CURRICULUM_LINKS=api;if(typeof module!=='undefined')module.exports=api;
 })(typeof window!=='undefined'?window:globalThis);
+
+(function(){
+  if(typeof document==='undefined'||typeof location==='undefined'||!location.pathname.startsWith('/mentorship-hub'))return;
+  if(document.querySelector('script[data-roadmap-review-history]'))return;
+  const script=document.createElement('script');
+  script.src='/mentorship-roadmap-review-history.js?v=1';
+  script.defer=true;
+  script.dataset.roadmapReviewHistory='1';
+  document.head.appendChild(script);
+})();
