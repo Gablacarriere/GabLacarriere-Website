@@ -2,6 +2,8 @@
 (function(root){'use strict';
 const mappings=[
 // Body organization & weight
+{skill:'breath-organization',concept:'organization-0',name:'Breath & organization'},
+{skill:'breath-organization',concept:'organization-2',name:'Breath & organization'},
 {skill:'weight-transfer',concept:'connection-2',name:'Weight transfer'},
 {skill:'weight-transfer',concept:'steps-0',name:'Weight transfer'},
 {skill:'weight-transfer',concept:'steps-1',name:'Weight transfer'},
