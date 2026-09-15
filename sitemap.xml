@@ -1,68 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>https://gablacarriere.com/</loc>
-  </url>
-  <url>
-    <loc>https://gablacarriere.com/about/</loc>
-  </url>
-  <url>
-    <loc>https://gablacarriere.com/learn/</loc>
-  </url>
-  <url>
-    <loc>https://gablacarriere.com/method/</loc>
-  </url>
-  <url>
-    <loc>https://gablacarriere.com/perception-projection/</loc>
-  </url>
-  <url>
-    <loc>https://gablacarriere.com/movement-architecture/</loc>
-  </url>
-  <url>
-    <loc>https://gablacarriere.com/kinesthetic-practice/</loc>
-  </url>
-  <url>
-    <loc>https://gablacarriere.com/how-to-practice-zouk/</loc>
-  </url>
-  <url>
-    <loc>https://gablacarriere.com/classes/</loc>
-  </url>
-  <url>
-    <loc>https://gablacarriere.com/brazilian-zouk-classes-nyc/</loc>
-  </url>
-  <url>
-    <loc>https://gablacarriere.com/lambada-classes-nyc/</loc>
-  </url>
-  <url>
-    <loc>https://gablacarriere.com/zouk-nyc-guide/</loc>
-  </url>
-  <url>
-    <loc>https://gablacarriere.com/privates/</loc>
-  </url>
-  <url>
-    <loc>https://gablacarriere.com/mentorship/</loc>
-  </url>
-  <url>
-    <loc>https://gablacarriere.com/work-with-gab/</loc>
-  </url>
-  <url>
-    <loc>https://gablacarriere.com/workshops/</loc>
-  </url>
-  <url>
-    <loc>https://gablacarriere.com/experience/</loc>
-  </url>
-  <url>
-    <loc>https://gablacarriere.com/wedding/</loc>
-  </url>
-  <url>
-    <loc>https://gablacarriere.com/creative/</loc>
-  </url>
+  <url><loc>https://gablacarriere.com/</loc></url>
+  <url><loc>https://gablacarriere.com/about/</loc></url>
+  <url><loc>https://gablacarriere.com/learn/</loc></url>
+  <url><loc>https://gablacarriere.com/method/</loc></url>
+  <url><loc>https://gablacarriere.com/perception-projection/</loc></url>
+  <url><loc>https://gablacarriere.com/dance-puzzles/</loc></url>
+  <url><loc>https://gablacarriere.com/movement-architecture/</loc></url>
+  <url><loc>https://gablacarriere.com/kinesthetic-practice/</loc></url>
+  <url><loc>https://gablacarriere.com/how-to-practice-zouk/</loc></url>
+  <url><loc>https://gablacarriere.com/classes/</loc></url>
+  <url><loc>https://gablacarriere.com/brazilian-zouk-classes-nyc/</loc></url>
+  <url><loc>https://gablacarriere.com/lambada-classes-nyc/</loc></url>
+  <url><loc>https://gablacarriere.com/zouk-nyc-guide/</loc></url>
+  <url><loc>https://gablacarriere.com/privates/</loc></url>
+  <url><loc>https://gablacarriere.com/mentorship/</loc></url>
+  <url><loc>https://gablacarriere.com/work-with-gab/</loc></url>
+  <url><loc>https://gablacarriere.com/workshops/</loc></url>
+  <url><loc>https://gablacarriere.com/experience/</loc></url>
+  <url><loc>https://gablacarriere.com/wedding/</loc></url>
+  <url><loc>https://gablacarriere.com/creative/</loc></url>
   <url><loc>https://gablacarriere.com/zouk-bnb/</loc></url>
-<url><loc>https://gablacarriere.com/journal/</loc></url>
-<url><loc>https://gablacarriere.com/feedback/</loc></url>
-<url><loc>https://gablacarriere.com/reviews/</loc></url>
+  <url><loc>https://gablacarriere.com/journal/</loc></url>
+  <url><loc>https://gablacarriere.com/feedback/</loc></url>
+  <url><loc>https://gablacarriere.com/reviews/</loc></url>
   <url><loc>https://gablacarriere.com/alex-de-carvalho/</loc></url>
   <url><loc>https://gablacarriere.com/for-teachers/</loc></url>
-<url><loc>https://gablacarriere.com/session-planner/</loc></url>
-<url><loc>https://gablacarriere.com/curriculum-planner/</loc></url>
+  <url><loc>https://gablacarriere.com/session-planner/</loc></url>
+  <url><loc>https://gablacarriere.com/curriculum-planner/</loc></url>
 </urlset>
