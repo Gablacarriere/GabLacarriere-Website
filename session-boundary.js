@@ -34,3 +34,42 @@ if(/^\/teaching-lab\/?$/.test(location.pathname)&&!document.querySelector('scrip
   script.dataset.teachingCoverage='1';
   document.head.appendChild(script);
 }
+
+// Mentorship Hub: wire the student-facing post-class recap and longitudinal history.
+if(/^\/mentorship-hub\/?$/.test(location.pathname)){
+  const loadMentorshipScript=(key,src)=>{
+    if(document.querySelector(`script[data-${key}]`))return;
+    const script=document.createElement('script');
+    script.src=src;
+    script.defer=true;
+    script.setAttribute(`data-${key}`,'1');
+    document.head.appendChild(script);
+  };
+
+  loadMentorshipScript('mentorship-latest-session','/mentorship-latest-session.js?v=2');
+  loadMentorshipScript('mentorship-learning-timeline','/mentorship-learning-timeline.js?v=2');
+
+  const syncLatestSessionVisibility=()=>{
+    const card=document.getElementById('latestSessionStudent');
+    if(!card)return;
+    const hash=location.hash || '#hub-today';
+    card.hidden=hash.startsWith('#hub-') && hash!=='#hub-today';
+  };
+
+  const watchHub=()=>{
+    syncLatestSessionVisibility();
+    const root=document.getElementById('dashboardView');
+    if(!root)return;
+    let queued=false;
+    new MutationObserver(()=>{
+      if(queued)return;
+      queued=true;
+      requestAnimationFrame(()=>{queued=false;syncLatestSessionVisibility();});
+    }).observe(root,{childList:true,subtree:true});
+  };
+
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',watchHub,{once:true});
+  else watchHub();
+  window.addEventListener('hashchange',syncLatestSessionVisibility);
+  window.addEventListener('popstate',syncLatestSessionVisibility);
+}
