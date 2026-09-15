@@ -57,6 +57,8 @@ if(/^\/mentorship-hub\/?$/.test(location.pathname)){
 
   loadMentorshipScript('mentorship-latest-session','/mentorship-latest-session.js?v=2');
   loadMentorshipScript('mentorship-learning-timeline','/mentorship-learning-timeline.js?v=2');
+  loadMentorshipScript('dance-puzzles','/dance-puzzles.js?v=assessment-1');
+  loadMentorshipScript('mentorship-dance-puzzle-assessments','/mentorship-dance-puzzle-assessments.js?v=1');
 
   const syncLatestSessionVisibility=()=>{
     const card=document.getElementById('latestSessionStudent');
