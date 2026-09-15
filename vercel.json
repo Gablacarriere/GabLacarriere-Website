@@ -1,6 +1,6 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "buildCommand": "node apply_branding.cjs && node integrate_zoukable.cjs && node scripts/finalize-site.cjs",
+  "buildCommand": "node apply_branding.cjs && node integrate_zoukable.cjs && node scripts/finalize-site.cjs && node scripts/audit-publication.cjs",
   "outputDirectory": "public",
   "rewrites": [
     {"source":"/business-hq/","destination":"/business-hq.html"},
