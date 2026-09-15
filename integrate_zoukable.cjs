@@ -91,8 +91,70 @@ function limitHeroActions(html,file){
     return start+links.slice(0,2).join('')+end;
   });
 }
+function removeContainingSection(html,marker){
+  const at=html.indexOf(marker);
+  if(at<0)return {html,removed:false};
+  const start=html.lastIndexOf('<section',at);
+  if(start<0)return {html,removed:false};
+  const token=/<\/?section\b[^>]*>/gi;
+  token.lastIndex=start;
+  let depth=0,match;
+  while((match=token.exec(html))){
+    if(/^<section\b/i.test(match[0]))depth++;
+    else depth--;
+    if(depth===0){
+      return {html:html.slice(0,start)+html.slice(token.lastIndex),removed:true};
+    }
+  }
+  return {html,removed:false};
+}
+const pruneMarkers={
+  'classes.html':[
+    '<div class="kicker">Choose your next step</div>',
+    '<div class="kicker">Learn between classes</div>',
+    '<div class="kicker">Visiting New York?</div>'
+  ],
+  'privates.html':[
+    '<div class="kicker">Keep developing</div>'
+  ],
+  'mentorship.html':[
+    '<div class="kicker">The learning loop</div>',
+    '<div class="kicker">Teaching approach</div>',
+    '<div class="kicker">Who it is for</div>',
+    '<div class="kicker">Explore the approach</div>',
+    '<div class="kicker">Current members</div>'
+  ]
+};
+function pruneOfferPage(html,file){
+  let removed=0;
+  for(const marker of pruneMarkers[file]||[]){
+    const result=removeContainingSection(html,marker);
+    html=result.html;
+    if(result.removed)removed++;
+  }
+  return {html,removed};
+}
+function normalizeOfferLanguage(html,file){
+  let next=html;
+  // Kinesthetic Practice is a named training format, so keep the same label everywhere.
+  next=next
+    .replace(/Kinesthetic sessions:/g,'Kinesthetic Practice sessions:')
+    .replace(/<dt>Kinesthetic session<\/dt>/g,'<dt>Kinesthetic Practice</dt>')
+    .replace(/30-minute kinesthetic session/g,'30-minute Kinesthetic Practice Session')
+    .replace(/30-minute kinesthetic practice/g,'30-minute Kinesthetic Practice')
+    .replace(/monthly private coaching, kinesthetic practice, Sunday group training/g,'monthly private coaching, Kinesthetic Practice, Sunday group training')
+    .replace(/1-hour private · 30-minute kinesthetic session · 4 group classes · member space/g,'1-hour private · 30-minute Kinesthetic Practice · group training + practica · member space');
+  if(file==='privates.html'){
+    next=next.replace('<h3>Guided dance practice</h3>','<h3>Kinesthetic Practice</h3>');
+    next=next.replace(
+      '<p>Kinesthetic Practice Sessions give you more time moving with a partner, repeating and adjusting with immediate physical feedback.</p>',
+      '<p>Kinesthetic Practice Sessions give you more time moving with a partner, repeating and adjusting with immediate physical feedback.</p><p><a class="textLink" href="/kinesthetic-practice/">Learn more about Kinesthetic Practice →</a></p>'
+    );
+  }
+  return next;
+}
 
-let linked=0,publicShells=0,removedGeneric=0,trimmedHeroes=0;
+let linked=0,publicShells=0,removedGeneric=0,trimmedHeroes=0,prunedSections=0,normalizedOffers=0;
 const structuralErrors=[];
 for(const file of fs.readdirSync(out)){
   if(!file.endsWith('.html'))continue;
@@ -118,6 +180,16 @@ for(const file of fs.readdirSync(out)){
     const beforeHero=html;
     html=limitHeroActions(html,file);
     if(html!==beforeHero)trimmedHeroes++;
+
+    const beforeLanguage=html;
+    html=normalizeOfferLanguage(html,file);
+    if(html!==beforeLanguage)normalizedOffers++;
+
+    // Offer pages should end once the visitor has enough information to decide or contact Gab.
+    // Site-wide exploration belongs in the shared navigation and footer rather than repeated cross-sell sections.
+    const pruned=pruneOfferPage(html,file);
+    html=pruned.html;
+    prunedSections+=pruned.removed;
 
     // Homepage: promise -> three training choices -> interactive teaching idea -> concise method split.
     if(file==='index.html'){
@@ -197,4 +269,4 @@ if(structuralErrors.length){
 // Keep build and schema/test source out of the static website output.
 fs.rmSync(path.join(out,'.zoukable'),{recursive:true,force:true});
 fs.rmSync(path.join(out,'integrate_zoukable.cjs'),{force:true});
-console.log(`Zoukable installed at /zoukable/; linked from ${linked} member/tool pages. Public shell normalized on ${publicShells} pages; private workspaces restored: ${restoredPrivate}; duplicate CTAs cleaned on ${removedGeneric} pages; hero choices simplified on ${trimmedHeroes} pages.`);
+console.log(`Zoukable installed at /zoukable/; linked from ${linked} member/tool pages. Public shell normalized on ${publicShells} pages; private workspaces restored: ${restoredPrivate}; duplicate CTAs cleaned on ${removedGeneric} pages; hero choices simplified on ${trimmedHeroes} pages; offer sections pruned: ${prunedSections}; training language normalized on ${normalizedOffers} pages.`);
