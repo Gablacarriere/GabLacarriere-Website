@@ -4,7 +4,7 @@
 const PROJECT_URL='https://lftguwmyagkehqmaxjig.supabase.co';
 const PUBLISHABLE_KEY='sb_publishable_YzhfBB0z3emKU-rM8f_18A_Z0RUJUYt';
 const esc=value=>String(value??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
-const state={db:null,user:null,profile:null,assignments:[],drills:[],queued:false,ready:false};
+const state={db:null,user:null,profile:null,assignments:[],drills:[],queued:false,ready:false,revision:0,refreshing:false};
 
 function notice(text,error=false){
  const n=document.querySelector('#notice');
@@ -21,12 +21,16 @@ function drillFor(id){return state.drills.find(d=>d.id===id);}
 async function reloadAssignments(){
  const {data,error}=await state.db.from('zoukable_drill_assignments').select('*').order('assigned_at',{ascending:false});
  if(error)throw error;
- state.assignments=data||[];
+ state.assignments=data||[];state.revision++;
 }
 async function reloadDrills(){
  const {data,error}=await state.db.from('zoukable_drills').select('id,title,objective,primary_skill_id,target_seconds,partner_mode,role,status,assigned_to,requires_clearance').order('title');
  if(error)throw error;
  state.drills=data||[];
+}
+async function refresh(){
+ if(!state.ready||state.refreshing)return;state.refreshing=true;
+ try{await Promise.all([reloadAssignments(),reloadDrills()]);schedule();}catch(_){/* Keep the current view if a refresh fails. */}finally{state.refreshing=false;}
 }
 
 function homeworkCard(a,d){
@@ -63,26 +67,26 @@ function bindStudentHomework(){
 }
 function renderStudentHomework(){
  if(!state.ready||state.profile?.role==='coach'||document.body.dataset.chapter!=='practice')return;
- const old=document.querySelector('#zoukable-homework-section');if(old)old.remove();
  const libraryHeading=[...document.querySelectorAll('#view .section-head')].find(x=>x.querySelector('h2')?.textContent.trim()==='Drill library');
  if(!libraryHeading)return;
- const active=activeFor();
- decorateLibrary(active);
+ const active=activeFor(),revision=String(state.revision),old=document.querySelector('#zoukable-homework-section');
+ if(old?.dataset.revision===revision){decorateLibrary(active);return;}
+ old?.remove();decorateLibrary(active);
  if(!active.length)return;
  const cards=active.map(a=>{const d=drillFor(a.drill_id);return d&&d.status==='published'?homeworkCard(a,d):'';}).filter(Boolean).join('');
  if(!cards)return;
  const section=document.createElement('div');
- section.id='zoukable-homework-section';
+ section.id='zoukable-homework-section';section.dataset.revision=revision;
  section.innerHTML=`<div class="section-head"><h2>Your homework</h2><span class="tag">${active.length} active</span></div><p class="help">Homework assigned in class or captured from your private-class notes is pinned here. Granola transcripts themselves stay private to your teacher.</p><div class="grid">${cards}</div>`;
  libraryHeading.insertAdjacentElement('beforebegin',section);
  bindStudentHomework();
 }
 function renderTodayHomework(){
  if(!state.ready||state.profile?.role==='coach'||document.body.dataset.chapter!=='today')return;
- document.querySelector('#zoukable-homework-today')?.remove();
+ const revision=String(state.revision),old=document.querySelector('#zoukable-homework-today');if(old?.dataset.revision===revision)return;old?.remove();
  const active=activeFor();if(!active.length)return;
  const intro=document.querySelector('#view .intro');if(!intro)return;
- const box=document.createElement('section');box.id='zoukable-homework-today';box.className='card';
+ const box=document.createElement('section');box.id='zoukable-homework-today';box.dataset.revision=revision;box.className='card';
  box.innerHTML=`<p class="kicker">HOMEWORK FROM GAB</p><h2>${active.length} active drill${active.length===1?'':'s'}</h2><p class="muted">Your assigned practice is pinned at the top of the drill library.</p><button type="button" class="btn secondary" id="open-homework">Open homework →</button>`;
  intro.insertAdjacentElement('afterend',box);
  box.querySelector('#open-homework').onclick=()=>document.querySelector('#tabs [data-tab="practice"]')?.click();
@@ -116,10 +120,12 @@ function renderCoachPanel(){
  if(!state.ready||state.profile?.role!=='coach'||document.body.dataset.chapter!=='coach')return;
  const select=document.querySelector('#student-select');const detail=document.querySelector('#student-detail');if(!select||!detail)return;
  if(!select.dataset.homeworkBound){select.dataset.homeworkBound='1';select.addEventListener('change',schedule);}
- detail.querySelector('#zoukable-homework-coach')?.remove();
- const studentId=select.value;if(!studentId)return;
+ const studentId=select.value,revision=String(state.revision),old=detail.querySelector('#zoukable-homework-coach');
+ if(!studentId){old?.remove();return;}
+ if(old?.dataset.revision===revision&&old.dataset.student===studentId)return;
+ old?.remove();
  const drills=state.drills.filter(d=>d.status==='published'&&(!d.assigned_to||d.assigned_to===studentId));
- const panel=document.createElement('section');panel.id='zoukable-homework-coach';panel.className='card';panel.style.marginTop='22px';
+ const panel=document.createElement('section');panel.id='zoukable-homework-coach';panel.dataset.revision=revision;panel.dataset.student=studentId;panel.className='card';panel.style.marginTop='22px';
  panel.innerHTML=`<p class="kicker">STUDENT HOMEWORK</p><h2>Assign practice</h2><p class="help">Use this during class, or confirm a homework item that came from Granola. One drill can be assigned to several students without duplicating it.</p><form id="homework-form" class="form form-grid"><label class="full">Published drill<select name="drill" required><option value="">Choose a drill</option>${drills.map(d=>`<option value="${esc(d.id)}">${esc(d.title)}</option>`).join('')}</select></label><label>Source<select name="source"><option value="class">Class</option><option value="granola">Granola notes</option><option value="coach">Teacher assignment</option></select></label><label>Due date (optional)<input name="due_date" type="date"></label><label class="full">Homework note / cue<textarea name="note" maxlength="2000" placeholder="What should this student focus on?"></textarea></label><button class="btn full" type="submit">Assign to drill library</button></form><div class="section-head"><h3>Active homework</h3><span class="tag">${activeFor(studentId).length}</span></div>${coachAssignmentRows(studentId)}`;
  detail.appendChild(panel);bindCoachPanel(panel,studentId);
 }
@@ -136,6 +142,8 @@ async function boot(){
   const profile=await state.db.from('profiles').select('id,display_name,role').eq('id',state.user.id).single();if(profile.error)return;state.profile=profile.data;
   await Promise.all([reloadAssignments(),reloadDrills()]);state.ready=true;
   new MutationObserver(schedule).observe(document.querySelector('#view')||document.body,{childList:true,subtree:true});
+  window.addEventListener('focus',refresh);
+  document.addEventListener('visibilitychange',()=>{if(!document.hidden)refresh();});
   schedule();
  }catch(err){console.warn('Zoukable homework bridge unavailable',err);}
 }
