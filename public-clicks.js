@@ -4,14 +4,13 @@
   const source = document.body.dataset.page;
   if (!publicPages.has(source)) return;
 
-  const removeSectionContaining = text => {
+  const findSectionContaining = text => {
     for (const section of document.querySelectorAll('main section')) {
-      if ((section.textContent || '').includes(text)) {
-        section.remove();
-        return;
-      }
+      if ((section.textContent || '').includes(text)) return section;
     }
+    return null;
   };
+  const removeSectionContaining = text => findSectionContaining(text)?.remove();
 
   // Keep the main Classes page decision-focused. Detailed teaching content still lives on its own pages.
   if (source === 'classes') {
@@ -42,12 +41,9 @@
       }
     }
 
-    // These are useful secondary destinations, but they distract from the class decision on this page.
     removeSectionContaining('What you train');
     removeSectionContaining('Learn between classes');
     removeSectionContaining('Visiting New York?');
-
-    // FAQs should be available without visually dominating the page.
     document.querySelectorAll('#student-questions details[open]').forEach(item => item.removeAttribute('open'));
   }
 
@@ -70,16 +66,66 @@
       if (body[2]) body[2].textContent = 'Spend 30 minutes moving, repeating and adjusting with immediate partner feedback so the skill becomes easier to reproduce in real dancing.';
     }
 
-    // The two offer cards already explain the booking decision; these sections repeat it or branch away from it.
     removeSectionContaining('Arrange your session');
     removeSectionContaining('Keep developing');
     removeSectionContaining('Explore the learning system');
-
-    // Keep FAQs for reassurance, but do not open one by default.
     document.querySelectorAll('#student-questions details[open]').forEach(item => item.removeAttribute('open'));
 
     const inquiryTitle = document.querySelector('#training-inquiry h2');
     if (inquiryTitle) inquiryTitle.textContent = 'Ready to train?';
+  }
+
+  // Mentorship is a fit/application page, not a tour of every tool inside the member ecosystem.
+  if (source === 'mentorship') {
+    document.querySelector('.hero .breadcrumb')?.remove();
+
+    const heroActions = document.querySelectorAll('.hero .actions a');
+    if (heroActions[0]) heroActions[0].textContent = 'Apply for mentorship';
+    if (heroActions[1]) heroActions[1].textContent = 'See what is included';
+
+    // The public decision should not branch into the internal product universe.
+    document.querySelector('#referral-reward')?.remove();
+    document.querySelector('#your-learning-worlds')?.remove();
+    removeSectionContaining('The learning loop');
+    removeSectionContaining('Teaching approach');
+    removeSectionContaining('Explore the approach');
+    removeSectionContaining('Current members');
+    removeSectionContaining('You do not need to know exactly what is wrong with your dancing.');
+
+    // Put audience fit before the offer details, where it helps the decision.
+    const who = findSectionContaining('Who it is for');
+    const why = document.querySelector('#why-mentorship');
+    if (who && why) why.after(who);
+
+    // One concise member-space mention is enough; prospects do not need the full dashboard preview here.
+    const membership = document.querySelector('#membership');
+    membership?.querySelector('.portalPreview')?.remove();
+    const membershipGrid = membership?.querySelector('.w.g2');
+    if (membershipGrid) membershipGrid.style.gridTemplateColumns = '1fr';
+    membership?.querySelectorAll('a[href="#your-learning-worlds"]').forEach(link => link.remove());
+
+    // Keep the practical monthly rules, but make them secondary to the actual offer.
+    const rulesHeading = [...(membership?.querySelectorAll('h3') || [])].find(h => h.textContent.includes('How the monthly membership works'));
+    const rulesCard = rulesHeading?.closest('.card');
+    if (rulesCard) {
+      const details = document.createElement('details');
+      details.className = 'applicationExtra mentorshipRules';
+      const summary = document.createElement('summary');
+      summary.textContent = 'Monthly membership details';
+      details.append(summary, ...[...rulesCard.children].filter(child => child !== rulesHeading));
+      rulesCard.replaceWith(details);
+    }
+
+    // The FAQ can explain tools without sending prospects into the member interface.
+    const toolQuestion = [...document.querySelectorAll('#student-questions details')].find(item => (item.querySelector('summary')?.textContent || '').includes('Zoukable and Atlas'));
+    const toolAnswer = toolQuestion?.querySelector('p');
+    if (toolAnswer) toolAnswer.textContent = 'Zoukable supports rhythm and practice between sessions. Atlas keeps coach-reviewed discoveries, session notes and practice priorities connected to your longer-term learning.';
+    document.querySelectorAll('#student-questions details[open]').forEach(item => item.removeAttribute('open'));
+
+    const applicationTitle = document.querySelector('#apply h2');
+    if (applicationTitle) applicationTitle.textContent = 'Tell Gab about your dancing.';
+    const applicationIntro = document.querySelector('#apply > .w > .muted');
+    if (applicationIntro) applicationIntro.textContent = 'A few details are enough to start a conversation about fit. Applying does not enroll you or take a payment.';
   }
 
   const classPages = new Set(['/classes/','/brazilian-zouk-classes-nyc/','/lambada-classes-nyc/']);
@@ -96,7 +142,6 @@
     } else if (url.origin === location.origin && classPages.has(url.pathname)) {
       eventName = 'class_details_click'; details = {class_page: url.pathname};
     } else return;
-    // A click is intent to inquire, not a completed booking or sent message.
     try {
       window.gtag('event', eventName, {
         ...details,
